@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📚 Full Workshop Materials
+    url: https://github.com/MSBart2/CopilotWorkshop
+    about: Complete workshop modules and training materials
+  - name: 💬 Workshop Discussions
+    url: https://github.com/MSBart2/CopilotWorkshop/discussions
+    about: Ask questions or share feedback about the workshop
+  - name: 🐛 Bug Documentation
+    url: https://github.com/MSBart2/FanHub/blob/main/BUGS.md
+    about: View all documented Node.js bugs
+  - name: 🐛 .NET Bug Documentation
+    url: https://github.com/MSBart2/FanHub/blob/main/dotnet/BUGS.md
+    about: View all documented .NET/C# bugs

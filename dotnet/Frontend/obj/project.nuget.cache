@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "jb7vx/8bPCY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rmathis\\source\\FanHub\\dotnet\\Frontend\\Frontend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rmathis\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

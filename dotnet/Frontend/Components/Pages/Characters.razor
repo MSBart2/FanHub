@@ -1,0 +1,153 @@
+@page "/characters"
+@rendermode InteractiveServer
+@inject HttpClient Http
+
+<PageTitle>Characters - FanHub</PageTitle>
+
+<div class="characters-page">
+    <h1>Breaking Bad Characters</h1>
+    
+    @* BUG: No null check before foreach *@
+    @if (characters == null)
+    {
+        <p>Loading characters...</p>
+    }
+    else
+    {
+        <div class="character-grid">
+            @foreach (var character in characters)
+            {
+                @* BUG: Not using a component, duplicating markup *@
+                <div class="character-card" @onclick="() => SelectCharacter(character)">
+                    <h3>@character.Name</h3>
+                    <p class="actor">@character.ActorName</p>
+                    @* BUG: No null check on Bio before calling Substring *@
+                    <p class="bio">@character.Bio.Substring(0, 100)...</p>
+                    <span class="status">@character.Status</span>
+                </div>
+            }
+        </div>
+    }
+    
+    @if (selectedCharacter != null)
+    {
+        <div class="character-detail">
+            <h2>@selectedCharacter.Name</h2>
+            <p>Played by: @selectedCharacter.ActorName</p>
+            <p>@selectedCharacter.Bio</p>
+            <button @onclick="CloseDetail">Close</button>
+        </div>
+    }
+</div>
+
+@code {
+    private Character[]? characters;
+    private Character? selectedCharacter;
+    
+    // BUG: Event not unsubscribed - memory leak!
+    private static event EventHandler<Character>? OnCharacterSelected;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // BUG: Subscribing to static event without cleanup
+        OnCharacterSelected += HandleCharacterSelected;
+        
+        await LoadCharacters();
+    }
+    
+    private async Task LoadCharacters()
+    {
+        try
+        {
+            // BUG: Hardcoded URL
+            characters = await Http.GetFromJsonAsync<Character[]>("http://localhost:5000/api/characters");
+            
+            // BUG: Will show duplicate Jesse Pinkman from backend bug!
+        }
+        catch (Exception ex)
+        {
+            // BUG: Only logging to console, user sees nothing
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    
+    private void SelectCharacter(Character character)
+    {
+        selectedCharacter = character;
+        
+        // BUG: Raising event but never cleaning up subscribers
+        OnCharacterSelected?.Invoke(this, character);
+        
+        // BUG: Unnecessary StateHasChanged
+        StateHasChanged();
+    }
+    
+    private void CloseDetail()
+    {
+        selectedCharacter = null;
+    }
+    
+    // BUG: NOT implementing IDisposable!
+    // Should unsubscribe from OnCharacterSelected
+    // Correct implementation:
+    // public void Dispose()
+    // {
+    //     OnCharacterSelected -= HandleCharacterSelected;
+    // }
+    
+    private void HandleCharacterSelected(object? sender, Character character)
+    {
+        // BUG: This will cause multiple components to react
+        Console.WriteLine($"Character selected: {character.Name}");
+    }
+    
+    public class Character
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ActorName { get; set; }
+        public string Bio { get; set; }
+        public string Status { get; set; }
+    }
+}
+
+<style>
+    /* BUG: Global styles instead of scoped CSS */
+    .characters-page {
+        padding: 2rem;
+    }
+    
+    .character-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    
+    .character-card {
+        border: 1px solid #ddd;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .character-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .bio {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .character-detail {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+</style>

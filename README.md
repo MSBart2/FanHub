@@ -29,12 +29,28 @@ For the full training experience, visit: **https://github.com/MSBart2/CopilotWor
 
 A generic fan site application for TV shows featuring:
 
+### 🌐 Multi-Language Support
+
+FanHub is available in **two language implementations** to accommodate different developer preferences:
+
+| Language | Path | Stack | Status |
+|----------|------|-------|--------|
+| **Node.js** | `node/` | Express + React + PostgreSQL | ✅ Original version |
+| **.NET** | `dotnet/` | ASP.NET Core + Blazor + PostgreSQL | ✅ C# version |
+
+Both implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
+
+**Filtering GitHub Issues by Language:**
+- Node.js issues: [`is:issue label:lang:node`](../../issues?q=is%3Aissue+label%3Alang%3Anode)
+- .NET issues: [`is:issue label:lang:dotnet`](../../issues?q=is%3Aissue+label%3Alang%3Adotnet)
+- By severity: Add `label:severity:critical`, `label:severity:high`, etc.
+
 ### Current (Incomplete) Features
 - Basic character and episode listing
 - Simple API with inconsistent patterns
 - Minimal frontend with generic styling
 - Partial authentication scaffolding
-- SQLite database (no migrations yet)
+- Database with intentional data issues
 
 ### What Participants Will Build
 Through the workshop, participants transform FanHub by:
@@ -68,7 +84,7 @@ Your cloud-based environment includes:
 
 Once your Codespace is ready:
 ```bash
-cd src
+cd node
 npm run install:all
 npm start
 ```
@@ -95,7 +111,7 @@ npm start
 4. Wait for container to build (2-3 minutes first time)
 5. Once ready:
    ```bash
-   cd src
+   cd node
    npm run install:all
    npm start
    ```
@@ -119,10 +135,12 @@ If you prefer to set up everything yourself without containers:
 | **GitHub Account** | With [Copilot access](https://github.com/features/copilot) (Individual, Business, or Enterprise) |
 
 **Installation steps:**
+
+**For Node.js version:**
 ```bash
 # 1. Clone repository
 git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/src
+cd FanHub/node
 
 # 2. Install dependencies
 npm run install:all
@@ -135,6 +153,34 @@ npm start
 # Backend API: http://localhost:3001
 # PostgreSQL: localhost:5432
 ```
+
+**For .NET version:**
+```bash
+# 1. Clone repository
+git clone https://github.com/MSBart2/FanHub.git
+cd FanHub/dotnet
+
+# 2. Start PostgreSQL with Docker
+docker-compose up -d db
+
+# 3. Run migrations and start backend
+cd Backend
+dotnet restore
+dotnet ef database update
+dotnet run
+
+# 4. In another terminal, start frontend
+cd ../Frontend
+dotnet restore
+dotnet run
+
+# Application URLs:
+# Frontend: http://localhost:5001
+# Backend API: http://localhost:5000
+# PostgreSQL: localhost:5432
+```
+
+See `dotnet/README.md` for complete .NET setup instructions.
 
 **Stop services:**
 ```bash
@@ -165,7 +211,7 @@ After getting the app running with any of the options above:
 ## 📂 Project Structure
 
 ```
-src/
+node/
 ├── backend/           # Node.js/Express API (inconsistent patterns)
 │   ├── src/
 │   │   ├── routes/    # API endpoints (some incomplete)

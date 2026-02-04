@@ -1,0 +1,53 @@
+<!-- BUG: No proper navigation component -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="logo">FanHub</a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/characters">Characters</a></li>
+            <li><a href="/episodes">Episodes</a></li>
+        </ul>
+    </div>
+</nav>
+
+<style>
+    /* BUG: Global CSS in component instead of isolated styles! */
+    .navbar {
+        background: #333;
+        color: white;
+        padding: 1rem 0;
+    }
+    
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav-links a:hover {
+        text-decoration: underline;
+    }
+</style>

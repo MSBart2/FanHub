@@ -1,0 +1,161 @@
+@page "/episodes"
+@rendermode InteractiveServer
+@inject HttpClient Http
+
+<PageTitle>Episodes - FanHub</PageTitle>
+
+<div class="episodes-page">
+    <h1>Breaking Bad Episodes</h1>
+    
+    <div class="filters">
+        <label>Filter by Season:</label>
+        <select @onchange="OnSeasonChanged">
+            <option value="">All Seasons</option>
+            <option value="1">Season 1</option>
+            <option value="2">Season 2</option>
+            <option value="3">Season 3</option>
+            <option value="4">Season 4</option>
+            <option value="5">Season 5</option>
+        </select>
+    </div>
+    
+    @if (isLoading)
+    {
+        <p>Loading episodes...</p>
+    }
+    else if (episodes != null)
+    {
+        @* BUG: Cache bug equivalent to Node.js version! *@
+        <div class="episode-list">
+            @foreach (var episode in episodes)
+            {
+                <div class="episode-item">
+                    <h3>S@episode.SeasonId E@episode.EpisodeNumber: @episode.Title</h3>
+                    @* BUG: No null check before formatting date *@
+                    <p class="air-date">Aired: @episode.AirDate.ToString("MMM dd, yyyy")</p>
+                    <p>@episode.Description</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private Episode[]? episodes;
+    private Episode[]? cachedEpisodes;  // BUG: Cache without considering season filter!
+    private bool isLoading = true;
+    private int? selectedSeason;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEpisodes();
+    }
+    
+    private async Task OnSeasonChanged(ChangeEventArgs e)
+    {
+        // BUG: StateHasChanged before async work
+        StateHasChanged();
+        
+        var value = e.Value?.ToString();
+        selectedSeason = string.IsNullOrEmpty(value) ? null : int.Parse(value);
+        
+        await LoadEpisodes();
+        
+        // BUG: StateHasChanged after async (redundant)
+        StateHasChanged();
+    }
+    
+    private async Task LoadEpisodes()
+    {
+        isLoading = true;
+        
+        // BUG: Cache ignores season filter! (Same as Node.js bug)
+        if (cachedEpisodes != null)
+        {
+            episodes = cachedEpisodes;
+            isLoading = false;
+            return;  // Returns ALL episodes even if season filter selected!
+        }
+        
+        try
+        {
+            var url = "http://localhost:5000/api/episodes";
+            
+            if (selectedSeason.HasValue)
+            {
+                // BUG: Wrong query parameter name (should match backend)
+                url += $"?season={selectedSeason.Value}";
+            }
+            
+            var response = await Http.GetFromJsonAsync<EpisodeResponse>(url);
+            
+            // BUG: Backend returns wrapped response, but we're not handling it correctly
+            episodes = response?.Data;
+            
+            // BUG: Caching ALL episodes regardless of filter
+            cachedEpisodes = episodes;
+        }
+        catch
+        {
+            // BUG: Silent failure
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+    
+    // BUG: Response model doesn't match backend inconsistency
+    // Episodes controller returns { success, count, data }
+    // But other controllers return raw arrays
+    public class EpisodeResponse
+    {
+        public bool Success { get; set; }
+        public int Count { get; set; }
+        public Episode[] Data { get; set; }
+    }
+    
+    public class Episode
+    {
+        public int Id { get; set; }
+        public int SeasonId { get; set; }
+        public int EpisodeNumber { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime AirDate { get; set; }
+    }
+}
+
+<style>
+    .episodes-page {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .filters {
+        margin-bottom: 2rem;
+    }
+    
+    select {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .episode-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .episode-item {
+        border: 1px solid #ddd;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    
+    .air-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+</style>
