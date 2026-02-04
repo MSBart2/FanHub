@@ -65,129 +65,36 @@ Through the workshop, participants transform FanHub by:
 
 ## 🚀 Getting Started
 
-Choose your preferred development environment:
+Choose your language/framework and follow the setup guide:
 
-### Option 1: GitHub Codespaces (✨ Recommended)
+### Node.js / React Version
+📖 **[Complete Node.js Setup Guide →](node/SETUP.md)**
 
-**Zero setup required!** Click the **"Code"** button above → **"Create codespace on main"**.
-
-Your cloud-based environment includes:
-- ✅ VS Code in the browser (or connect from desktop VS Code)
-- ✅ GitHub Copilot & Copilot Chat pre-installed and activated
-- ✅ Mermaid diagram rendering for architecture visuals
-- ✅ All FanHub development tools (Node.js, Docker, PostgreSQL)
-- ✅ Ports automatically forwarded for the app (3000, 3001, 5432)
-- ✅ Docker-in-Docker for running containers
-- ✅ Works from any device—even tablets!
-
-**Build time:** 2-3 minutes first launch, instant thereafter
-
-Once your Codespace is ready:
+Quick start for Codespaces:
 ```bash
 cd node
 npm run install:all
 npm start
 ```
+Visit http://localhost:3000
 
-**Access the app**: Click the "Ports" tab and open port 3000 in your browser.
+### .NET / C# Version
+📖 **[Complete .NET Setup Guide →](dotnet/SETUP.md)**
 
-📖 [Learn more about the dev container setup](.devcontainer/README.md)
-
----
-
-### Option 2: Local Dev Container (🐳 Preferred for Local Development)
-
-**Near-zero setup** using VS Code with Docker Desktop:
-
-**Requirements:**
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [VS Code](https://code.visualstudio.com/download)
-- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-
-**Steps:**
-1. Clone this repository: `git clone https://github.com/MSBart2/FanHub.git`
-2. Open the folder in VS Code
-3. Click **"Reopen in Container"** when prompted (or use Command Palette → "Dev Containers: Reopen in Container")
-4. Wait for container to build (2-3 minutes first time)
-5. Once ready:
-   ```bash
-   cd node
-   npm run install:all
-   npm start
-   ```
-
-Same consistent environment as Codespaces, but running locally on your machine.
-
-📖 [Troubleshooting dev containers](.devcontainer/README.md)
-
----
-
-### Option 3: Manual Installation (⚙️ Advanced)
-
-If you prefer to set up everything yourself without containers:
-
-| Requirement | Details |
-|-------------|---------|
-| **VS Code 1.107+** | [Download](https://code.visualstudio.com/download) · Check version: Help → About |
-| **GitHub Copilot** | Install both [Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) + [Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) extensions |
-| **Docker Desktop** | [Download](https://www.docker.com/products/docker-desktop/) (for PostgreSQL database) |
-| **Node.js 18+** | [Download](https://nodejs.org/) · Verify: `node --version` |
-| **GitHub Account** | With [Copilot access](https://github.com/features/copilot) (Individual, Business, or Enterprise) |
-
-**Installation steps:**
-
-**For Node.js version:**
+Quick start for Codespaces:
 ```bash
-# 1. Clone repository
-git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/node
-
-# 2. Install dependencies
-npm run install:all
-
-# 3. Start services with Docker
-npm start
-
-# Application URLs:
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:3001
-# PostgreSQL: localhost:5432
-```
-
-**For .NET version:**
-```bash
-# 1. Clone repository
-git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/dotnet
-
-# 2. Start PostgreSQL with Docker
+cd dotnet
 docker-compose up -d db
-
-# 3. Run migrations and start backend
-cd Backend
-dotnet restore
-dotnet ef database update
-dotnet run
-
-# 4. In another terminal, start frontend
-cd ../Frontend
-dotnet restore
-dotnet run
-
-# Application URLs:
-# Frontend: http://localhost:5001
-# Backend API: http://localhost:5000
-# PostgreSQL: localhost:5432
+cd Backend && dotnet ef database update && dotnet run
 ```
+Visit http://localhost:5000
 
-See `dotnet/README.md` for complete .NET setup instructions.
+### Setup Options Available:
+- ✨ **GitHub Codespaces** (Recommended) - Zero setup required
+- 🐳 **Local Dev Container** - Consistent environment with Docker
+- ⚙️ **Manual Installation** - Full control for advanced users
 
-**Stop services:**
-```bash
-npm stop
-```
-
-**Note**: Manual setup requires configuring your own environment, installing tools, and troubleshooting dependencies. We recommend Codespaces or Dev Containers for a smoother experience.
+See the language-specific setup guides above for detailed instructions.
 
 ---
 
