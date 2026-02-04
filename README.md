@@ -47,42 +47,120 @@ Through the workshop, participants transform FanHub by:
 - ✅ Adding proper documentation
 - ✅ Establishing coding standards
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### Prerequisites
+Choose your preferred development environment:
 
-- **Node.js 18+**
-- **Docker Desktop** (recommended for database)
-- **GitHub Copilot** (for workshop exercises)
+### Option 1: GitHub Codespaces (✨ Recommended)
 
-### Installation
+**Zero setup required!** Click the **"Code"** button above → **"Create codespace on main"**.
 
+Your cloud-based environment includes:
+- ✅ VS Code in the browser (or connect from desktop VS Code)
+- ✅ GitHub Copilot & Copilot Chat pre-installed and activated
+- ✅ Mermaid diagram rendering for architecture visuals
+- ✅ All FanHub development tools (Node.js, Docker, PostgreSQL)
+- ✅ Ports automatically forwarded for the app (3000, 3001, 5432)
+- ✅ Docker-in-Docker for running containers
+- ✅ Works from any device—even tablets!
+
+**Build time:** 2-3 minutes first launch, instant thereafter
+
+Once your Codespace is ready:
 ```bash
-# Clone this repository
-git clone https://github.com/YOUR_USERNAME/FanHub.git
+cd fanhub
+npm run install:all
+npm start
+```
+
+**Access the app**: Click the "Ports" tab and open port 3000 in your browser.
+
+📖 [Learn more about the dev container setup](.devcontainer/README.md)
+
+---
+
+### Option 2: Local Dev Container (🐳 Preferred for Local Development)
+
+**Near-zero setup** using VS Code with Docker Desktop:
+
+**Requirements:**
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [VS Code](https://code.visualstudio.com/download)
+- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+**Steps:**
+1. Clone this repository: `git clone https://github.com/MSBart2/FanHub.git`
+2. Open the folder in VS Code
+3. Click **"Reopen in Container"** when prompted (or use Command Palette → "Dev Containers: Reopen in Container")
+4. Wait for container to build (2-3 minutes first time)
+5. Once ready:
+   ```bash
+   cd fanhub
+   npm run install:all
+   npm start
+   ```
+
+Same consistent environment as Codespaces, but running locally on your machine.
+
+📖 [Troubleshooting dev containers](.devcontainer/README.md)
+
+---
+
+### Option 3: Manual Installation (⚙️ Advanced)
+
+If you prefer to set up everything yourself without containers:
+
+| Requirement | Details |
+|-------------|---------|
+| **VS Code 1.107+** | [Download](https://code.visualstudio.com/download) · Check version: Help → About |
+| **GitHub Copilot** | Install both [Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) + [Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) extensions |
+| **Docker Desktop** | [Download](https://www.docker.com/products/docker-desktop/) (for PostgreSQL database) |
+| **Node.js 18+** | [Download](https://nodejs.org/) · Verify: `node --version` |
+| **GitHub Account** | With [Copilot access](https://github.com/features/copilot) (Individual, Business, or Enterprise) |
+
+**Installation steps:**
+```bash
+# 1. Clone repository
+git clone https://github.com/MSBart2/FanHub.git
 cd FanHub/fanhub
 
-# Install all dependencies
+# 2. Install dependencies
 npm run install:all
 
-# Start with Docker (includes database)
+# 3. Start services with Docker
 npm start
 
-# OR start services individually
-npm run backend  # Backend API: http://localhost:3001
-npm run frontend # Frontend app: http://localhost:3000
+# Application URLs:
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:3001
+# PostgreSQL: localhost:5432
 ```
 
-The application should now be running:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **Database**: PostgreSQL running in Docker
-
-### Stopping Services
-
+**Stop services:**
 ```bash
-npm stop  # Stop all Docker services
+npm stop
 ```
+
+**Note**: Manual setup requires configuring your own environment, installing tools, and troubleshooting dependencies. We recommend Codespaces or Dev Containers for a smoother experience.
+
+---
+
+## 🎯 Next Steps
+
+After getting the app running with any of the options above:
+
+1. **Explore the broken app** - Visit http://localhost:3000 and notice:
+   - Two Jesse Pinkman characters (duplicate bug!)
+   - Season filter doesn't work properly
+   - Inconsistent styling across pages
+   
+2. **Review the issues** - Check out the [46+ documented bugs](BUGS.md)
+
+3. **Start the workshop** - Head to the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for the full training modules
+
+4. **Try Copilot without config** - Ask Copilot to help fix something and see how it struggles without context
+
+5. **Begin Module 1** - Add repository instructions and watch Copilot transform!
 
 ## 📂 Project Structure
 
