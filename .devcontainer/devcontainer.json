@@ -1,6 +1,6 @@
 {
   "name": "FanHub Workshop",
-  "dockerComposeFile": "../fanhub/docker-compose.yml",
+  "dockerComposeFile": "../src/docker-compose.yml",
   "service": "frontend",
   "workspaceFolder": "/workspace",
   
@@ -61,7 +61,7 @@
     }
   },
   
-  "postCreateCommand": "echo '✓ Dev container ready! Run: cd fanhub && npm run install:all && npm start'",
+  "postCreateCommand": "echo '✓ Dev container ready! Run: cd src && npm run install:all && npm start'",
   
   "remoteUser": "node"
 }

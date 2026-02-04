@@ -391,7 +391,7 @@ This application is designed for a progressive workshop teaching AI-assisted dev
 ## 📁 Project Structure
 
 ```
-fanhub/
+src/
 ├── .github/                    # ❌ MISSING COPILOT CONFIG
 │   ├── copilot-instructions.md # ❌ Add in Module 1
 │   ├── prompts/                # ❌ Add in Module 3

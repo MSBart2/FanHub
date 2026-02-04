@@ -68,7 +68,7 @@ Your cloud-based environment includes:
 
 Once your Codespace is ready:
 ```bash
-cd fanhub
+cd src
 npm run install:all
 npm start
 ```
@@ -95,7 +95,7 @@ npm start
 4. Wait for container to build (2-3 minutes first time)
 5. Once ready:
    ```bash
-   cd fanhub
+   cd src
    npm run install:all
    npm start
    ```
@@ -122,7 +122,7 @@ If you prefer to set up everything yourself without containers:
 ```bash
 # 1. Clone repository
 git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/fanhub
+cd FanHub/src
 
 # 2. Install dependencies
 npm run install:all
@@ -165,7 +165,7 @@ After getting the app running with any of the options above:
 ## 📂 Project Structure
 
 ```
-fanhub/
+src/
 ├── backend/           # Node.js/Express API (inconsistent patterns)
 │   ├── src/
 │   │   ├── routes/    # API endpoints (some incomplete)

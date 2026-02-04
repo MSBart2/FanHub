@@ -30,7 +30,7 @@ This directory contains the configuration for the **development container** used
 2. Wait 2-3 minutes for the environment to build
 3. Once ready, run:
    ```bash
-   cd fanhub
+   cd src
    npm run install:all
    npm start
    ```
@@ -63,7 +63,7 @@ This directory contains the configuration for the **development container** used
 
 5. Once the container is ready, open a terminal and run:
    ```bash
-   cd fanhub
+   cd src
    npm run install:all
    npm start
    ```
