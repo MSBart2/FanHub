@@ -29,7 +29,7 @@ Jesse Pinkman appears TWICE in the characters table with different IDs (2 and 5)
 
 ## Location
 ``````
-fanhub/backend/src/database/seed.sql (lines 36 and 39)
+src/backend/src/database/seed.sql (lines 36 and 39)
 ``````
 
 ## Impact
@@ -73,7 +73,7 @@ The episode cache doesn't account for the ``seasonId`` parameter, causing filter
 
 ## Location
 ``````
-fanhub/frontend/src/pages/Episodes.js (lines 76-84)
+src/frontend/src/pages/Episodes.js (lines 76-84)
 ``````
 
 ## Impact
@@ -122,7 +122,7 @@ Most API routes use ``/api/*`` prefix, but auth routes use ``/auth`` (no ``/api`
 
 ## Location
 ``````
-fanhub/backend/src/index.js (lines 30-34)
+src/backend/src/index.js (lines 30-34)
 ``````
 
 ## Impact
@@ -171,7 +171,7 @@ The GET ``/api/characters`` endpoint has no try/catch block, while other routes 
 
 ## Location
 ``````
-fanhub/backend/src/routes/characters.js (lines 10-45)
+src/backend/src/routes/characters.js (lines 10-45)
 ``````
 
 ## Impact
@@ -208,7 +208,7 @@ DELETE endpoint for characters has no error handling, causing unhandled promise 
 
 ## Location
 ``````
-fanhub/backend/src/routes/characters.js (lines 158-168)
+src/backend/src/routes/characters.js (lines 158-168)
 ``````
 
 ## Impact
@@ -280,7 +280,7 @@ Password validation only requires 6 characters minimum with no complexity requir
 
 ## Location
 ``````
-fanhub/backend/src/routes/auth.js (line 27)
+src/backend/src/routes/auth.js (line 27)
 ``````
 
 ## Impact
@@ -322,7 +322,7 @@ Admin user seed data contains an invalid/placeholder bcrypt hash that won't auth
 
 ## Location
 ``````
-fanhub/backend/src/database/seed.sql (line 65)
+src/backend/src/database/seed.sql (line 65)
 ``````
 
 ## Impact
@@ -439,7 +439,7 @@ CORS is enabled for all origins with no restrictions.
 
 ## Location
 ``````
-fanhub/backend/src/index.js (line 13)
+src/backend/src/index.js (line 13)
 ``````
 
 ## Impact
@@ -481,7 +481,7 @@ Error messages from database are exposed directly to clients in all environments
 
 ## Location
 ``````
-fanhub/backend/src/routes/characters.js (line 113)
+src/backend/src/routes/characters.js (line 113)
 ``````
 
 ## Impact
@@ -554,7 +554,7 @@ $issue14 = gh issue create `
 
 ## Location
 ``````
-fanhub/backend/src/routes/auth.js (lines 175-199)
+src/backend/src/routes/auth.js (lines 175-199)
 ``````
 
 ## Impact
@@ -623,7 +623,7 @@ $issue16 = gh issue create `
 Frontend components use mixed patterns - some class components, some functional with hooks.
 
 ## Location
-``fanhub/frontend/src/pages/`` and ``fanhub/frontend/src/components/``
+``src/frontend/src/pages/`` and ``src/frontend/src/components/``
 
 ## Impact
 - Inconsistent codebase
@@ -652,7 +652,7 @@ $issue17 = gh issue create `
 The codebase uses FOUR different styling methods, creating inconsistency.
 
 ## Location
-``fanhub/frontend/src/``
+``src/frontend/src/``
 
 ## The Four Approaches
 1. **Styled-components**: Home.jsx, Header.jsx, CharacterCard.jsx
@@ -684,7 +684,7 @@ $issue18 = gh issue create `
 Mixed file extensions for React components with no clear pattern.
 
 ## Location
-``fanhub/frontend/src/``
+``src/frontend/src/``
 
 ## Examples
 - **.jsx**: Header.jsx, Characters.jsx, Home.jsx, About.jsx, CharacterCard.jsx, QuoteDisplay.jsx
@@ -713,7 +713,7 @@ $issue19 = gh issue create `
 ``episodes.js`` route file mixes async/await and .then() promise handling.
 
 ## Location
-``fanhub/backend/src/routes/episodes.js``
+``src/backend/src/routes/episodes.js``
 
 ## Examples
 - GET ``/``: Uses ``.then().catch()`` (lines 44-52)
@@ -774,7 +774,7 @@ $issue21 = gh issue create `
 Route imports use inconsistent naming convention.
 
 ## Location
-``fanhub/backend/src/index.js`` (lines 23-27)
+``src/backend/src/index.js`` (lines 23-27)
 
 ## Evidence
 ``````javascript
@@ -866,7 +866,7 @@ $issue24 = gh issue create `
 Basic request logging with no request IDs or correlation tracking.
 
 ## Location
-``fanhub/backend/src/index.js`` (lines 17-20)
+``src/backend/src/index.js`` (lines 17-20)
 
 ## Impact
 - Debugging concurrent requests is difficult
@@ -899,7 +899,7 @@ $issue25 = gh issue create `
 Dynamic query building uses same parameter twice but only pushes once - confusing pattern.
 
 ## Location
-``fanhub/backend/src/routes/characters.js`` (line 38)
+``src/backend/src/routes/characters.js`` (line 38)
 
 ## Evidence
 ``````javascript
@@ -930,7 +930,7 @@ $issue26 = gh issue create `
 Connection pool created but never properly closed, no size configuration, no timeout settings.
 
 ## Location
-``fanhub/backend/src/database/connection.js``
+``src/backend/src/database/connection.js``
 
 ## Impact
 - Pool size defaults may not be optimal
@@ -967,7 +967,7 @@ $issue27 = gh issue create `
 Database connection exports both CommonJS and a default export "for ESM-style imports".
 
 ## Location
-``fanhub/backend/src/database/connection.js`` (lines 42-49)
+``src/backend/src/database/connection.js`` (lines 42-49)
 
 ## Evidence
 ``````javascript
@@ -1004,7 +1004,7 @@ $issue28 = gh issue create `
 ``getClient()`` function has warning comment but no safeguards to ensure client is released.
 
 ## Location
-``fanhub/backend/src/database/connection.js`` (lines 35-39)
+``src/backend/src/database/connection.js`` (lines 35-39)
 
 ## Evidence
 ``````javascript
@@ -1053,7 +1053,7 @@ $issue29 = gh issue create `
 ``formatDate`` helper function is defined inside component, causing it to be recreated on every render.
 
 ## Location
-``fanhub/frontend/src/components/EpisodeList.js`` (lines 84-92)
+``src/frontend/src/components/EpisodeList.js`` (lines 84-92)
 
 ## Evidence
 ``````javascript
@@ -1121,7 +1121,7 @@ $issue31 = gh issue create `
 Footer uses ``<a>`` tags instead of React Router ``<Link>``, causing full page reloads.
 
 ## Location
-``fanhub/frontend/src/components/Footer.js`` (lines 44-48)
+``src/frontend/src/components/Footer.js`` (lines 44-48)
 
 ## Impact
 - Poor user experience
@@ -1156,7 +1156,7 @@ $issue32 = gh issue create `
 Quote like handler has no loading state, no error handling, and doesn't use the result.
 
 ## Location
-``fanhub/frontend/src/pages/Home.jsx`` (line 123)
+``src/frontend/src/pages/Home.jsx`` (line 123)
 
 ## Evidence
 ``````javascript
@@ -1243,7 +1243,7 @@ $issue35 = gh issue create `
 Both Dockerfiles use development mode with no optimized production builds.
 
 ## Location
-``fanhub/backend/Dockerfile`` and ``fanhub/frontend/Dockerfile``
+``src/backend/Dockerfile`` and ``src/frontend/Dockerfile``
 
 ## Evidence
 ``````dockerfile
@@ -1277,7 +1277,7 @@ $issue36 = gh issue create `
 Application is missing a favicon.
 
 ## Location
-``fanhub/frontend/public/index.html`` (line 9)
+``src/frontend/public/index.html`` (line 9)
 
 ## TODO Comment
 ``<!-- TODO: Add favicon -->``
@@ -1295,7 +1295,7 @@ $issue37 = gh issue create `
 Application lacks dark mode support.
 
 ## Location
-``fanhub/frontend/src/styles/global.css`` (line 43)
+``src/frontend/src/styles/global.css`` (line 43)
 
 ## TODO Comment
 ``/* TODO: Add dark mode support */``
@@ -1313,7 +1313,7 @@ $issue38 = gh issue create `
 UI needs responsive design improvements.
 
 ## Location
-``fanhub/frontend/src/styles/global.css`` (line 44)
+``src/frontend/src/styles/global.css`` (line 44)
 
 ## TODO Comment
 ``/* TODO: Make responsive */``
@@ -1331,7 +1331,7 @@ $issue39 = gh issue create `
 Character detail page not implemented - clicking characters shows alert.
 
 ## Location
-``fanhub/frontend/src/pages/Characters.jsx`` (line 137)
+``src/frontend/src/pages/Characters.jsx`` (line 137)
 
 ## Current Behavior
 ``````javascript
@@ -1351,7 +1351,7 @@ $issue40 = gh issue create `
 Episode detail page not implemented - clicking episodes shows alert.
 
 ## Location
-``fanhub/frontend/src/pages/Episodes.js`` (line 137)
+``src/frontend/src/pages/Episodes.js`` (line 137)
 
 ## Current Behavior
 ``````javascript

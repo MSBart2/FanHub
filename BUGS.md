@@ -7,7 +7,7 @@
 ## 🔴 Critical Bugs
 
 ### 1. **Duplicate Character Data in Seed File**
-**Location**: `fanhub/backend/src/database/seed.sql` (lines 36 and 39)
+**Location**: `src/backend/src/database/seed.sql` (lines 36 and 39)
 **Type**: Data Integrity Bug
 **Impact**: Page-breaking
 
@@ -34,7 +34,7 @@
 ---
 
 ### 2. **Episode Cache Ignores Season Filter**
-**Location**: `fanhub/frontend/src/pages/Episodes.js` (lines 76-84)
+**Location**: `src/frontend/src/pages/Episodes.js` (lines 76-84)
 **Type**: Logic Bug
 **Impact**: Data Display Bug
 
@@ -61,7 +61,7 @@ if (episodeCache && cacheTimestamp && (now - cacheTimestamp) < 30000) {
 ---
 
 ### 3. **Inconsistent API Path Structure**
-**Location**: `fanhub/backend/src/index.js` (lines 30-34)
+**Location**: `src/backend/src/index.js` (lines 30-34)
 **Type**: API Design Bug
 **Impact**: Developer Experience
 
@@ -89,7 +89,7 @@ app.use('/auth', authRoutes);  // INCONSISTENT - no /api prefix!
 ## ⚠️ High Priority Issues
 
 ### 4. **Missing Error Handling in Characters Route**
-**Location**: `fanhub/backend/src/routes/characters.js` (lines 10-45)
+**Location**: `src/backend/src/routes/characters.js` (lines 10-45)
 **Type**: Error Handling Bug
 
 **Description**:
@@ -113,7 +113,7 @@ router.get('/', async (req, res) => {
 ---
 
 ### 5. **DELETE Operations Without Try/Catch**
-**Location**: `fanhub/backend/src/routes/characters.js` (lines 158-168)
+**Location**: `src/backend/src/routes/characters.js` (lines 158-168)
 **Type**: Error Handling Bug
 
 **Description**:
@@ -151,7 +151,7 @@ res.status(201).json(result.rows[0]);  // Correct!
 ---
 
 ### 7. **Weak Password Requirements**
-**Location**: `fanhub/backend/src/routes/auth.js` (line 27)
+**Location**: `src/backend/src/routes/auth.js` (line 27)
 **Type**: Security Bug
 
 **Description**:
@@ -172,7 +172,7 @@ if (password.length < 6) {
 ---
 
 ### 8. **Invalid Bcrypt Hash in Seed Data**
-**Location**: `fanhub/backend/src/database/seed.sql` (line 65)
+**Location**: `src/backend/src/database/seed.sql` (line 65)
 **Type**: Authentication Bug
 
 **Description**:
@@ -239,7 +239,7 @@ router.put('/:id', async (req, res, next) => {
 ---
 
 ### 11. **Inconsistent Coding Patterns (Class vs Functional Components)**
-**Location**: `fanhub/frontend/src/pages/` and `fanhub/frontend/src/components/`
+**Location**: `src/frontend/src/pages/` and `src/frontend/src/components/`
 **Type**: Code Style Inconsistency
 
 **Description**:
@@ -263,7 +263,7 @@ class Footer extends Component {
 ---
 
 ### 12. **Four Different Styling Approaches**
-**Location**: `fanhub/frontend/src/`
+**Location**: `src/frontend/src/`
 **Type**: Architecture Inconsistency
 
 **Description**:
@@ -295,7 +295,7 @@ const AboutStyles = () => (<style>{`...`}</style>);
 ---
 
 ### 13. **File Extension Inconsistency (.js vs .jsx)**
-**Location**: `fanhub/frontend/src/`
+**Location**: `src/frontend/src/`
 **Type**: Code Organization
 
 **Description**:
@@ -308,7 +308,7 @@ No clear pattern - appears random.
 ---
 
 ### 14. **Inconsistent Promise Handling (async/await vs .then())**
-**Location**: `fanhub/backend/src/routes/episodes.js`
+**Location**: `src/backend/src/routes/episodes.js`
 **Type**: Code Style Inconsistency
 
 **Description**:
@@ -349,7 +349,7 @@ Different route files import the database connection with different names:
 ---
 
 ### 16. **Inconsistent Variable Naming in Routes**
-**Location**: `fanhub/backend/src/index.js` (lines 23-27)
+**Location**: `src/backend/src/index.js` (lines 23-27)
 **Type**: Code Style
 
 **Description**:
@@ -398,7 +398,7 @@ return res.status(400).json({ error: 'Title is required' }); // Single error
 ---
 
 ### 18. **Exposed Error Details in Production**
-**Location**: `fanhub/backend/src/routes/characters.js` (line 113)
+**Location**: `src/backend/src/routes/characters.js` (line 113)
 **Type**: Security Bug
 
 **Description**:
@@ -433,7 +433,7 @@ const characterResult = await query(
 ---
 
 ### 20. **CORS Wide Open**
-**Location**: `fanhub/backend/src/index.js` (line 13)
+**Location**: `src/backend/src/index.js` (line 13)
 **Type**: Security Configuration
 
 **Description**:
@@ -447,7 +447,7 @@ Should be restricted to specific origins in production.
 ---
 
 ### 21. **Unused Auth Middleware**
-**Location**: `fanhub/backend/src/routes/auth.js` (lines 175-199)
+**Location**: `src/backend/src/routes/auth.js` (lines 175-199)
 **Type**: Implementation Gap
 
 **Description**:
@@ -465,7 +465,7 @@ function authMiddleware(req, res, next) {
 ---
 
 ### 22. **TODO Comments for Missing Auth Features**
-**Location**: `fanhub/backend/src/routes/auth.js` (lines 166-171)
+**Location**: `src/backend/src/routes/auth.js` (lines 166-171)
 **Type**: Implementation Gap
 
 **Description**:
@@ -502,7 +502,7 @@ router.post('/', async (req, res) => {
 ## 🟢 Low Priority / Code Quality Issues
 
 ### 24. **No Request ID for Logging**
-**Location**: `fanhub/backend/src/index.js` (lines 17-20)
+**Location**: `src/backend/src/index.js` (lines 17-20)
 **Type**: Observability Gap
 
 **Description**:
@@ -530,7 +530,7 @@ Makes debugging concurrent requests difficult.
 ---
 
 ### 26. **SQL Injection Risk in Dynamic Query Building**
-**Location**: `fanhub/backend/src/routes/characters.js` (line 38)
+**Location**: `src/backend/src/routes/characters.js` (line 38)
 **Type**: Security Risk (Mitigated)
 
 **Description**:
@@ -548,7 +548,7 @@ The same parameter is referenced twice but only pushed once - this works but is 
 ---
 
 ### 27. **No Database Connection Pool Management**
-**Location**: `fanhub/backend/src/database/connection.js`
+**Location**: `src/backend/src/database/connection.js`
 **Type**: Performance/Scalability
 
 **Description**:
@@ -560,7 +560,7 @@ The same parameter is referenced twice but only pushed once - this works but is 
 ---
 
 ### 28. **Inconsistent Module Exports**
-**Location**: `fanhub/backend/src/database/connection.js` (lines 42-49)
+**Location**: `src/backend/src/database/connection.js` (lines 42-49)
 **Type**: Code Quality
 
 **Description**:
@@ -581,7 +581,7 @@ This is unnecessary and confusing.
 ---
 
 ### 29. **Client Not Released in Transactions**
-**Location**: `fanhub/backend/src/database/connection.js` (lines 35-39)
+**Location**: `src/backend/src/database/connection.js` (lines 35-39)
 **Type**: Resource Leak Risk
 
 **Description**:
@@ -599,7 +599,7 @@ Should use try/finally or provide helper for transactions.
 ---
 
 ### 30. **Date Formatting Function Defined Inside Component**
-**Location**: `fanhub/frontend/src/components/EpisodeList.js` (lines 84-92)
+**Location**: `src/frontend/src/components/EpisodeList.js` (lines 84-92)
 **Type**: Performance
 
 **Description**:
@@ -615,7 +615,7 @@ Should be moved outside component or use `useCallback`.
 ---
 
 ### 31. **Mixed Quote Usage in SQL**
-**Location**: `fanhub/backend/src/database/seed.sql`
+**Location**: `src/backend/src/database/seed.sql`
 **Type**: Code Style
 
 **Description**:
@@ -658,7 +658,7 @@ Should fail loudly in production if JWT_SECRET is not set.
 ---
 
 ### 34. **Footer Links Don't Use React Router**
-**Location**: `fanhub/frontend/src/components/Footer.js` (lines 44-48)
+**Location**: `src/frontend/src/components/Footer.js` (lines 44-48)
 **Type**: Functionality Bug
 
 **Description**:
@@ -673,7 +673,7 @@ This causes full page reloads instead of client-side navigation.
 ---
 
 ### 35. **No Loading States for Quote Like**
-**Location**: `fanhub/frontend/src/pages/Home.jsx` (line 123)
+**Location**: `src/frontend/src/pages/Home.jsx` (line 123)
 **Type**: UX Gap
 
 **Description**:
@@ -731,7 +731,7 @@ Different placeholder secrets could cause confusion.
 ---
 
 ### 39. **No Production Dockerfile**
-**Location**: `fanhub/backend/` and `fanhub/frontend/`
+**Location**: `src/backend/` and `src/frontend/`
 **Type**: Deployment Gap
 
 **Description**:
@@ -748,19 +748,19 @@ No optimized production builds.
 ## 🔧 Missing Features (Documented as TODO)
 
 ### 40. **No Favicon**
-**Location**: `fanhub/frontend/public/index.html` (line 9)
+**Location**: `src/frontend/public/index.html` (line 9)
 
 ### 41. **No Dark Mode**
-**Location**: `fanhub/frontend/src/styles/global.css` (line 43)
+**Location**: `src/frontend/src/styles/global.css` (line 43)
 
 ### 42. **No Responsive Design**
-**Location**: `fanhub/frontend/src/styles/global.css` (line 44)
+**Location**: `src/frontend/src/styles/global.css` (line 44)
 
 ### 43. **No Character Detail Page**
-**Location**: `fanhub/frontend/src/pages/Characters.jsx` (line 137)
+**Location**: `src/frontend/src/pages/Characters.jsx` (line 137)
 
 ### 44. **No Episode Detail Page**
-**Location**: `fanhub/frontend/src/pages/Episodes.js` (line 137)
+**Location**: `src/frontend/src/pages/Episodes.js` (line 137)
 
 ### 45. **No Tests Configured**
 **Location**: Both backend and frontend
