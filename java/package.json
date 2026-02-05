@@ -1,0 +1,16 @@
+{
+  "name": "fanhub-java",
+  "version": "0.1.0",
+  "description": "FanHub Java implementation - Workshop starter with intentional bugs",
+  "scripts": {
+    "start": "docker-compose up",
+    "stop": "docker-compose down",
+    "backend": "cd backend && ./mvnw spring-boot:run",
+    "frontend": "cd frontend && npm start",
+    "install:all": "cd backend && ./mvnw install && cd ../frontend && npm install",
+    "db:reset": "docker-compose down -v && docker-compose up -d db"
+  },
+  "keywords": ["workshop", "spring-boot", "react", "intentional-bugs"],
+  "author": "",
+  "license": "MIT"
+}

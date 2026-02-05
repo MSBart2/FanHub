@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fanhub-java-db
+    environment:
+      POSTGRES_USER: fanhub
+      POSTGRES_PASSWORD: fanhub_dev_password
+      POSTGRES_DB: fanhub
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fanhub"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: fanhub-java-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/fanhub
+      DB_USERNAME: fanhub
+      DB_PASSWORD: fanhub_dev_password
+      JWT_SECRET: dev_secret_change_in_production
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+
+  frontend:
+    build: ./frontend
+    container_name: fanhub-java-frontend
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      REACT_APP_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Maven Wrapper Script - Simplified version for workshop
+
+# This wrapper will use the system Maven if available
+# For a full Maven wrapper, run: mvn wrapper:wrapper
+
+if command -v mvn > /dev/null 2>&1; then
+    mvn "$@"
+else
+    echo "Error: Maven is not installed. Please install Maven 3.6+ or use Docker."
+    echo "Download from: https://maven.apache.org/download.cgi"
+    exit 1
+fi

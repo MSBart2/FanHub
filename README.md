@@ -31,18 +31,20 @@ A generic fan site application for TV shows featuring:
 
 ### 🌐 Multi-Language Support
 
-FanHub is available in **two language implementations** to accommodate different developer preferences:
+FanHub is available in **three language implementations** to accommodate different developer preferences:
 
 | Language | Path | Stack | Status |
 |----------|------|-------|--------|
 | **Node.js** | `node/` | Express + React + PostgreSQL | ✅ Original version |
 | **.NET** | `dotnet/` | ASP.NET Core + Blazor + PostgreSQL | ✅ C# version |
+| **Java** | `java/` | Spring Boot + React + PostgreSQL | ✅ Java version |
 
-Both implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
+All implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
 
 **Filtering GitHub Issues by Language:**
 - Node.js issues: [`is:issue label:lang:node`](../../issues?q=is%3Aissue+label%3Alang%3Anode)
 - .NET issues: [`is:issue label:lang:dotnet`](../../issues?q=is%3Aissue+label%3Alang%3Adotnet)
+- Java issues: [`is:issue label:lang:java`](../../issues?q=is%3Aissue+label%3Alang%3Ajava)
 - By severity: Add `label:severity:critical`, `label:severity:high`, etc.
 
 ### Current (Incomplete) Features
@@ -88,6 +90,16 @@ docker-compose up -d db
 cd Backend && dotnet ef database update && dotnet run
 ```
 Visit http://localhost:5000
+
+### Java / Spring Boot Version
+📖 **[Complete Java Setup Guide →](java/SETUP.md)**
+
+Quick start for Codespaces:
+```bash
+cd java
+npm start
+```
+Visit http://localhost:3002 (frontend) and http://localhost:8080 (backend API)
 
 ### Setup Options Available:
 - ✨ **GitHub Codespaces** (Recommended) - Zero setup required
