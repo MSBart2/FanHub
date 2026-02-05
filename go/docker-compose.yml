@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fanhub-go-db
+    environment:
+      POSTGRES_DB: fanhub
+      POSTGRES_USER: fanhub
+      POSTGRES_PASSWORD: fanhub123
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_go_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./backend/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fanhub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fanhub-go-backend
+    ports:
+      - "8090:8090"
+    environment:
+      PORT: "8090"
+      DATABASE_URL: "postgres://fanhub:fanhub123@db:5432/fanhub?sslmode=disable"
+      JWT_SECRET: "your-secret-key-change-in-production"
+      GIN_MODE: "debug"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fanhub-go-frontend
+    ports:
+      - "3003:3003"
+    environment:
+      REACT_APP_API_URL: "http://localhost:8090"
+      PORT: "3003"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_go_data:
