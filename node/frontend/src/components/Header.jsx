@@ -6,10 +6,11 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderWrapper = styled.header`
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: #0d0d0d;
   color: white;
   padding: 1rem 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  border-bottom: 2px solid #3eaf1a;
 `;
 
 const Nav = styled.nav`
@@ -23,14 +24,12 @@ const Nav = styled.nav`
 const Logo = styled(Link)`
   font-size: 1.8rem;
   font-weight: bold;
-  color: white;
+  color: #3eaf1a;
   text-decoration: none;
-  
+  letter-spacing: 1px;
+
   &:hover {
-    color: #e94560;
-    text-decoration: none;
-  }
-`;
+    color: #5ddb38;
 
 const NavLinks = styled.div`
   display: flex;
@@ -38,30 +37,29 @@ const NavLinks = styled.div`
 `;
 
 const NavLink = styled(Link)`
-  color: ${props => props.$active ? '#e94560' : 'white'};
+  color: ${props => props.$active ? '#3eaf1a' : '#ccc'};
   text-decoration: none;
   font-weight: ${props => props.$active ? 'bold' : 'normal'};
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: all 0.3s ease;
-  
+
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e94560;
-    text-decoration: none;
+    background: rgba(62, 175, 26, 0.15);
+    color: #3eaf1a;
   }
 `;
 
 // Functional component with hooks
 const Header = () => {
   const location = useLocation();
-  
+
   const isActive = (path) => location.pathname === path;
-  
+
   return (
     <HeaderWrapper>
       <Nav>
-        <Logo to="/">FanHub</Logo>
+        <Logo to="/">Breaking Bad Fan Hub</Logo>
         <NavLinks>
           <NavLink to="/" $active={isActive('/')}>Home</NavLink>
           <NavLink to="/characters" $active={isActive('/characters')}>Characters</NavLink>

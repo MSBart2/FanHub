@@ -11,7 +11,7 @@ const Card = styled.div`
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -49,7 +49,7 @@ const CardContent = styled.div`
 
 const CharacterName = styled.h3`
   margin: 0 0 0.5rem 0;
-  color: #1a1a2e;
+  color: #0d0d0d;
   font-size: 1.2rem;
 `;
 
@@ -80,7 +80,7 @@ const MainCharacterBadge = styled.span`
   display: inline-block;
   margin-left: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: #e94560;
+  background: #3eaf1a;
   color: white;
   border-radius: 4px;
   font-size: 0.7rem;
@@ -102,8 +102,8 @@ const CharacterCard = ({ character, onClick }) => {
     <Card onClick={() => onClick && onClick(character)}>
       <ImageWrapper>
         {character.image_url ? (
-          <CharacterImage 
-            src={character.image_url} 
+          <CharacterImage
+            src={character.image_url}
             alt={character.name}
             onError={(e) => {
               e.target.style.display = 'none';

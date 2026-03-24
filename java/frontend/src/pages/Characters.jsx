@@ -20,7 +20,7 @@ const styles = {
   },
   title: {
     fontSize: '2rem',
-    color: '#1a1a2e',
+    color: '#0d0d0d',
     margin: 0,
   },
   filters: {
@@ -88,29 +88,29 @@ class Characters extends React.Component {
   loadCharacters = async () => {
     try {
       this.setState({ loading: true, error: null });
-      
+
       const params = {};
       if (this.state.filter === 'main') {
         params.is_main = 'true';
       } else if (this.state.filter === 'supporting') {
         params.is_main = 'false';
       }
-      
+
       if (this.state.statusFilter !== 'all') {
         params.status = this.state.statusFilter;
       }
-      
+
       if (this.state.searchTerm) {
         params.search = this.state.searchTerm;
       }
-      
+
       const response = await charactersApi.getAll(params);
       this.setState({ characters: response.data, loading: false });
     } catch (err) {
       console.error('Failed to load characters:', err);
-      this.setState({ 
+      this.setState({
         error: 'Failed to load characters. Is the backend running?',
-        loading: false 
+        loading: false
       });
     }
   };
@@ -155,8 +155,8 @@ class Characters extends React.Component {
               onChange={this.handleSearchChange}
               onKeyPress={this.handleSearchSubmit}
             />
-            <select 
-              style={styles.select} 
+            <select
+              style={styles.select}
               value={filter}
               onChange={this.handleFilterChange}
             >

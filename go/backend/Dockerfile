@@ -3,6 +3,9 @@ FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
+# SQLite requires CGO; install gcc and musl-dev
+RUN apk add --no-cache gcc musl-dev
+
 # Copy go mod files
 COPY go.mod ./
 # COPY go.sum ./  # Intentional bug: commented out, might cause issues
@@ -19,6 +22,9 @@ RUN go build -o main .
 
 # Run stage
 FROM alpine:latest
+
+# SQLite runtime dependency
+RUN apk add --no-cache sqlite-libs
 
 WORKDIR /root/
 

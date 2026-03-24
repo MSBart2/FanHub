@@ -7,18 +7,19 @@ import { showsApi, quotesApi } from '../services/api';
 import QuoteDisplay from '../components/QuoteDisplay';
 
 const HeroSection = styled.section`
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d2100 100%);
   color: white;
   padding: 4rem 2rem;
   text-align: center;
   border-radius: 12px;
   margin-bottom: 2rem;
+  border: 1px solid #3eaf1a;
 `;
 
 const Title = styled.h1`
   font-size: 3rem;
   margin-bottom: 1rem;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -37,10 +38,10 @@ const Section = styled.section`
 
 const SectionTitle = styled.h2`
   font-size: 1.8rem;
-  color: #1a1a2e;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 3px solid #e94560;
+  border-bottom: 3px solid #3eaf1a;
   display: inline-block;
 `;
 
@@ -62,7 +63,7 @@ const StatCard = styled.div`
 const StatNumber = styled.div`
   font-size: 2.5rem;
   font-weight: bold;
-  color: #e94560;
+  color: #3eaf1a;
 `;
 
 const StatLabel = styled.div`
@@ -163,8 +164,8 @@ function Home() {
       {randomQuote && (
         <Section>
           <SectionTitle>Quote of the Day</SectionTitle>
-          <QuoteDisplay 
-            quote={randomQuote} 
+          <QuoteDisplay
+            quote={randomQuote}
             onLike={handleQuoteLike}
           />
         </Section>
@@ -172,9 +173,9 @@ function Home() {
 
       <Section>
         <SectionTitle>About the Show</SectionTitle>
-        <div style={{ 
-          background: 'white', 
-          padding: '1.5rem', 
+        <div style={{
+          background: 'white',
+          padding: '1.5rem',
           borderRadius: '12px',
           boxShadow: '0 2px 10px rgba(0,0,0,0.08)'
         }}>

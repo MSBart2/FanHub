@@ -2,48 +2,48 @@
 // NOTE: This file uses .js extension while others use .jsx - inconsistent!
 // Also mixes different patterns
 
-import React, { useState, useEffect, useCallback } from 'react';
-import EpisodeList from '../components/EpisodeList';
-import { episodesApi } from '../services/api';
+import React, { useState, useEffect, useCallback } from "react";
+import EpisodeList from "../components/EpisodeList";
+import { episodesApi } from "../services/api";
 
 // Using CSS-in-JS object but NOT styled-components
 const pageStyles = {
   container: {
-    padding: '1rem 0',
+    padding: "1rem 0",
   },
   header: {
-    marginBottom: '2rem',
+    marginBottom: "2rem",
   },
   title: {
-    fontSize: '2rem',
-    color: '#1a1a2e',
-    marginBottom: '1rem',
+    fontSize: "2rem",
+    color: "#0d0d0d",
+    marginBottom: "1rem",
   },
   filterBar: {
-    display: 'flex',
-    gap: '1rem',
-    flexWrap: 'wrap',
-    padding: '1rem',
-    background: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+    display: "flex",
+    gap: "1rem",
+    flexWrap: "wrap",
+    padding: "1rem",
+    background: "white",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
   },
   seasonButton: {
-    padding: '0.5rem 1.5rem',
-    border: 'none',
-    borderRadius: '20px',
-    cursor: 'pointer',
-    fontSize: '0.9rem',
-    fontWeight: '500',
-    transition: 'all 0.2s ease',
+    padding: "0.5rem 1.5rem",
+    border: "none",
+    borderRadius: "20px",
+    cursor: "pointer",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+    transition: "all 0.2s ease",
   },
   activeButton: {
-    background: '#e94560',
-    color: 'white',
+    background: "#3eaf1a",
+    color: "white",
   },
   inactiveButton: {
-    background: '#f0f0f0',
-    color: '#333',
+    background: "#f0f0f0",
+    color: "#333",
   },
 };
 
@@ -61,7 +61,7 @@ const Episodes = () => {
   // Extract unique seasons from episodes
   const extractSeasons = useCallback((episodeList) => {
     const seasonMap = new Map();
-    episodeList.forEach(ep => {
+    episodeList.forEach((ep) => {
       if (ep.season_number && !seasonMap.has(ep.season_number)) {
         seasonMap.set(ep.season_number, {
           number: ep.season_number,
@@ -73,47 +73,50 @@ const Episodes = () => {
   }, []);
 
   // Load episodes
-  const loadEpisodes = useCallback(async (seasonId = null) => {
-    // Attempt to use cache (but cache doesn't account for seasonId!)
-    const now = Date.now();
-    if (episodeCache && cacheTimestamp && (now - cacheTimestamp) < 30000) {
-      // BUG: Using cached data regardless of which season was requested
-      setEpisodes(episodeCache);
-      setLoading(false);
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const params = {};
-      if (seasonId) {
-        params.season_id = seasonId;
+  const loadEpisodes = useCallback(
+    async (seasonId = null) => {
+      // Attempt to use cache (but cache doesn't account for seasonId!)
+      const now = Date.now();
+      if (episodeCache && cacheTimestamp && now - cacheTimestamp < 30000) {
+        // BUG: Using cached data regardless of which season was requested
+        setEpisodes(episodeCache);
+        setLoading(false);
+        return;
       }
-      
-      const response = await episodesApi.getAll(params);
-      
-      // Handle different response formats (backend inconsistency!)
-      const data = response.data.data || response.data;
-      
-      // Update cache (but doesn't track which season this is for!)
-      episodeCache = data;
-      cacheTimestamp = Date.now();
-      
-      setEpisodes(data);
-      
-      // Only extract seasons on initial load
-      if (!seasonId && data.length > 0) {
-        setSeasons(extractSeasons(data));
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const params = {};
+        if (seasonId) {
+          params.season_id = seasonId;
+        }
+
+        const response = await episodesApi.getAll(params);
+
+        // Handle different response formats (backend inconsistency!)
+        const data = response.data.data || response.data;
+
+        // Update cache (but doesn't track which season this is for!)
+        episodeCache = data;
+        cacheTimestamp = Date.now();
+
+        setEpisodes(data);
+
+        // Only extract seasons on initial load
+        if (!seasonId && data.length > 0) {
+          setSeasons(extractSeasons(data));
+        }
+      } catch (err) {
+        console.error("Failed to load episodes:", err);
+        setError("Failed to load episodes. Is the backend running?");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Failed to load episodes:', err);
-      setError('Failed to load episodes. Is the backend running?');
-    } finally {
-      setLoading(false);
-    }
-  }, [extractSeasons]);
+    },
+    [extractSeasons],
+  );
 
   // Initial load
   useEffect(() => {
@@ -135,26 +138,30 @@ const Episodes = () => {
   // Handle episode click
   const handleEpisodeClick = (episode) => {
     // TODO: Navigate to episode detail page
-    console.log('Clicked episode:', episode);
-    alert(`Episode detail page not implemented yet!\n\nEpisode: ${episode.title}`);
+    console.log("Clicked episode:", episode);
+    alert(
+      `Episode detail page not implemented yet!\n\nEpisode: ${episode.title}`,
+    );
   };
 
   // Filter episodes by selected season (client-side backup)
   const filteredEpisodes = selectedSeason
-    ? episodes.filter(ep => ep.season_id === selectedSeason)
+    ? episodes.filter((ep) => ep.season_id === selectedSeason)
     : episodes;
 
   return (
     <div style={pageStyles.container}>
       <div style={pageStyles.header}>
         <h1 style={pageStyles.title}>Episodes</h1>
-        
+
         {seasons.length > 0 && (
           <div style={pageStyles.filterBar}>
             <button
               style={{
                 ...pageStyles.seasonButton,
-                ...(selectedSeason === null ? pageStyles.activeButton : pageStyles.inactiveButton),
+                ...(selectedSeason === null
+                  ? pageStyles.activeButton
+                  : pageStyles.inactiveButton),
               }}
               onClick={() => handleSeasonClick(null)}
             >
@@ -165,7 +172,9 @@ const Episodes = () => {
                 key={season.number}
                 style={{
                   ...pageStyles.seasonButton,
-                  ...(selectedSeason === season.id ? pageStyles.activeButton : pageStyles.inactiveButton),
+                  ...(selectedSeason === season.id
+                    ? pageStyles.activeButton
+                    : pageStyles.inactiveButton),
                 }}
                 onClick={() => handleSeasonClick(season)}
               >
@@ -177,23 +186,25 @@ const Episodes = () => {
       </div>
 
       {error && (
-        <div style={{
-          background: '#ffebee',
-          color: '#c62828',
-          padding: '1rem',
-          borderRadius: '8px',
-          marginBottom: '1rem',
-        }}>
+        <div
+          style={{
+            background: "#ffebee",
+            color: "#c62828",
+            padding: "1rem",
+            borderRadius: "8px",
+            marginBottom: "1rem",
+          }}
+        >
           {error}
         </div>
       )}
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#666' }}>
+        <div style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
           Loading episodes...
         </div>
       ) : (
-        <EpisodeList 
+        <EpisodeList
           episodes={filteredEpisodes}
           onEpisodeClick={handleEpisodeClick}
         />

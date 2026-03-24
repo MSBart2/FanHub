@@ -1,114 +1,114 @@
--- FanHub Database Schema
+-- FanHub Database Schema — SQLite
 -- Generic schema for any TV show fan site
 
 -- Shows table
 CREATE TABLE IF NOT EXISTS shows (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
     description TEXT,
-    genre VARCHAR(100),
+    genre TEXT,
     start_year INTEGER,
     end_year INTEGER,
-    network VARCHAR(100),
+    network TEXT,
     poster_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Seasons table
 CREATE TABLE IF NOT EXISTS seasons (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
     season_number INTEGER NOT NULL,
-    title VARCHAR(255),
+    title TEXT,
     episode_count INTEGER,
-    air_date DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    air_date TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Episodes table
 CREATE TABLE IF NOT EXISTS episodes (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
     season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
     episode_number INTEGER NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    title TEXT NOT NULL,
     description TEXT,
-    air_date DATE,
+    air_date TEXT,
     runtime_minutes INTEGER,
-    director VARCHAR(255),
-    writer VARCHAR(255),
+    director TEXT,
+    writer TEXT,
     thumbnail_url TEXT,
-    rating DECIMAL(3,1),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    rating REAL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Characters table
 CREATE TABLE IF NOT EXISTS characters (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL,
-    actor_name VARCHAR(255),
+    name TEXT NOT NULL,
+    actor_name TEXT,
     bio TEXT,
     image_url TEXT,
-    is_main_character BOOLEAN DEFAULT false,
+    is_main_character INTEGER DEFAULT 0,
     first_appearance INTEGER REFERENCES episodes(id),
-    status VARCHAR(50), -- alive, deceased, unknown
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    status TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Character appearances in episodes (many-to-many)
 CREATE TABLE IF NOT EXISTS character_episodes (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     character_id INTEGER REFERENCES characters(id) ON DELETE CASCADE,
     episode_id INTEGER REFERENCES episodes(id) ON DELETE CASCADE,
-    is_featured BOOLEAN DEFAULT false,
+    is_featured INTEGER DEFAULT 0,
     UNIQUE(character_id, episode_id)
 );
 
 -- Quotes table
 CREATE TABLE IF NOT EXISTS quotes (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
     character_id INTEGER REFERENCES characters(id) ON DELETE SET NULL,
     episode_id INTEGER REFERENCES episodes(id) ON DELETE SET NULL,
     quote_text TEXT NOT NULL,
     context TEXT,
-    is_famous BOOLEAN DEFAULT false,
+    is_famous INTEGER DEFAULT 0,
     likes_count INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Users table (for future auth)
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    display_name VARCHAR(255),
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    username TEXT UNIQUE NOT NULL,
+    display_name TEXT,
     avatar_url TEXT,
-    role VARCHAR(50) DEFAULT 'user', -- user, admin, moderator
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    role TEXT DEFAULT 'user',
+    is_active INTEGER DEFAULT 1,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- User favorites (for future feature)
 CREATE TABLE IF NOT EXISTS user_favorites (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     character_id INTEGER REFERENCES characters(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, character_id)
 );
 
--- Indexes for performance
-CREATE INDEX idx_characters_show ON characters(show_id);
-CREATE INDEX idx_episodes_show ON episodes(show_id);
-CREATE INDEX idx_episodes_season ON episodes(season_id);
-CREATE INDEX idx_quotes_character ON quotes(character_id);
-CREATE INDEX idx_quotes_episode ON quotes(episode_id);
-CREATE INDEX idx_character_episodes_character ON character_episodes(character_id);
-CREATE INDEX idx_character_episodes_episode ON character_episodes(episode_id);
+-- Indexes for performance (CREATE INDEX IF NOT EXISTS is supported in SQLite 3.3.7+)
+CREATE INDEX IF NOT EXISTS idx_characters_show ON characters(show_id);
+CREATE INDEX IF NOT EXISTS idx_episodes_show ON episodes(show_id);
+CREATE INDEX IF NOT EXISTS idx_episodes_season ON episodes(season_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_character ON quotes(character_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_episode ON quotes(episode_id);
+CREATE INDEX IF NOT EXISTS idx_character_episodes_character ON character_episodes(character_id);
+CREATE INDEX IF NOT EXISTS idx_character_episodes_episode ON character_episodes(episode_id);
