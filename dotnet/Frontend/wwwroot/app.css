@@ -1,15 +1,27 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #fafafa;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
 }
 
 a, .btn-link {
-    color: #006bb7;
+    color: #2a8c2a;
+}
+
+a:hover {
+    color: #62d962;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #2a8c2a;
+    border-color: #237a23;
+}
+
+.btn-primary:hover {
+    background-color: #237a23;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

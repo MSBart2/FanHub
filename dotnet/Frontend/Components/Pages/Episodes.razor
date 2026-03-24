@@ -5,8 +5,12 @@
 <PageTitle>Episodes - FanHub</PageTitle>
 
 <div class="episodes-page">
-    <h1>Breaking Bad Episodes</h1>
-    
+    <div class="page-header">
+        <div class="page-header-label">FanHub</div>
+        <h1>Episodes</h1>
+        <p class="page-subtitle">Season guide for Breaking Bad</p>
+    </div>
+
     <div class="filters">
         <label>Filter by Season:</label>
         <select @onchange="OnSeasonChanged">
@@ -18,7 +22,7 @@
             <option value="5">Season 5</option>
         </select>
     </div>
-    
+
     @if (isLoading)
     {
         <p>Loading episodes...</p>
@@ -42,56 +46,56 @@
 
 @code {
     private Episode[]? episodes;
-    private Episode[]? cachedEpisodes;  // BUG: Cache without considering season filter!
+    private Episode[]? cachedEpisodes; // BUG: Cache without considering season filter!
     private bool isLoading = true;
     private int? selectedSeason;
-    
+
     protected override async Task OnInitializedAsync()
     {
         await LoadEpisodes();
     }
-    
+
     private async Task OnSeasonChanged(ChangeEventArgs e)
     {
         // BUG: StateHasChanged before async work
         StateHasChanged();
-        
+
         var value = e.Value?.ToString();
         selectedSeason = string.IsNullOrEmpty(value) ? null : int.Parse(value);
-        
+
         await LoadEpisodes();
-        
+
         // BUG: StateHasChanged after async (redundant)
         StateHasChanged();
     }
-    
+
     private async Task LoadEpisodes()
     {
         isLoading = true;
-        
+
         // BUG: Cache ignores season filter! (Same as Node.js bug)
         if (cachedEpisodes != null)
         {
             episodes = cachedEpisodes;
             isLoading = false;
-            return;  // Returns ALL episodes even if season filter selected!
+            return; // Returns ALL episodes even if season filter selected!
         }
-        
+
         try
         {
-            var url = "http://localhost:5000/api/episodes";
-            
+            var url = "api/episodes";
+
             if (selectedSeason.HasValue)
             {
                 // BUG: Wrong query parameter name (should match backend)
                 url += $"?season={selectedSeason.Value}";
             }
-            
+
             var response = await Http.GetFromJsonAsync<EpisodeResponse>(url);
-            
+
             // BUG: Backend returns wrapped response, but we're not handling it correctly
             episodes = response?.Data;
-            
+
             // BUG: Caching ALL episodes regardless of filter
             cachedEpisodes = episodes;
         }
@@ -104,7 +108,7 @@
             isLoading = false;
         }
     }
-    
+
     // BUG: Response model doesn't match backend inconsistency
     // Episodes controller returns { success, count, data }
     // But other controllers return raw arrays
@@ -114,7 +118,7 @@
         public int Count { get; set; }
         public Episode[] Data { get; set; }
     }
-    
+
     public class Episode
     {
         public int Id { get; set; }
@@ -128,34 +132,109 @@
 
 <style>
     .episodes-page {
-        padding: 2rem;
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
     }
-    
-    .filters {
-        margin-bottom: 2rem;
+
+    .page-header {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        color: white;
+        padding: 3rem 2rem 2.5rem;
+        margin: -1.1rem -1rem 2rem;
+        border-bottom: 3px solid #62d962;
     }
-    
-    select {
-        padding: 0.5rem;
+
+    .page-header-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: #62d962;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .page-header h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 900;
+        margin: 0 0 0.5rem;
+        color: #fff;
+    }
+
+    .page-subtitle {
+        color: #aaa;
+        margin: 0;
         font-size: 1rem;
     }
-    
+
+    .filters {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .filters label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+    }
+
+    select {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #62d962;
+        box-shadow: 0 0 0 2px rgba(98, 217, 98, 0.2);
+    }
+
     .episode-list {
         display: flex;
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .episode-item {
-        border: 1px solid #ddd;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #62d962;
         padding: 1.5rem;
-        border-radius: 8px;
+        border-radius: 4px;
+        background: #fff;
+        transition: box-shadow 0.15s;
     }
-    
+
+    .episode-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .episode-item h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0 0 0.35rem;
+    }
+
     .air-date {
-        color: #888;
+        color: #62d962;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.5rem;
+    }
+
+    .episode-item p:last-child {
+        color: #666;
         font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
     }
 </style>

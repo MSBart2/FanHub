@@ -5,8 +5,12 @@
 <PageTitle>Characters - FanHub</PageTitle>
 
 <div class="characters-page">
-    <h1>Breaking Bad Characters</h1>
-    
+    <div class="page-header">
+        <div class="page-header-label">FanHub</div>
+        <h1>Characters</h1>
+        <p class="page-subtitle">The cast of Breaking Bad</p>
+    </div>
+
     @* BUG: No null check before foreach *@
     @if (characters == null)
     {
@@ -19,23 +23,38 @@
             {
                 @* BUG: Not using a component, duplicating markup *@
                 <div class="character-card" @onclick="() => SelectCharacter(character)">
-                    <h3>@character.Name</h3>
-                    <p class="actor">@character.ActorName</p>
-                    @* BUG: No null check on Bio before calling Substring *@
-                    <p class="bio">@character.Bio.Substring(0, 100)...</p>
-                    <span class="status">@character.Status</span>
+                    @if (!string.IsNullOrEmpty(character.ImageUrl))
+                    {
+                        <img src="@character.ImageUrl" alt="@character.Name" class="character-img" />
+                    }
+                    <div class="character-card-body">
+                        <h3>@character.Name</h3>
+                        <p class="actor">@character.ActorName</p>
+                        @* BUG: No null check on Bio before calling Substring — crashes if Bio < 100 chars *@
+                        <p class="bio">@(character.Bio?.Length > 100 ? character.Bio.Substring(0, 100) : character.Bio)...</p>
+                        <span class="status">@character.Status</span>
+                    </div>
                 </div>
             }
         </div>
     }
-    
+
     @if (selectedCharacter != null)
     {
         <div class="character-detail">
-            <h2>@selectedCharacter.Name</h2>
-            <p>Played by: @selectedCharacter.ActorName</p>
-            <p>@selectedCharacter.Bio</p>
-            <button @onclick="CloseDetail">Close</button>
+            @if (!string.IsNullOrEmpty(selectedCharacter.ImageUrl))
+            {
+                <img src="@selectedCharacter.ImageUrl" alt="@selectedCharacter.Name" class="detail-img" />
+            }
+            <div class="detail-body">
+                <h2>@selectedCharacter.Name</h2>
+                <p class="actor">@selectedCharacter.ActorName</p>
+                <p>@selectedCharacter.Bio</p>
+                <span class="status">@selectedCharacter.Status</span>
+                <div>
+                    <button @onclick="CloseDetail">Close</button>
+                </div>
+            </div>
         </div>
     }
 </div>
@@ -43,25 +62,25 @@
 @code {
     private Character[]? characters;
     private Character? selectedCharacter;
-    
+
     // BUG: Event not unsubscribed - memory leak!
     private static event EventHandler<Character>? OnCharacterSelected;
-    
+
     protected override async Task OnInitializedAsync()
     {
         // BUG: Subscribing to static event without cleanup
         OnCharacterSelected += HandleCharacterSelected;
-        
+
         await LoadCharacters();
     }
-    
+
     private async Task LoadCharacters()
     {
         try
         {
             // BUG: Hardcoded URL
-            characters = await Http.GetFromJsonAsync<Character[]>("http://localhost:5000/api/characters");
-            
+            characters = await Http.GetFromJsonAsync<Character[]>("api/characters");
+
             // BUG: Will show duplicate Jesse Pinkman from backend bug!
         }
         catch (Exception ex)
@@ -70,37 +89,37 @@
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
-    
+
     private void SelectCharacter(Character character)
     {
         selectedCharacter = character;
-        
+
         // BUG: Raising event but never cleaning up subscribers
         OnCharacterSelected?.Invoke(this, character);
-        
+
         // BUG: Unnecessary StateHasChanged
         StateHasChanged();
     }
-    
+
     private void CloseDetail()
     {
         selectedCharacter = null;
     }
-    
+
     // BUG: NOT implementing IDisposable!
     // Should unsubscribe from OnCharacterSelected
     // Correct implementation:
     // public void Dispose()
     // {
-    //     OnCharacterSelected -= HandleCharacterSelected;
+    // OnCharacterSelected -= HandleCharacterSelected;
     // }
-    
+
     private void HandleCharacterSelected(object? sender, Character character)
     {
         // BUG: This will cause multiple components to react
         Console.WriteLine($"Character selected: {character.Name}");
     }
-    
+
     public class Character
     {
         public int Id { get; set; }
@@ -108,46 +127,170 @@
         public string ActorName { get; set; }
         public string Bio { get; set; }
         public string Status { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }
 
 <style>
     /* BUG: Global styles instead of scoped CSS */
     .characters-page {
-        padding: 2rem;
+        padding: 0;
+        max-width: 1100px;
+        margin: 0 auto;
     }
-    
+
+    .page-header {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        color: white;
+        padding: 3rem 2rem 2.5rem;
+        margin: -2rem -2rem 2rem;
+        border-bottom: 3px solid #62d962;
+    }
+
+    .page-header-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: #62d962;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .page-header h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 900;
+        margin: 0 0 0.5rem;
+        color: #fff;
+    }
+
+    .page-subtitle {
+        color: #aaa;
+        margin: 0;
+        font-size: 1rem;
+    }
+
     .character-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.25rem;
+        padding: 0 2rem 2rem;
     }
-    
+
     .character-card {
-        border: 1px solid #ddd;
-        padding: 1rem;
-        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        border-top: 3px solid #62d962;
+        border-radius: 4px;
         cursor: pointer;
+        background: #fff;
+        overflow: hidden;
+        transition: box-shadow 0.2s, transform 0.1s;
     }
-    
+
+    .character-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+    }
+
+    .character-card-body {
+        padding: 1.25rem 1.5rem 1.5rem;
+    }
+
+    .character-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0 0 0.25rem;
+    }
+
     .character-card:hover {
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
     }
-    
+
+    .actor {
+        font-size: 0.85rem;
+        color: #62d962;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+
     .bio {
         color: #666;
         font-size: 0.9rem;
+        line-height: 1.5;
     }
-    
+
+    .status {
+        display: inline-block;
+        margin-top: 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2em 0.6em;
+        border-radius: 3px;
+        background: #f0f0f0;
+        color: #555;
+    }
+
     .character-detail {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        border-radius: 4px;
+        border-top: 4px solid #62d962;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
         z-index: 1000;
+        max-width: 560px;
+        width: 90%;
+        overflow: hidden;
+        display: flex;
+        gap: 0;
+    }
+
+    .detail-img {
+        width: 180px;
+        min-height: 100%;
+        object-fit: cover;
+        object-position: top;
+        flex-shrink: 0;
+    }
+
+    .detail-body {
+        padding: 2rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .character-detail h2 {
+        font-weight: 900;
+        margin-bottom: 0.15rem;
+        font-size: 1.3rem;
+    }
+
+    .character-detail button {
+        margin-top: 1.5rem;
+        background: #0f0f0f;
+        color: #62d962;
+        border: 1px solid #62d962;
+        padding: 0.5rem 1.5rem;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        transition: background 0.15s;
+    }
+
+    .character-detail button:hover {
+        background: #1a1a1a;
     }
 </style>

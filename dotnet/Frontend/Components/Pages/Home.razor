@@ -1,0 +1,261 @@
+@page "/"
+
+<PageTitle>FanHub - Breaking Bad</PageTitle>
+
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-logo">
+            <span class="logo-fan">Fan</span><span class="logo-hub">Hub</span>
+        </div>
+        <div class="hero-show-title">
+            <span class="element-tag">Br</span>eaking
+            <span class="element-tag">Ba</span>d
+        </div>
+        <p class="hero-tagline">I am the one who knocks.</p>
+        <div class="hero-actions">
+            <a href="/characters" class="btn-hero">Meet the Characters</a>
+            <a href="/episodes" class="btn-hero btn-hero-secondary">Browse Episodes</a>
+        </div>
+    </div>
+</div>
+
+<div class="home-content">
+    <section class="show-summary">
+        <div class="summary-card">
+            <div class="summary-stat">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Seasons</span>
+            </div>
+            <div class="summary-stat">
+                <span class="stat-number">62</span>
+                <span class="stat-label">Episodes</span>
+            </div>
+            <div class="summary-stat">
+                <span class="stat-number">2008</span>
+                <span class="stat-label">Premiered</span>
+            </div>
+            <div class="summary-stat">
+                <span class="stat-number">AMC</span>
+                <span class="stat-label">Network</span>
+            </div>
+        </div>
+        <p class="show-description">
+            A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing
+            and selling methamphetamine with a former student to secure his family's future.
+            What begins as a desperate act of survival transforms into something far darker.
+        </p>
+    </section>
+
+    <section class="nav-cards">
+        <a href="/characters" class="nav-card">
+            <div class="nav-card-icon">⚗️</div>
+            <h2>Characters</h2>
+            <p>Walter White. Jesse Pinkman. Saul Goodman. Explore the cast of Breaking Bad — including the duplicate
+                Jesse Pinkman bug.</p>
+                <span class="nav-card-cta">View Characters →</span>
+            </a>
+            <a href="/episodes" class="nav-card">
+                <div class="nav-card-icon">📺</div>
+                <h2>Episodes</h2>
+                <p>From the Pilot to Felina — browse the episodes that defined prestige television.</p>
+                <span class="nav-card-cta">View Episodes →</span>
+            </a>
+        </section>
+    </div>
+
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1f0d 100%);
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            margin: -1rem -1rem 0;
+        }
+
+        .hero-logo {
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .logo-fan {
+            color: #fff;
+            font-weight: 300;
+        }
+
+        .logo-hub {
+            color: #62d962;
+            font-weight: 700;
+        }
+
+        .hero-show-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .element-tag {
+            display: inline-block;
+            background: #62d962;
+            color: #0a0a0a;
+            font-size: 0.5em;
+            font-weight: 900;
+            padding: 0.05em 0.2em;
+            vertical-align: super;
+            line-height: 1;
+            border-radius: 2px;
+            margin-right: 0.05em;
+        }
+
+        .hero-tagline {
+            font-size: 1.4rem;
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero {
+            display: inline-block;
+            background: #62d962;
+            color: #0a0a0a;
+            text-decoration: none;
+            padding: 0.85rem 2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 3px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-hero:hover {
+            background: #80e880;
+            transform: translateY(-1px);
+            color: #0a0a0a;
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            color: #62d962;
+            border: 2px solid #62d962;
+        }
+
+        .btn-hero-secondary:hover {
+            background: rgba(98, 217, 98, 0.1);
+            color: #62d962;
+        }
+
+        .home-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .summary-card {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            background: #f8f8f8;
+            border-left: 4px solid #62d962;
+            padding: 2rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .show-description {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .nav-card {
+            display: block;
+            text-decoration: none;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-top: 3px solid #62d962;
+            border-radius: 4px;
+            padding: 2rem;
+            transition: box-shadow 0.2s, transform 0.1s;
+        }
+
+        .nav-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .nav-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .nav-card-cta {
+            font-weight: 700;
+            color: #62d962;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>

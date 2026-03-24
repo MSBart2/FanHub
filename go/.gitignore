@@ -1,0 +1,51 @@
+# Go binaries and build output
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+out/
+
+# Test binaries and coverage
+*.test
+*.out
+coverage/
+TestResults/
+
+# Go workspace
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Frontend (Node/React)
+node_modules/
+build/
+.next/
+.cache/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker
+.docker/

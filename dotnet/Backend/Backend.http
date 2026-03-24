@@ -1,6 +1,52 @@
 @Backend_HostAddress = http://localhost:5265
 
-GET {{Backend_HostAddress}}/weatherforecast/
+### Get all shows
+GET {{Backend_HostAddress}}/api/shows
+Accept: application/json
+
+###
+
+### Get all characters
+GET {{Backend_HostAddress}}/api/characters
+Accept: application/json
+
+###
+
+### Get a single character (BUG: returns 500 if id not found)
+GET {{Backend_HostAddress}}/api/characters/1
+Accept: application/json
+
+###
+
+### Create a character (BUG: returns 200 instead of 201)
+POST {{Backend_HostAddress}}/api/characters
+Content-Type: application/json
+
+{
+  "name": "Walter White",
+  "actorName": "Bryan Cranston",
+  "bio": "A high school chemistry teacher turned methamphetamine producer.",
+  "isMainCharacter": true,
+  "status": "Deceased",
+  "showId": 1
+}
+
+###
+
+### Get all episodes
+GET {{Backend_HostAddress}}/api/episodes
+Accept: application/json
+
+###
+
+### Get all quotes
+GET {{Backend_HostAddress}}/api/quotes
+Accept: application/json
+
+###
+
+### OpenAPI spec (only available in Development)
+GET {{Backend_HostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###

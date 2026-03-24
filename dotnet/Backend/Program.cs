@@ -10,7 +10,7 @@ builder.Services.AddOpenApi();
 // BUG: Still hardcoded here instead of using configuration!
 // Should be: builder.Configuration.GetConnectionString("DefaultConnection")
 builder.Services.AddDbContext<FanHubContext>(options =>
-    options.UseNpgsql("Host=localhost;Database=fanhub;Username=postgres;Password=postgres"));
+    options.UseSqlite("Data Source=fanhub.db"));
 
 // BUG: CORS wide open for all origins - security issue!
 builder.Services.AddCors(options =>

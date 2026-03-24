@@ -10,9 +10,10 @@ public class Character
     public string Bio { get; set; }
     public bool IsMainCharacter { get; set; }
     public string Status { get; set; }  // BUG: Should be an enum, not a string
-    
+    public string? ImageUrl { get; set; }
+
     // BUG: Navigation property without virtual keyword (lazy loading won't work)
     public Show Show { get; set; }
-    
+
     // BUG: Missing navigation properties for Quotes, Episodes
 }
