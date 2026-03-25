@@ -156,22 +156,22 @@ public static class SeedData
         // BUG: DUPLICATE JESSE PINKMAN! (Same as Node.js version bug)
         var characters = new[]
         {
-            new Character { ShowId = show.Id, Name = "Walter White",         ActorName = "Bryan Cranston",       Bio = "A mild-mannered high school chemistry teacher who transforms into a ruthless methamphetamine manufacturer known as \"Heisenberg\". His diagnosis of inoperable lung cancer sets the entire story in motion.", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Walter White"] },
-            new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and small-time meth dealer turned manufacturing partner. Jesse struggles with guilt, addiction, and his own moral code throughout the series.", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
-            new Character { ShowId = show.Id, Name = "Skyler White",         ActorName = "Anna Gunn",            Bio = "Walter's pregnant wife and mother of Walt Jr. A meticulous bookkeeper who grows increasingly suspicious of Walt's activities before becoming an unwilling accomplice in money laundering.", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Skyler White"] },
-            new Character { ShowId = show.Id, Name = "Hank Schrader",        ActorName = "Dean Norris",          Bio = "Walter's boisterous brother-in-law and DEA agent whose investigation of Heisenberg leads him ever closer to the truth. Killed by Jack Welker's gang in the New Mexico desert.", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Hank Schrader"] },
+            new Character { ShowId = show.Id, Name = "Walter White",         ActorName = "Bryan Cranston",       Bio = "A mild-mannered high school chemistry teacher who transforms into a ruthless methamphetamine manufacturer known as \"Heisenberg\". His diagnosis of inoperable lung cancer sets the entire story in motion.", Tagline = "I am the danger", CharacterType = "Antihero,Villain", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Walter White"] },
+            new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and small-time meth dealer turned manufacturing partner. Jesse struggles with guilt, addiction, and his own moral code throughout the series.", Tagline = "Yeah, science!", CharacterType = "Antihero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
+            new Character { ShowId = show.Id, Name = "Skyler White",         ActorName = "Anna Gunn",            Bio = "Walter's pregnant wife and mother of Walt Jr. A meticulous bookkeeper who grows increasingly suspicious of Walt's activities before becoming an unwilling accomplice in money laundering.", Tagline = "The collateral damage of Walt's ambition", CharacterType = "Hero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Skyler White"] },
+            new Character { ShowId = show.Id, Name = "Hank Schrader",        ActorName = "Dean Norris",          Bio = "Walter's boisterous brother-in-law and DEA agent whose investigation of Heisenberg leads him ever closer to the truth. Killed by Jack Welker's gang in the New Mexico desert.", Tagline = "A man with principles and a bouncer's heart", CharacterType = "Hero", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Hank Schrader"] },
             // BUG: DUPLICATE JESSE PINKMAN - Same as Node.js seed data bug!
-            new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and partner in the methamphetamine business.", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
-            new Character { ShowId = show.Id, Name = "Saul Goodman",         ActorName = "Bob Odenkirk",         Bio = "Flamboyant criminal lawyer Jimmy McGill who operates under the alias Saul Goodman. Provides legal counsel and criminal connections to Walt and Jesse, eventually fleeing to Omaha as 'Gene Takavic'.", IsMainCharacter = false, Status = "alive",    ImageUrl = CharacterImages["Saul Goodman"] },
-            new Character { ShowId = show.Id, Name = "Gustavo Fring",        ActorName = "Giancarlo Esposito",   Bio = "The polite, meticulous owner of the Los Pollos Hermanos fast food chain who secretly operates a massive methamphetamine distribution network. His composed exterior masks a calculating and ruthless cartel operator.", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Gustavo Fring"] },
-            new Character { ShowId = show.Id, Name = "Mike Ehrmantraut",     ActorName = "Jonathan Banks",       Bio = "Gus Fring's fixer and enforcer — a former Philadelphia cop with a strict moral code and quiet competence. Becomes a reluctant partner to Walt and Jesse. Shot by Walt in a petulant rage.", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Mike Ehrmantraut"] },
-            new Character { ShowId = show.Id, Name = "Marie Schrader",       ActorName = "Betsy Brandt",         Bio = "Skyler's sister and Hank's wife. A radiologic technologist with a compulsive shoplifting habit. Marie becomes Hank's steadfast supporter through his recovery and ultimately his crusade against Heisenberg.", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Marie Schrader"] },
-            new Character { ShowId = show.Id, Name = "Walter White Jr.",     ActorName = "RJ Mitte",             Bio = "Walt and Skyler's teenage son, who has cerebral palsy and goes by the nickname Flynn. He idolizes his father and is devastated when the truth about Walt is revealed.", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Walter White Jr."] },
-            new Character { ShowId = show.Id, Name = "Lydia Rodarte-Quayle", ActorName = "Laura Fraser",         Bio = "A high-strung Madrigal Electromotive executive who manages the methylamine supply chain. She facilitates the international distribution of Walt's blue meth and is poisoned by Walt with ricin in the finale.", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Lydia Rodarte-Quayle"] },
-            new Character { ShowId = show.Id, Name = "Todd Alquist",         ActorName = "Jesse Plemons",        Bio = "A cheerful, sociopathic young man who joins Walt's crew and kills young Drew Sharp without hesitation. He becomes a cook for Jack Welker's white supremacist gang and holds Jesse captive as a slave.", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Todd Alquist"] },
-            new Character { ShowId = show.Id, Name = "Tuco Salamanca",       ActorName = "Raymond Cruz",         Bio = "A volatile, unpredictable cartel distributor who becomes Walt and Jesse's first major buyer. His erratic violence makes him one of the series' most dangerous — and memorable — early antagonists.", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Tuco Salamanca"] },
-            new Character { ShowId = show.Id, Name = "Jane Margolis",        ActorName = "Krysten Ritter",       Bio = "Jesse's neighbor and landlord who becomes his girlfriend and enables his relapse into heroin. Her death — Walt watches her choke and does nothing — is a pivotal moral turning point.", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Jane Margolis"] },
-            new Character { ShowId = show.Id, Name = "Gale Boetticher",      ActorName = "David Costabile",      Bio = "A brilliant, idealistic chemist hired by Gus to work alongside Walt. A vegan who loves Italian opera, Gale is tragically shot by Jesse on Walt's orders to prevent them from being replaced.", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Gale Boetticher"] },
+            new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and partner in the methamphetamine business.", Tagline = "Just a small-time dealer", CharacterType = "Antihero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
+            new Character { ShowId = show.Id, Name = "Saul Goodman",         ActorName = "Bob Odenkirk",         Bio = "Flamboyant criminal lawyer Jimmy McGill who operates under the alias Saul Goodman. Provides legal counsel and criminal connections to Walt and Jesse, eventually fleeing to Omaha as 'Gene Takavic'.", Tagline = "Better call Saul!", CharacterType = "Comic Relief", IsMainCharacter = false, Status = "alive",    ImageUrl = CharacterImages["Saul Goodman"] },
+            new Character { ShowId = show.Id, Name = "Gustavo Fring",        ActorName = "Giancarlo Esposito",   Bio = "The polite, meticulous owner of the Los Pollos Hermanos fast food chain who secretly operates a massive methamphetamine distribution network. His composed exterior masks a calculating and ruthless cartel operator.", Tagline = "Pollo hermano with cold-blooded precision", CharacterType = "Villain", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Gustavo Fring"] },
+            new Character { ShowId = show.Id, Name = "Mike Ehrmantraut",     ActorName = "Jonathan Banks",       Bio = "Gus Fring's fixer and enforcer — a former Philadelphia cop with a strict moral code and quiet competence. Becomes a reluctant partner to Walt and Jesse. Shot by Walt in a petulant rage.", Tagline = "Measure twice, cut once", CharacterType = "Antihero", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Mike Ehrmantraut"] },
+            new Character { ShowId = show.Id, Name = "Marie Schrader",       ActorName = "Betsy Brandt",         Bio = "Skyler's sister and Hank's wife. A radiologic technologist with a compulsive shoplifting habit. Marie becomes Hank's steadfast supporter through his recovery and ultimately his crusade against Heisenberg.", Tagline = "Purple is my passion", CharacterType = "Hero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Marie Schrader"] },
+            new Character { ShowId = show.Id, Name = "Walter White Jr.",     ActorName = "RJ Mitte",             Bio = "Walt and Skyler's teenage son, who has cerebral palsy and goes by the nickname Flynn. He idolizes his father and is devastated when the truth about Walt is revealed.", Tagline = "Dad, breakfast?", CharacterType = "Hero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Walter White Jr."] },
+            new Character { ShowId = show.Id, Name = "Lydia Rodarte-Quayle", ActorName = "Laura Fraser",         Bio = "A high-strung Madrigal Electromotive executive who manages the methylamine supply chain. She facilitates the international distribution of Walt's blue meth and is poisoned by Walt with ricin in the finale.", Tagline = "Stevia and logistics", CharacterType = "Villain", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Lydia Rodarte-Quayle"] },
+            new Character { ShowId = show.Id, Name = "Todd Alquist",         ActorName = "Jesse Plemons",        Bio = "A cheerful, sociopathic young man who joins Walt's crew and kills young Drew Sharp without hesitation. He becomes a cook for Jack Welker's white supremacist gang and holds Jesse captive as a slave.", Tagline = "The smiling sociopath", CharacterType = "Villain,Comic Relief", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Todd Alquist"] },
+            new Character { ShowId = show.Id, Name = "Tuco Salamanca",       ActorName = "Raymond Cruz",         Bio = "A volatile, unpredictable cartel distributor who becomes Walt and Jesse's first major buyer. His erratic violence makes him one of the series' most dangerous — and memorable — early antagonists.", Tagline = "Crystal clear chaos", CharacterType = "Villain", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Tuco Salamanca"] },
+            new Character { ShowId = show.Id, Name = "Jane Margolis",        ActorName = "Krysten Ritter",       Bio = "Jesse's neighbor and landlord who becomes his girlfriend and enables his relapse into heroin. Her death — Walt watches her choke and does nothing — is a pivotal moral turning point.", Tagline = "A moment of mercy never given", CharacterType = "Hero", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Jane Margolis"] },
+            new Character { ShowId = show.Id, Name = "Gale Boetticher",      ActorName = "David Costabile",      Bio = "A brilliant, idealistic chemist hired by Gus to work alongside Walt. A vegan who loves Italian opera, Gale is tragically shot by Jesse on Walt's orders to prevent them from being replaced.", Tagline = "Brilliance without ambition", CharacterType = "Hero", IsMainCharacter = false, Status = "deceased", ImageUrl = CharacterImages["Gale Boetticher"] },
         };
         context.Characters.AddRange(characters);
         context.SaveChanges();
@@ -245,6 +245,56 @@ public static class SeedData
             },
         };
         context.Quotes.AddRange(quotes);
+        context.SaveChanges();
+
+        // Link characters to episodes (many-to-many relationships)
+        // Walter White appears in most episodes
+        for (int i = 0; i < episodes.Length; i++)
+        {
+            episodes[i].Characters.Add(characters[0]);
+        }
+
+        // Jesse Pinkman appears in most episodes
+        for (int i = 0; i < episodes.Length - 5; i++)  // Skip a few later episodes
+        {
+            episodes[i].Characters.Add(characters[1]);
+        }
+
+        // Skyler White appears in select episodes (first 50)
+        for (int i = 0; i < Math.Min(50, episodes.Length); i++)
+        {
+            episodes[i].Characters.Add(characters[2]);
+        }
+
+        // Hank Schrader appears starting from Season 1 Episode 4
+        for (int i = 3; i < episodes.Length; i++)
+        {
+            episodes[i].Characters.Add(characters[3]);
+        }
+
+        // Gus Fring appears in later episodes (starting Season 2, roughly episode 13)
+        for (int i = 13; i < Math.Min(38, episodes.Length); i++)
+        {
+            episodes[i].Characters.Add(characters[6]);
+        }
+
+        context.SaveChanges();
+
+        // Create character relationships (many-to-many self-join)
+        var relationships = new[]
+        {
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[2].Id, RelationshipType = "spouse" },           // Walt ↔ Skyler
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[3].Id, RelationshipType = "brother-in-law" }, // Walt ↔ Hank
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[1].Id, RelationshipType = "partner" },       // Walt ↔ Jesse
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[5].Id, RelationshipType = "employee" },      // Walt → Saul (legal)
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[6].Id, RelationshipType = "employer" },      // Walt → Gus
+            new CharacterRelationship { CharacterId = characters[1].Id, RelatedCharacterId = characters[2].Id, RelationshipType = "neighbor" },      // Jesse ↔ Skyler
+            new CharacterRelationship { CharacterId = characters[2].Id, RelatedCharacterId = characters[3].Id, RelationshipType = "sister" },       // Skyler ↔ Hank
+            new CharacterRelationship { CharacterId = characters[3].Id, RelatedCharacterId = characters[8].Id, RelationshipType = "spouse" },       // Hank ↔ Marie
+            new CharacterRelationship { CharacterId = characters[5].Id, RelatedCharacterId = characters[0].Id, RelationshipType = "client" },       // Saul ← Walt
+            new CharacterRelationship { CharacterId = characters[6].Id, RelatedCharacterId = characters[7].Id, RelationshipType = "associate" },    // Gus ↔ Mike
+        };
+        context.CharacterRelationships.AddRange(relationships);
         context.SaveChanges();
 
         // Insert test admin user

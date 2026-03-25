@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "fanhub-db": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite"],
+      "env": {
+        "SQLITE_DB_PATH": "${workspaceFolder}/dotnet/fanhub.db"
+      }
+    }
+  }
+}

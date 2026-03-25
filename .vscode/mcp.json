@@ -1,0 +1,20 @@
+{
+  "servers": {
+    "fanhub-db": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-sqlite",
+        "${workspaceFolder}/dotnet/Backend/fanhub.db"
+      ]
+    },
+    "fanhub-api": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./mcp-servers/fanhub-api-server.js"],
+      "env": {
+        "FANHUB_API_URL": "http://localhost:5265"
+      }
+    }
+  }
+}
