@@ -33,16 +33,17 @@ A generic fan site application for TV shows featuring:
 
 FanHub is available in **four language implementations** to accommodate different developer preferences:
 
-| Language | Path | Stack | Status |
-|----------|------|-------|--------|
-| **Node.js** | `node/` | Express + React + PostgreSQL | ✅ Original version |
-| **.NET** | `dotnet/` | ASP.NET Core + Blazor + PostgreSQL | ✅ C# version |
-| **Java** | `java/` | Spring Boot + React + PostgreSQL | ✅ Java version |
-| **Go** | `go/` | Gin + React + PostgreSQL | ✅ Go version |
+| Language    | Path      | Stack                              | Status              |
+| ----------- | --------- | ---------------------------------- | ------------------- |
+| **Node.js** | `node/`   | Express + React + PostgreSQL       | ✅ Original version |
+| **.NET**    | `dotnet/` | ASP.NET Core + Blazor + PostgreSQL | ✅ C# version       |
+| **Java**    | `java/`   | Spring Boot + React + PostgreSQL   | ✅ Java version     |
+| **Go**      | `go/`     | Gin + React + PostgreSQL           | ✅ Go version       |
 
 All implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
 
 **Filtering GitHub Issues by Language:**
+
 - Node.js issues: [`is:issue label:lang:node`](../../issues?q=is%3Aissue+label%3Alang%3Anode)
 - .NET issues: [`is:issue label:lang:dotnet`](../../issues?q=is%3Aissue+label%3Alang%3Adotnet)
 - Java issues: [`is:issue label:lang:java`](../../issues?q=is%3Aissue+label%3Alang%3Ajava)
@@ -50,6 +51,7 @@ All implementations contain **intentionally similar bugs** for consistent worksh
 - By severity: Add `label:severity:critical`, `label:severity:high`, etc.
 
 ### Current (Incomplete) Features
+
 - Basic character and episode listing
 - Simple API with inconsistent patterns
 - Minimal frontend with generic styling
@@ -57,6 +59,7 @@ All implementations contain **intentionally similar bugs** for consistent worksh
 - Database with intentional data issues
 
 ### What Participants Will Build
+
 Through the workshop, participants transform FanHub by:
 
 - ✅ Adding search functionality
@@ -69,56 +72,94 @@ Through the workshop, participants transform FanHub by:
 
 ## 🚀 Getting Started
 
+This repo has **four language-specific dev container configurations** — one per workshop track. You pick the one you want when creating a Codespace or reopening locally in a container.
+
+### Option 1: GitHub Codespaces (Recommended — zero local setup)
+
+> ⚠️ **Don't use the big green "Code" button's default codespace link** — it may not let you pick your configuration. Instead:
+
+1. Click **"Code"** → **"Codespaces"** tab → **"New codespace"**
+2. In the **"Dev container configuration"** dropdown, pick your language:
+   | Choice | For |
+   |--------|-----|
+   | **FanHub – Node.js** | `node/` track |
+   | **FanHub – Go** | `go/` track |
+   | **FanHub – Java** | `java/` track |
+   | **FanHub – .NET** | `dotnet/` track |
+3. Select a machine type (2-core is sufficient) and click **"Create codespace"**
+4. Wait ~2 minutes for the container to build
+5. Follow your language's quick-start below
+
+See [.devcontainer/README.md](.devcontainer/README.md) for full details on how the configurations are structured.
+
+### Option 2: Local VS Code Dev Container
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. Clone the repo and open it in VS Code
+3. When prompted **"Reopen in Container"**, click it — VS Code will show a picker for the four configurations
+4. Select your language track and wait for the build
+
+### Option 3: Manual / Local Installation
+
+Install the required runtimes for your chosen language and follow the language-specific SETUP.md.
+
+---
+
 Choose your language/framework and follow the setup guide:
 
 ### Node.js / React Version
+
 📖 **[Complete Node.js Setup Guide →](node/SETUP.md)**
 
-Quick start for Codespaces:
+Quick start (inside the **FanHub – Node.js** container):
+
 ```bash
 cd node
 npm run install:all
 npm start
 ```
+
 Visit http://localhost:3000
 
 ### .NET / C# Version
+
 📖 **[Complete .NET Setup Guide →](dotnet/SETUP.md)**
 
-Quick start for Codespaces:
+Quick start (inside the **FanHub – .NET** container):
+
 ```bash
 cd dotnet
 docker-compose up -d db
 cd Backend && dotnet ef database update && dotnet run
 ```
+
 Visit http://localhost:5000
 
 ### Java / Spring Boot Version
+
 📖 **[Complete Java Setup Guide →](java/SETUP.md)**
 
-Quick start for Codespaces:
+Quick start (inside the **FanHub – Java** container):
+
 ```bash
 cd java
 npm start
 ```
+
 Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
 
 ### Go / Gin Version
+
 📖 **[Complete Go Setup Guide →](go/SETUP.md)**
 
-Quick start for Codespaces:
+Quick start (inside the **FanHub – Go** container):
+
 ```bash
 cd go
 docker-compose up --build
 ```
+
 Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
-
-### Setup Options Available:
-- ✨ **GitHub Codespaces** (Recommended) - Zero setup required
-- 🐳 **Local Dev Container** - Consistent environment with Docker
-- ⚙️ **Manual Installation** - Full control for advanced users
-
-See the language-specific setup guides above for detailed instructions.
 
 ---
 
@@ -130,7 +171,7 @@ After getting the app running with any of the options above:
    - Two Jesse Pinkman characters (duplicate bug!)
    - Season filter doesn't work properly
    - Inconsistent styling across pages
-   
+
 2. **Review the issues** - Check out the [46+ documented bugs](BUGS.md)
 
 3. **Start the workshop** - Head to the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for the full training modules
@@ -164,18 +205,21 @@ node/
 These issues are **intentional** for workshop learning purposes:
 
 ### Documentation Issues
+
 - ❌ No architecture documentation
 - ❌ Missing API documentation
 - ❌ No coding standards defined
 - ❌ Incomplete setup instructions
 
 ### Code Quality Issues
+
 - ❌ Inconsistent API patterns
 - ❌ Mixed error handling approaches
 - ❌ Incomplete input validation
 - ❌ Missing edge case handling
 
 ### Feature Gaps
+
 - ❌ No authentication implemented
 - ❌ No search functionality
 - ❌ No admin capabilities
@@ -183,6 +227,7 @@ These issues are **intentional** for workshop learning purposes:
 - ❌ Generic, unthemed UI
 
 ### Development Workflow Issues
+
 - ❌ No CI/CD pipeline
 - ❌ No linting configured
 - ❌ No pre-commit hooks
@@ -246,6 +291,7 @@ No tests configured yet
 ```
 
 Workshop participants will:
+
 - Set up testing frameworks
 - Write unit and integration tests
 - Configure test automation
@@ -277,11 +323,13 @@ MIT License - See [LICENSE](LICENSE) file for details.
 ## 🆘 Support
 
 ### For Workshop Participants
+
 - Check the main [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for detailed modules
 - Review the troubleshooting guide in the workshop materials
 - Ask your instructor or workshop facilitator
 
 ### For General Questions
+
 - Open an issue in this repository
 - Reference the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) materials
 

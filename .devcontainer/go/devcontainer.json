@@ -1,40 +1,24 @@
 {
-  // ⚠️  Legacy: uses the large universal:2 image (~3GB+) which can cause
-  //    "no space left on device" errors in Codespaces.
-  //    Use one of the language-specific configs in node/ go/ java/ dotnet/ instead.
-  "name": "FanHub – Universal (legacy, not recommended)",
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "name": "FanHub – Go",
+  "image": "mcr.microsoft.com/devcontainers/go:1",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   "customizations": {
     "vscode": {
       "extensions": [
-        // Core AI tools
         "github.copilot",
         "github.copilot-chat",
-        // Node.js / TypeScript (all frontends + Node backend)
+        "golang.go",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        // Go
-        "golang.go",
-        // Java
-        "vscjava.vscode-java-pack",
-        // .NET / C#
-        "ms-dotnettools.csdevkit",
-        // SQLite
         "qwtel.sqlite-viewer",
-        // Docker
         "ms-azuretools.vscode-docker",
-        // Markdown
         "bierner.markdown-mermaid",
         "yzhang.markdown-all-in-one"
       ],
       "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "[csharp]": {
-          "editor.defaultFormatter": "ms-dotnettools.csdevkit"
-        },
         "[go]": {
           "editor.defaultFormatter": "golang.go"
         },
@@ -42,13 +26,11 @@
         "github.copilot.enable": {
           "*": true,
           "markdown": true,
+          "go": true,
           "javascript": true,
           "typescript": true,
           "javascriptreact": true,
-          "typescriptreact": true,
-          "go": true,
-          "java": true,
-          "csharp": true
+          "typescriptreact": true
         }
       }
     }
@@ -58,22 +40,25 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "version": "latest",
       "moby": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
     }
   },
 
   "forwardPorts": [3000, 5265],
   "portsAttributes": {
     "3000": {
-      "label": "Frontend (all languages)",
+      "label": "Frontend (React)",
       "onAutoForward": "notify"
     },
     "5265": {
-      "label": "Backend API (all languages)",
+      "label": "Backend API (Gin)",
       "onAutoForward": "silent"
     }
   },
 
-  "postCreateCommand": "echo '✓ Dev container ready! Choose your language and follow its SETUP.md: node/ | go/ | java/ | dotnet/'",
+  "postCreateCommand": "echo '✓ Go dev container ready! Run: cd go && docker-compose up --build'",
 
-  "remoteUser": "codespace"
+  "remoteUser": "vscode"
 }

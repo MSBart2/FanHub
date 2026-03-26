@@ -1,0 +1,61 @@
+{
+  "name": "FanHub – Java",
+  "image": "mcr.microsoft.com/devcontainers/java:21",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.copilot",
+        "github.copilot-chat",
+        "vscjava.vscode-java-pack",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "qwtel.sqlite-viewer",
+        "ms-azuretools.vscode-docker",
+        "bierner.markdown-mermaid",
+        "yzhang.markdown-all-in-one"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "js/ts.updateImportsOnFileMove.enabled": "always",
+        "github.copilot.enable": {
+          "*": true,
+          "markdown": true,
+          "java": true,
+          "javascript": true,
+          "typescript": true,
+          "javascriptreact": true,
+          "typescriptreact": true
+        }
+      }
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+
+  "forwardPorts": [3000, 5265],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (React)",
+      "onAutoForward": "notify"
+    },
+    "5265": {
+      "label": "Backend API (Spring Boot)",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "echo '✓ Java dev container ready! Run: cd java && npm start'",
+
+  "remoteUser": "vscode"
+}

@@ -1,56 +1,76 @@
-# FanHub Dev Container
+# FanHub Dev Containers
 
-This directory contains the configuration for the **development container** used in GitHub Codespaces and VS Code Dev Containers.
+This directory contains **four language-specific dev container configurations**, one per FanHub workshop track. Each uses a small, purpose-built image instead of a monolithic universal image, which means faster builds and no out-of-disk-space failures in GitHub Codespaces.
 
-The dev container is language-agnostic — it supports all four FanHub workshop implementations out of the box: **Node.js**, **Go**, **Java**, and **.NET**.
+## Available Configurations
 
-## What's Included
+| Folder    | Name             | Language Track               | Base Image                         |
+| --------- | ---------------- | ---------------------------- | ---------------------------------- |
+| `node/`   | FanHub – Node.js | Node.js / Express / React    | `devcontainers/javascript-node:22` |
+| `go/`     | FanHub – Go      | Go / Gin / React             | `devcontainers/go:1`               |
+| `java/`   | FanHub – Java    | Java / Spring Boot / React   | `devcontainers/java:21`            |
+| `dotnet/` | FanHub – .NET    | .NET / ASP.NET Core / Blazor | `devcontainers/dotnet:9`           |
 
-### Pre-installed Tools
+> **Note:** Go, Java, and .NET configs also install Node.js (via the `node` devcontainer feature) to support their React frontends.
 
-- ✅ **Node.js** - For all React frontends and the Node.js backend
-- ✅ **Go** - For the Go/Gin backend
-- ✅ **Java + Maven** - For the Spring Boot backend
-- ✅ **.NET SDK** - For the ASP.NET Core + Blazor implementation
-- ✅ **Docker-in-Docker** - Run containers inside the dev container
+## What's Included in Every Config
+
+### Tools
+
+- ✅ **Docker-in-Docker** - Run `docker compose` commands inside the container
 - ✅ **Git** - Version control
 - ✅ **SQLite** - Lightweight file-based database (no server required)
 
-### VS Code Extensions
+### VS Code Extensions (all configs)
 
-- ✅ **GitHub Copilot** - AI pair programming
-- ✅ **GitHub Copilot Chat** - AI chat assistant
-- ✅ **ESLint** - JavaScript/TypeScript linting
-- ✅ **Prettier** - Code formatting
-- ✅ **Go** - Go language support
-- ✅ **Java Pack** - Java language support
-- ✅ **C# Dev Kit** - .NET / C# language support
-- ✅ **SQLite Viewer** - Browse SQLite database files
+- ✅ **GitHub Copilot** + **Copilot Chat** - AI pair programming
+- ✅ **ESLint** + **Prettier** - Linting and formatting
+- ✅ **SQLite Viewer** - Browse database files
 - ✅ **Docker** - Container management
-- ✅ **Markdown Mermaid** - Diagram rendering
-- ✅ **Markdown All in One** - Enhanced markdown editing
+- ✅ **Markdown Mermaid** + **Markdown All in One** - Documentation
+
+Plus the language-specific extension for each track (Go tools, Java Pack, C# Dev Kit).
 
 ### Ports Forwarded
 
-| Port | Language | Service     |
-| ---- | -------- | ----------- |
-| 3000 | All      | Frontend    |
-| 5265 | All      | Backend API |
+| Port | Service     |
+| ---- | ----------- |
+| 3000 | Frontend    |
+| 5265 | Backend API |
 
 ## Using with GitHub Codespaces
 
-1. Click **"Code"** → **"Create codespace on main"** in the GitHub repository
-2. Wait 2-3 minutes for the environment to build
-3. Once ready, navigate to your chosen language folder and follow its `SETUP.md`:
+GitHub Codespaces automatically detects multiple configurations in this directory and lets you choose which one to use when creating a codespace.
+
+### Step-by-step
+
+1. Go to the repository on GitHub
+2. Click **"Code"** → **"Codespaces"** tab → **"New codespace"** (not just the green button)
+
+   > If you use the quick green button it picks the default config. Use **"New codespace"** to choose.
+
+3. In the **"Dev container configuration"** dropdown, select the language you want:
+   - **FanHub – Node.js** → for `node/`
+   - **FanHub – Go** → for `go/`
+   - **FanHub – Java** → for `java/`
+   - **FanHub – .NET** → for `dotnet/`
+
+4. Choose your machine type (2-core is fine for most tracks) and click **"Create codespace"**
+
+5. Wait ~2 minutes for the container to build
+
+6. Once ready, open the terminal and follow the language-specific SETUP.md:
+
    ```bash
    cd node    # Node.js/Express
    cd go      # Go/Gin
    cd java    # Java/Spring Boot
    cd dotnet  # .NET/Blazor
    ```
-4. Click the **"Ports"** tab and open the appropriate frontend port
 
-## Using with VS Code Dev Containers
+7. Click the **"Ports"** tab in VS Code and open the forwarded port for your frontend
+
+## Using with VS Code Dev Containers (Local)
 
 ### Prerequisites
 
@@ -77,13 +97,15 @@ The dev container is language-agnostic — it supports all four FanHub workshop 
 
    Or manually: Press `F1` → **"Dev Containers: Reopen in Container"**
 
-4. Wait for the container to build (2-3 minutes first time)
+   VS Code will show a picker listing all four configurations. Select your language track.
+
+4. Wait for the container to build (~2 minutes first time — much faster than the old universal image)
 
 5. Once the container is ready, navigate to your language folder and follow its `SETUP.md`
 
 ## Rebuilding the Container
 
-If you make changes to `.devcontainer/devcontainer.json`:
+If you make changes to a devcontainer config:
 
 1. Press `F1`
 2. Select **"Dev Containers: Rebuild Container"**
@@ -132,9 +154,17 @@ If you make changes to `.devcontainer/devcontainer.json`:
 
 ## Configuration Details
 
-### Base Image
+### Images
 
-Uses `mcr.microsoft.com/devcontainers/universal:2` — Microsoft's universal dev container image that includes Node.js, Go, Java, .NET, and more pre-installed. Docker-in-Docker support is added as a feature so you can run `docker compose` commands inside the container.
+Each config uses a small, language-specific Microsoft devcontainer image rather than the large `universal:2` image. This avoids the "no space left on device" error that the universal image can trigger in Codespaces due to its size (~3GB+ compressed).
+
+### Docker-in-Docker
+
+Every config installs the `docker-in-docker` feature so you can run `docker compose` commands inside the container. This is needed by all four language implementations.
+
+### Node.js in non-Node configs
+
+Go, Java, and .NET configs add Node.js via the `ghcr.io/devcontainers/features/node:1` feature (pinned to v22) to support their React frontends.
 
 ### Database
 
@@ -144,17 +174,13 @@ All implementations use **SQLite** (file-based). No database server is needed �
 
 The repository is mounted at `/workspaces/<repo-name>` inside the container with full read/write access.
 
-### User
-
-Runs as the `codespace` user (non-root) for security.
-
 ### Post-Create Command
 
-After the container is created, a welcome message is displayed pointing to the language-specific setup guides.
+After the container is created, a welcome message is displayed pointing to the language-specific setup guide.
 
-## Advanced: Customizing the Dev Container
+## Advanced: Customizing a Dev Container
 
-Edit `.devcontainer/devcontainer.json` to:
+Edit the relevant `.devcontainer/<language>/devcontainer.json` to:
 
 - Add more VS Code extensions
 - Change VS Code settings

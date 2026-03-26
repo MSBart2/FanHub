@@ -1,0 +1,61 @@
+{
+  "name": "FanHub – .NET",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:9",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.copilot",
+        "github.copilot-chat",
+        "ms-dotnettools.csdevkit",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "qwtel.sqlite-viewer",
+        "ms-azuretools.vscode-docker",
+        "bierner.markdown-mermaid",
+        "yzhang.markdown-all-in-one"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[csharp]": {
+          "editor.defaultFormatter": "ms-dotnettools.csdevkit"
+        },
+        "github.copilot.enable": {
+          "*": true,
+          "markdown": true,
+          "csharp": true,
+          "javascript": true,
+          "typescript": true
+        }
+      }
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+
+  "forwardPorts": [3000, 5265],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (Blazor)",
+      "onAutoForward": "notify"
+    },
+    "5265": {
+      "label": "Backend API (ASP.NET Core)",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "echo '✓ .NET dev container ready! Run: cd dotnet && docker-compose up -d db && cd Backend && dotnet ef database update && dotnet run'",
+
+  "remoteUser": "vscode"
+}
