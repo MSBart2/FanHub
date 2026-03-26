@@ -44,8 +44,8 @@ npm start
 docker-compose up
 
 # Application URLs:
-# Frontend: http://localhost:3002
-# Backend API: http://localhost:8080
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5265
 # PostgreSQL: localhost:5434
 ```
 
@@ -69,13 +69,13 @@ docker-compose up -d db
 # 2. Start Backend (Spring Boot)
 cd backend
 ./mvnw spring-boot:run
-# Backend runs on http://localhost:8080
+# Backend runs on http://localhost:5265
 
 # 3. In a new terminal, start Frontend (React)
 cd frontend
 npm install
 npm start
-# Frontend runs on http://localhost:3002
+# Frontend runs on http://localhost:3000
 ```
 
 ---
@@ -109,8 +109,8 @@ JWT_SECRET=change_this_in_production
 SPRING_PROFILES_ACTIVE=dev
 
 # Frontend
-PORT=3002
-REACT_APP_API_URL=http://localhost:8080
+PORT=3000
+REACT_APP_API_URL=http://localhost:5265
 ```
 
 ### 3. Install Dependencies
@@ -169,11 +169,11 @@ docker exec -it fanhub-java-db psql -U fanhub -d fanhub -c "SELECT COUNT(*) FROM
 
 **Test backend API:**
 ```bash
-curl http://localhost:8080/api/characters
+curl http://localhost:5265/api/characters
 ```
 
 **Test frontend:**
-Open http://localhost:3002 in your browser
+Open http://localhost:3000 in your browser
 
 ---
 
@@ -252,7 +252,7 @@ java -jar target/fanhub-backend-0.1.0.jar
 ```bash
 cd frontend
 
-# Development server (port 3002)
+# Development server (port 3000)
 npm start
 
 # Build for production
@@ -334,11 +334,11 @@ docker-compose logs db
 # Verify connection string in application.properties
 ```
 
-**Error: "Port 8080 already in use"**
+**Error: "Port 5265 already in use"**
 ```bash
-# Find process using port 8080
-lsof -i :8080  # Mac/Linux
-netstat -ano | findstr :8080  # Windows
+# Find process using port 5265
+lsof -i :5265  # Mac/Linux
+netstat -ano | findstr :5265  # Windows
 
 # Kill the process or change port in application.properties
 server.port=8081
@@ -355,10 +355,10 @@ server.port=8081
 
 ### Frontend Won't Start
 
-**Error: "Port 3002 already in use"**
+**Error: "Port 3000 already in use"**
 ```bash
 # Change port
-PORT=3003 npm start
+PORT=3001 npm start
 ```
 
 **Error: "Module not found"**
@@ -370,11 +370,11 @@ npm install
 
 **Error: "Proxy error: Could not proxy request"**
 ```bash
-# Ensure backend is running on port 8080
-curl http://localhost:8080/api/characters
+# Ensure backend is running on port 5265
+curl http://localhost:5265/api/characters
 
 # Check package.json has correct proxy
-"proxy": "http://localhost:8080"
+"proxy": "http://localhost:5265"
 ```
 
 ### Docker Issues
@@ -412,42 +412,42 @@ docker-compose logs db
 ### Verify Bugs Are Present
 
 1. **Duplicate Jesse Pinkman**
-   - Visit http://localhost:3002
+   - Visit http://localhost:3000
    - Click "Characters"
    - You should see TWO Jesse Pinkman cards
 
 2. **Cache Bug**
-   - Visit http://localhost:3002/episodes
+   - Visit http://localhost:3000/episodes
    - Filter by "Season 1"
    - Filter by "Season 2"
    - Filter back to "Season 1"
    - May show wrong episodes due to cache bug
 
 3. **Inconsistent API Paths**
-   - Try: `curl http://localhost:8080/api/characters` ✅
-   - Try: `curl http://localhost:8080/auth/login` ✅
-   - Try: `curl http://localhost:8080/api/auth/login` ❌ (404)
+   - Try: `curl http://localhost:5265/api/characters` ✅
+   - Try: `curl http://localhost:5265/auth/login` ✅
+   - Try: `curl http://localhost:5265/api/auth/login` ❌ (404)
 
 ### Test API Endpoints
 
 ```bash
 # Characters (should show duplicate Jesse)
-curl http://localhost:8080/api/characters
+curl http://localhost:5265/api/characters
 
 # Episodes
-curl http://localhost:8080/api/episodes
+curl http://localhost:5265/api/episodes
 
 # Episodes by season (cache bug test)
-curl http://localhost:8080/api/episodes?seasonId=1
+curl http://localhost:5265/api/episodes?seasonId=1
 
 # Shows
-curl http://localhost:8080/api/shows
+curl http://localhost:5265/api/shows
 
 # Quotes
-curl http://localhost:8080/api/quotes
+curl http://localhost:5265/api/quotes
 
 # Register user (weak password validation)
-curl -X POST http://localhost:8080/auth/register \
+curl -X POST http://localhost:5265/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"test@test.com","password":"123456","username":"test"}'
 ```
@@ -458,7 +458,7 @@ curl -X POST http://localhost:8080/auth/register \
 
 After getting the app running:
 
-1. **Explore the broken app** - Visit http://localhost:3002 and notice:
+1. **Explore the broken app** - Visit http://localhost:3000 and notice:
    - Two Jesse Pinkman characters (duplicate bug!)
    - Season filter doesn't work properly (cache bug!)
    - Inconsistent API patterns

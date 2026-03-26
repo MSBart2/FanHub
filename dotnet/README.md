@@ -189,7 +189,7 @@ cd dotnet/Frontend
 dotnet run
 ```
 
-Frontend will open at: `http://localhost:5171`
+Frontend will open at: `http://localhost:3000`
 
 Pages available:
 

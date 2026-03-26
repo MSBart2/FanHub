@@ -44,13 +44,13 @@ docker-compose up --build
 
 This will start:
 - **PostgreSQL** database on port `5435`
-- **Go backend** API on port `8090`
-- **React frontend** on port `3003`
+- **Go backend** API on port `5265`
+- **React frontend** on port `3000`
 
 ### 4. Access the application
 
-- **Frontend**: http://localhost:3003
-- **Backend API**: http://localhost:8090/api/shows
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:5265/api/shows
 
 ### 5. Stop the services
 
@@ -121,7 +121,7 @@ Create `.env` file in `backend/` directory:
 
 ```env
 DATABASE_URL=postgres://fanhub:fanhub123@localhost:5435/fanhub?sslmode=disable
-PORT=8090
+PORT=5265
 GIN_MODE=debug
 JWT_SECRET=your-secret-key-change-in-production
 ```
@@ -132,7 +132,7 @@ JWT_SECRET=your-secret-key-change-in-production
 go run main.go
 ```
 
-The API will be available at http://localhost:8090
+The API will be available at http://localhost:5265
 
 #### 7. Run with hot reload (Optional)
 
@@ -162,8 +162,8 @@ npm install
 Create `.env` file:
 
 ```env
-REACT_APP_API_URL=http://localhost:8090
-PORT=3003
+REACT_APP_API_URL=http://localhost:5265
+PORT=3000
 ```
 
 #### 4. Start the development server
@@ -172,7 +172,7 @@ PORT=3003
 npm start
 ```
 
-The frontend will open at http://localhost:3003
+The frontend will open at http://localhost:3000
 
 ---
 
@@ -213,7 +213,7 @@ The frontend will open at http://localhost:3003
 #### 1. View all characters
 
 ```bash
-curl http://localhost:8090/api/characters
+curl http://localhost:5265/api/characters
 ```
 
 Expected: List of characters including **duplicate Jesse Pinkman** entries (bug!)
@@ -222,10 +222,10 @@ Expected: List of characters including **duplicate Jesse Pinkman** entries (bug!
 
 ```bash
 # Request episodes for season 1
-curl http://localhost:8090/api/episodes?seasonId=1
+curl http://localhost:5265/api/episodes?seasonId=1
 
 # Request episodes for season 2
-curl http://localhost:8090/api/episodes?seasonId=2
+curl http://localhost:5265/api/episodes?seasonId=2
 ```
 
 Expected: Both return season 1 episodes due to cache bug
@@ -233,7 +233,7 @@ Expected: Both return season 1 episodes due to cache bug
 #### 3. Test SQL injection vulnerability
 
 ```bash
-curl "http://localhost:8090/api/characters/search?name='; DROP TABLE characters; --"
+curl "http://localhost:5265/api/characters/search?name='; DROP TABLE characters; --"
 ```
 
 Expected: Shows SQL error (demonstrates vulnerability)
@@ -255,7 +255,7 @@ Expected: Detects race condition in episode cache
 go install github.com/rakyll/hey@latest
 
 # Test cache race condition
-hey -n 1000 -c 10 http://localhost:8090/api/episodes?seasonId=1
+hey -n 1000 -c 10 http://localhost:5265/api/episodes?seasonId=1
 ```
 
 ---
@@ -297,11 +297,11 @@ docker-compose logs -f db
 
 #### Port Already in Use
 
-If ports 8090, 3003, or 5435 are already in use:
+If ports 5265, 3000, or 5435 are already in use:
 
 ```bash
 # Find process using the port (Windows)
-netstat -ano | findstr :8090
+netstat -ano | findstr :5265
 
 # Kill the process
 taskkill /PID <PID> /F
@@ -341,7 +341,7 @@ Ensure `package.json` has:
 
 ```json
 {
-  "proxy": "http://localhost:8090"
+  "proxy": "http://localhost:5265"
 }
 ```
 

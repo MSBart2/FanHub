@@ -211,16 +211,30 @@ func SeedDB() {
 	}
 
 	// Sample quotes
-	isFamous := true
-	quotes := []models.Quote{
-		{ShowID: show.ID, CharacterID: &characters[0].ID, EpisodeID: &episodes[0].ID, QuoteText: "I am not in danger, Skyler. I am the danger!", IsFamous: isFamous},
-		{ShowID: show.ID, CharacterID: &characters[1].ID, EpisodeID: &episodes[0].ID, QuoteText: "Yeah, science!", IsFamous: isFamous},
-		{ShowID: show.ID, CharacterID: &characters[0].ID, EpisodeID: &episodes[46].ID, QuoteText: "Say my name.", IsFamous: isFamous},
-		{ShowID: show.ID, CharacterID: &characters[2].ID, EpisodeID: &episodes[3].ID, QuoteText: "Someone has to protect this family from the man who protects this family.", IsFamous: isFamous},
-		{ShowID: show.ID, CharacterID: &characters[6].ID, EpisodeID: &episodes[48].ID, QuoteText: "I have been in the empire business long enough to know that an empire is never truly owned — only borrowed.", IsFamous: isFamous},
-		{ShowID: show.ID, CharacterID: &characters[7].ID, EpisodeID: &episodes[46].ID, QuoteText: "No more half measures, Walter.", IsFamous: isFamous},
+	qs := []struct {
+		char    *models.Character
+		episode *models.Episode
+		text    string
+		famous  bool
+	}{
+		{&characters[0], &episodes[0],  "I am not in danger, Skyler. I am the danger!", true},
+		{&characters[1], &episodes[0],  "Yeah, science!", true},
+		{&characters[0], &episodes[52], "Say my name.", true},
+		{&characters[4], &episodes[1],  "Yeah, Mr. White! Yeah, science!", false}, // duplicate Jesse (intentional bug)
+		{&characters[2], &episodes[3],  "Someone has to protect this family from the man who protects this family.", true},
+		{&characters[3], &episodes[4],  "Jesus Christ, Marie, they're minerals!", false},
+		{&characters[6], &episodes[45], "I have been in the empire business long enough to know that an empire is never truly owned — only borrowed.", true},
+		{&characters[7], &episodes[52], "No more half measures, Walter.", true},
 	}
-	for i := range quotes {
-		DB.Create(&quotes[i])
+	for _, q := range qs {
+		charID := q.char.ID
+		epID := q.episode.ID
+		DB.Create(&models.Quote{
+			ShowID:      show.ID,
+			CharacterID: &charID,
+			EpisodeID:   &epID,
+			QuoteText:   q.text,
+			IsFamous:    q.famous,
+		})
 	}
 }

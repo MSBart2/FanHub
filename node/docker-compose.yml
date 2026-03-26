@@ -4,11 +4,11 @@ services:
   backend:
     build: ./backend
     ports:
-      - "3001:3001"
+      - "5265:5265"
     environment:
       NODE_ENV: development
       JWT_SECRET: dev_secret_change_in_production
-      PORT: 3001
+      PORT: 5265
     volumes:
       - ./backend/src:/app/src
       - fanhub_data:/app/data
@@ -19,7 +19,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_API_URL: http://localhost:3001
+      REACT_APP_API_URL: http://localhost:5265
     depends_on:
       - backend
     volumes:

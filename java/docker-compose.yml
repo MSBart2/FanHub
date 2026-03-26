@@ -5,7 +5,7 @@ services:
     build: ./backend
     container_name: fanhub-java-backend
     ports:
-      - "8080:8080"
+      - "5265:5265"
     environment:
       DATABASE_URL: jdbc:sqlite:/data/fanhub.db
       JWT_SECRET: dev_secret_change_in_production
@@ -18,10 +18,10 @@ services:
     build: ./frontend
     container_name: fanhub-java-frontend
     ports:
-      - "3002:3002"
+      - "3000:3000"
     environment:
-      PORT: 3002
-      REACT_APP_API_URL: http://localhost:8080
+      PORT: 3000
+      REACT_APP_API_URL: http://localhost:5265
     depends_on:
       - backend
     volumes:

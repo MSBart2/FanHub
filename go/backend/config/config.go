@@ -15,7 +15,7 @@ var (
 // BUG: Hardcoded JWT secret fallback (security issue)
 func LoadConfig() {
 	DBPath = getEnv("DB_PATH", "./fanhub.db")
-	Port = getEnv("PORT", "8080")
+	Port = getEnv("PORT", "5265")
 
 	// BUG: Hardcoded JWT secret - major security issue!
 	JWTSecret = getEnv("JWT_SECRET", "super-secret-key-do-not-use-in-production")

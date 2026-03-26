@@ -34,8 +34,8 @@ cd java
 npm start
 
 # Application URLs:
-# Frontend: http://localhost:3002
-# Backend API: http://localhost:8080
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5265
 # PostgreSQL: localhost:5434
 ```
 
@@ -341,7 +341,7 @@ java/
 ├── frontend/                                    # Copy from node/frontend
 │   ├── src/
 │   ├── public/
-│   ├── package.json                             # Port 3002, proxy to 8080
+│   ├── package.json                             # Port 3000, proxy to 5265
 │   └── Dockerfile
 ├── docker-compose.yml
 ├── .env.example
@@ -367,8 +367,8 @@ java/
 npm start              # Start all services with Docker
 npm stop               # Stop all services
 npm run install:all    # Install all dependencies
-npm run backend        # Start backend only (port 8080)
-npm run frontend       # Start frontend only (port 3002)
+npm run backend        # Start backend only (port 5265)
+npm run frontend       # Start frontend only (port 3000)
 npm run db:reset       # Reset database
 
 # Backend (cd backend/)
@@ -377,7 +377,7 @@ npm run db:reset       # Reset database
 ./mvnw test            # Run tests (not implemented yet)
 
 # Frontend (cd frontend/)
-npm start              # Start development server (port 3002)
+npm start              # Start development server (port 3000)
 npm run build          # Build for production
 npm test               # Run tests (not implemented)
 ```
@@ -397,8 +397,8 @@ JWT_SECRET=change_this_in_production
 SPRING_PROFILES_ACTIVE=dev
 
 # Frontend
-PORT=3002
-REACT_APP_API_URL=http://localhost:8080
+PORT=3000
+REACT_APP_API_URL=http://localhost:5265
 ```
 
 ### Database Management

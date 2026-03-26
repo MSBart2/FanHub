@@ -1,67 +1,76 @@
 {
   "name": "FanHub Workshop",
-  "dockerComposeFile": "../src/docker-compose.yml",
-  "service": "frontend",
-  "workspaceFolder": "/workspace",
-  
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
   "customizations": {
     "vscode": {
       "extensions": [
+        // Core AI tools
         "github.copilot",
         "github.copilot-chat",
+        // Node.js / TypeScript (all frontends + Node backend)
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
+        // Go
+        "golang.go",
+        // Java
+        "vscjava.vscode-java-pack",
+        // .NET / C#
+        "ms-dotnettools.csdevkit",
+        // SQLite
+        "qwtel.sqlite-viewer",
+        // Docker
         "ms-azuretools.vscode-docker",
+        // Markdown
         "bierner.markdown-mermaid",
         "yzhang.markdown-all-in-one"
       ],
       "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "javascript.updateImportsOnFileMove.enabled": "always",
-        "typescript.updateImportsOnFileMove.enabled": "always",
+        "[csharp]": {
+          "editor.defaultFormatter": "ms-dotnettools.csdevkit"
+        },
+        "[go]": {
+          "editor.defaultFormatter": "golang.go"
+        },
+        "js/ts.updateImportsOnFileMove.enabled": "always",
         "github.copilot.enable": {
           "*": true,
           "markdown": true,
           "javascript": true,
           "typescript": true,
           "javascriptreact": true,
-          "typescriptreact": true
+          "typescriptreact": true,
+          "go": true,
+          "java": true,
+          "csharp": true
         }
       }
     }
   },
-  
+
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "18"
-    },
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "version": "latest",
       "moby": true
-    },
-    "ghcr.io/devcontainers/features/git:1": {
-      "version": "latest"
     }
   },
-  
-  "forwardPorts": [3000, 3001, 5432],
+
+  "forwardPorts": [3000, 5265],
   "portsAttributes": {
     "3000": {
-      "label": "Frontend",
+      "label": "Frontend (all languages)",
       "onAutoForward": "notify"
     },
-    "3001": {
-      "label": "Backend API",
-      "onAutoForward": "silent"
-    },
-    "5432": {
-      "label": "PostgreSQL",
+    "5265": {
+      "label": "Backend API (all languages)",
       "onAutoForward": "silent"
     }
   },
-  
-  "postCreateCommand": "echo '✓ Dev container ready! Run: cd src && npm run install:all && npm start'",
-  
-  "remoteUser": "node"
+
+  "postCreateCommand": "echo '✓ Dev container ready! Choose your language and follow its SETUP.md: node/ | go/ | java/ | dotnet/'",
+
+  "remoteUser": "codespace"
 }

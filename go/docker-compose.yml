@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: fanhub-go-backend
     ports:
-      - "8090:8090"
+      - "5265:5265"
     environment:
-      PORT: "8090"
+      PORT: "5265"
       DB_PATH: "/data/fanhub.db"
       JWT_SECRET: "your-secret-key-change-in-production"
       GIN_MODE: "debug"
@@ -23,10 +23,10 @@ services:
       dockerfile: Dockerfile
     container_name: fanhub-go-frontend
     ports:
-      - "3003:3003"
+      - "3000:3000"
     environment:
-      REACT_APP_API_URL: "http://localhost:8090"
-      PORT: "3003"
+      REACT_APP_API_URL: "http://localhost:5265"
+      PORT: "3000"
     depends_on:
       - backend
     restart: unless-stopped

@@ -92,7 +92,7 @@ npm start
 
 # Application URLs:
 # Frontend: http://localhost:3000
-# Backend API: http://localhost:3001
+# Backend API: http://localhost:5265
 # PostgreSQL: localhost:5432
 ```
 
@@ -141,12 +141,12 @@ Create `.env` file from `.env.example`:
 DATABASE_URL=postgres://fanhub:fanhub_dev_password@localhost:5432/fanhub
 
 # Backend
-PORT=3001
+PORT=5265
 JWT_SECRET=change_this_in_production
 NODE_ENV=development
 
 # Frontend
-REACT_APP_API_URL=http://localhost:3001
+REACT_APP_API_URL=http://localhost:5265
 ```
 
 ---

@@ -29,7 +29,7 @@ COPY --from=builder /app/build ./build
 # Intentional bug: No non-root user
 # Should use: USER node
 
-EXPOSE 3003
+EXPOSE 3000
 
 # Intentional bug: Using serve in production without proper config
-CMD ["serve", "-s", "build", "-l", "3003"]
+CMD ["serve", "-s", "build", "-l", "3000"]

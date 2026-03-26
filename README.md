@@ -101,7 +101,7 @@ Quick start for Codespaces:
 cd java
 npm start
 ```
-Visit http://localhost:3002 (frontend) and http://localhost:8080 (backend API)
+Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
 
 ### Go / Gin Version
 📖 **[Complete Go Setup Guide →](go/SETUP.md)**
@@ -111,7 +111,7 @@ Quick start for Codespaces:
 cd go
 docker-compose up --build
 ```
-Visit http://localhost:3003 (frontend) and http://localhost:8090 (backend API)
+Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
 
 ### Setup Options Available:
 - ✨ **GitHub Codespaces** (Recommended) - Zero setup required
