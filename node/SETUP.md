@@ -1,209 +1,161 @@
 # FanHub Node.js Setup Guide
 
-Complete setup instructions for the Node.js/React version of FanHub.
+Complete setup instructions for the Node.js/Express + React version of FanHub.
+
+> ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops.
 
 ---
 
-## 🚀 Quick Start Options
+## 🚀 Quick Start
 
-Choose your preferred development environment:
+### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
 
-### Option 1: GitHub Codespaces (✨ Recommended)
+1. Click **Code → Open with Codespaces** on the repository page.
+2. Wait for the container to build (the devcontainer handles all prerequisites).
+3. In the terminal, start the backend:
 
-**Zero setup required!** Click the **"Code"** button → **"Create codespace on main"**.
-
-Your cloud-based environment includes:
-- ✅ VS Code in the browser (or connect from desktop VS Code)
-- ✅ GitHub Copilot & Copilot Chat pre-installed and activated
-- ✅ Mermaid diagram rendering for architecture visuals
-- ✅ All FanHub development tools (Node.js, Docker, PostgreSQL)
-- ✅ Ports automatically forwarded for the app (3000, 3001, 5432)
-- ✅ Docker-in-Docker for running containers
-- ✅ Works from any device—even tablets!
-
-**Build time:** 2-3 minutes first launch, instant thereafter
-
-Once your Codespace is ready:
 ```bash
-cd node
-npm run install:all
+cd node/backend
+npm install
 npm start
 ```
 
-**Access the app**: Click the "Ports" tab and open port 3000 in your browser.
+The API starts on **http://localhost:5265** — check the **Ports** tab for the forwarded URL.
 
-📖 [Learn more about the dev container setup](../.devcontainer/README.md)
-
----
-
-### Option 2: Local Dev Container (🐳 Preferred for Local Development)
-
-**Near-zero setup** using VS Code with Docker Desktop:
-
-**Requirements:**
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [VS Code](https://code.visualstudio.com/download)
-- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-
-**Steps:**
-1. Clone this repository: `git clone https://github.com/MSBart2/FanHub.git`
-2. Open the folder in VS Code
-3. Click **"Reopen in Container"** when prompted (or use Command Palette → "Dev Containers: Reopen in Container")
-4. Wait for container to build (2-3 minutes first time)
-5. Once ready:
-   ```bash
-   cd node
-   npm run install:all
-   npm start
-   ```
-
-Same consistent environment as Codespaces, but running locally on your machine.
-
-📖 [Troubleshooting dev containers](../.devcontainer/README.md)
-
----
-
-### Option 3: Manual Installation (⚙️ Advanced)
-
-If you prefer to set up everything yourself without containers:
-
-#### Prerequisites
-
-| Requirement | Details |
-|-------------|---------|
-| **VS Code 1.107+** | [Download](https://code.visualstudio.com/download) · Check version: Help → About |
-| **GitHub Copilot** | Install both [Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) + [Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) extensions |
-| **Docker Desktop** | [Download](https://www.docker.com/products/docker-desktop/) (for PostgreSQL database) |
-| **Node.js 18+** | [Download](https://nodejs.org/) · Verify: `node --version` |
-| **GitHub Account** | With [Copilot access](https://github.com/features/copilot) (Individual, Business, or Enterprise) |
-
-#### Installation Steps
+In a second terminal, start the frontend:
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/node
-
-# 2. Install dependencies
-npm run install:all
-
-# 3. Start services with Docker
+cd node/frontend
+npm install
 npm start
-
-# Application URLs:
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:5265
-# PostgreSQL: localhost:5432
 ```
 
-#### Stop Services
-
-```bash
-npm stop
-```
-
-**Note**: Manual setup requires configuring your own environment, installing tools, and troubleshooting dependencies. We recommend Codespaces or Dev Containers for a smoother experience.
+The frontend starts on **http://localhost:3000**.
 
 ---
 
-## 💻 Development
+### Option 2: Local Dev Container 🐳 (Consistent local environment)
 
-### Available Scripts
+**Requires:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+1. Open the repository in VS Code.
+2. Click **"Reopen in Container"** when prompted.
+3. Follow Option 1's terminal steps above — all tools are pre-installed.
+
+---
+
+### Option 3: Local Runtime 💻 (No Docker required)
+
+**Requires:** [Node.js 18+](https://nodejs.org/)
+
+No database server needed — SQLite creates a `fanhub.db` file automatically.
+
+**1. Start the backend:**
 
 ```bash
-# Root level (node/)
-npm start              # Start all services with Docker
-npm stop               # Stop all services
-npm run install:all    # Install all dependencies
-npm run backend        # Start backend only (port 3001)
-npm run frontend       # Start frontend only (port 3000)
-npm test               # Run tests (not implemented yet)
-npm run db:reset       # Reset database with fresh seed data
+cd node/backend
+npm install
+npm start
+```
 
-# Backend (cd backend/)
-npm run dev            # Start with nodemon (auto-reload)
-npm start              # Start production mode
+API runs on: **http://localhost:5265**
 
-# Frontend (cd frontend/)
-npm start              # Start development server
-npm run build          # Build for production
-npm test               # Run tests (not implemented)
+**2. In a second terminal, start the frontend:**
+
+```bash
+cd node/frontend
+npm install
+npm start
+```
+
+Frontend runs on: **http://localhost:3000**
+
+---
+
+## 💻 Development Commands
+
+```bash
+# Backend (node/backend/)
+npm install         # Install dependencies
+npm start           # Start the server
+npm run dev         # Start with nodemon (auto-reload on file changes)
+
+# Frontend (node/frontend/)
+npm install         # Install dependencies
+npm start           # Start dev server (port 3000)
+npm run build       # Production build
+npm test            # Run tests
 ```
 
 ---
 
-## 🔧 Environment Variables
+## 🔧 Configuration
 
-Create `.env` file from `.env.example`:
+The backend uses SQLite by default — no configuration needed. The database file is created at `node/backend/data/fanhub.db`.
 
-```bash
-# Database
-DATABASE_URL=postgres://fanhub:fanhub_dev_password@localhost:5432/fanhub
+To customize, create a `.env` file in `node/backend/`:
 
-# Backend
+```env
 PORT=5265
 JWT_SECRET=change_this_in_production
 NODE_ENV=development
+```
 
-# Frontend
-REACT_APP_API_URL=http://localhost:5265
+The frontend auto-connects to the backend via the proxy in `node/frontend/package.json`. No frontend `.env` needed for local development.
+
+### Reset the Database
+
+```bash
+# Delete the database file — it will be recreated with seed data on next start
+cd node/backend
+rm data/fanhub.db     # Mac/Linux
+del data\fanhub.db    # Windows
+npm start
 ```
 
 ---
 
-## 🗄️ Database Management
+## 🔍 Available API Endpoints
 
-### Access Database Shell
+### Characters
+- `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
+- `GET /api/characters/:id` — Get character by ID
+- `POST /api/characters` — Create a character
 
-```bash
-docker exec -it fanhub-db-1 psql -U fanhub -d fanhub
-```
+### Episodes
+- `GET /api/episodes` — List all episodes
+- `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
+- `GET /api/episodes/:id` — Get episode by ID
 
-### Useful Database Queries
+### Shows
+- `GET /api/shows` — List all shows
+- `GET /api/shows/:id` — Get show by ID
 
-```sql
--- View characters (should see duplicate Jesse!)
-SELECT id, name, actor_name FROM characters;
+### Quotes
+- `GET /api/quotes` — List all quotes
+- `GET /api/quotes/random` — Get a random quote
 
--- Check quotes attribution
-SELECT q.id, c.name, q.quote_text FROM quotes q 
-LEFT JOIN characters c ON q.character_id = c.id;
-```
-
-### Reset Database
-
-```bash
-# Drop all data and reseed
-npm run db:reset
-```
+### Authentication (Incomplete)
+- `POST /auth/register` — Register (no password strength validation!)
+- `POST /auth/login` — Login (incomplete JWT implementation)
 
 ---
 
-## 🐛 Debugging
+## 🧪 Testing the App
 
-### Check Docker Containers
+### Verify Bugs Are Present
 
+**Duplicate Jesse Pinkman:**
 ```bash
-docker ps
+curl http://localhost:5265/api/characters
 ```
+Expected: Two Jesse Pinkman entries.
 
-### View Logs
-
+**Inconsistent API paths:**
 ```bash
-# Backend logs
-docker logs fanhub-backend-1 -f
-
-# Frontend logs
-docker logs fanhub-frontend-1 -f
-
-# Database logs
-docker logs fanhub-db-1 -f
-```
-
-### Check Database Connection
-
-```bash
-docker exec fanhub-db-1 pg_isready -U fanhub
+curl http://localhost:5265/api/characters   # ✅ works
+curl http://localhost:5265/auth/login       # ✅ works (no /api prefix)
+curl http://localhost:5265/api/auth/login   # ❌ 404
 ```
 
 ---
@@ -213,50 +165,51 @@ docker exec fanhub-db-1 pg_isready -U fanhub
 ### Port Already in Use
 
 ```bash
-# Find process using port 3000
-npx kill-port 3000
+# Find process using the port (Windows)
+netstat -ano | findstr :5265
 
-# Or for port 3001
-npx kill-port 3001
+# Mac/Linux
+lsof -i :5265
 ```
 
-### Database Connection Errors
-
-```bash
-# Restart database container
-docker-compose restart db
-
-# Check database is running
-docker ps | grep postgres
-```
-
-### Docker Issues
-
-```bash
-# Clean restart
-docker-compose down -v
-docker-compose up --build
-```
-
-### Node Modules Issues
+### Node Module Issues
 
 ```bash
 # Clean reinstall
 rm -rf node_modules package-lock.json
-rm -rf backend/node_modules backend/package-lock.json
-rm -rf frontend/node_modules frontend/package-lock.json
-npm run install:all
+npm install
 ```
+
+### Frontend Can't Reach Backend
+
+Ensure the backend is running on port 5265:
+```bash
+curl http://localhost:5265/api/characters
+```
+
+Check `node/frontend/package.json` has:
+```json
+{ "proxy": "http://localhost:5265" }
+```
+
+---
+
+## 🎓 Workshop Learning Path
+
+This implementation contains **intentional bugs** for learning purposes!
+
+### Using GitHub Copilot
+
+- Find bugs: *"Find security vulnerabilities in this Express middleware"*
+- Get fixes: *"How should I validate user input here?"*
+- Refactor: *"Add proper error handling to this route"*
+- Write tests: *"Generate unit tests for this controller"*
 
 ---
 
 ## 📚 Additional Resources
 
-- [Main README](../README.md) - Workshop overview
-- [BUGS.md](../BUGS.md) - Complete catalog of intentional bugs
-- [node/README.md](./README.md) - Detailed Node.js workshop guide
-- [GitHub Issues](https://github.com/MSBart2/FanHub/issues) - Tracked bugs
-
----
-
-**Need help?** Check the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for detailed modules and troubleshooting guides.
+- [Main README](../README.md) — Workshop overview
+- [node/README.md](./README.md) — Detailed Node.js workshop guide
+- [Express Docs](https://expressjs.com/)
+- [React Docs](https://react.dev/)

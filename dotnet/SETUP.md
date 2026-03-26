@@ -2,210 +2,184 @@
 
 Complete setup instructions for the .NET/C# version of FanHub.
 
+> ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops.
+
 ---
 
-## 🚀 Quick Start Options
+## 🚀 Quick Start
 
-### Option 1: GitHub Codespaces (✨ Recommended)
+### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
 
-**Zero setup required!** Click the **"Code"** button → **"Create codespace on main"**.
+1. Click **Code → Open with Codespaces** on the repository page.
+2. Wait for the container to build (the devcontainer handles all prerequisites).
+3. In the terminal:
 
-Your cloud-based environment includes:
-- ✅ .NET 10 SDK pre-installed
-- ✅ VS Code with C# extensions
-- ✅ GitHub Copilot & Copilot Chat activated
-- ✅ Docker for PostgreSQL
-- ✅ All dependencies configured
-
-**Build time:** 2-3 minutes first launch
-
-Once your Codespace is ready:
 ```bash
-cd dotnet
-docker-compose up -d db
-cd Backend
+cd dotnet/Backend
 dotnet restore
 dotnet ef database update
 dotnet run
 ```
 
-**Access the app**: Use the forwarded ports (5000 for API)
+The API starts on **http://localhost:5265** — check the **Ports** tab for the forwarded URL.
 
-📖 [Learn more about the dev container setup](../.devcontainer/README.md)
-
----
-
-### Option 2: Local Dev Container (🐳 Preferred for Local Development)
-
-**Near-zero setup** using VS Code with Docker Desktop:
-
-**Requirements:**
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [VS Code](https://code.visualstudio.com/download)
-- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-
-**Steps:**
-1. Clone this repository: `git clone https://github.com/MSBart2/FanHub.git`
-2. Open the folder in VS Code
-3. Click **"Reopen in Container"** when prompted
-4. Wait for container to build (2-3 minutes first time)
-5. Follow the manual setup steps below
-
----
-
-### Option 3: Manual Installation (⚙️ Advanced)
-
-#### Prerequisites
-
-| Requirement | Details |
-|-------------|---------|
-| **VS Code 1.107+** | [Download](https://code.visualstudio.com/download) |
-| **GitHub Copilot** | Install both [Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) + [Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) extensions |
-| **.NET 10 SDK** | [Download](https://dotnet.microsoft.com/download/dotnet/10.0) · Verify: `dotnet --version` |
-| **Docker Desktop** | [Download](https://www.docker.com/products/docker-desktop/) (for PostgreSQL) |
-| **GitHub Account** | With [Copilot access](https://github.com/features/copilot) |
-
-#### Installation Steps
+In a second terminal, start the frontend:
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/MSBart2/FanHub.git
-cd FanHub/dotnet
+cd dotnet/Frontend
+dotnet restore
+dotnet run
+```
 
-# 2. Start PostgreSQL with Docker
-docker-compose up -d db
+The frontend starts on **http://localhost:3000**.
 
-# 3. Run migrations and start backend
-cd Backend
+---
+
+### Option 2: Local Dev Container 🐳 (Consistent local environment)
+
+**Requires:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+1. Open the repository in VS Code.
+2. Click **"Reopen in Container"** when prompted.
+3. Follow Option 1's terminal steps above — all tools are pre-installed.
+
+---
+
+### Option 3: Local Runtime 💻 (No Docker required)
+
+**Requires:** [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+
+No database server needed — SQLite creates a `fanhub.db` file automatically.
+
+**1. Install EF tools** (first time only):
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+**2. Start the backend:**
+
+```bash
+cd dotnet/Backend
 dotnet restore
 dotnet ef database update
 dotnet run
-
-# 4. In another terminal, start frontend (when available)
-cd ../Frontend
-dotnet restore
-dotnet run
-
-# Application URLs:
-# Frontend: http://localhost:5001 (when implemented)
-# Backend API: http://localhost:5000
-# PostgreSQL: localhost:5432
 ```
 
-#### Stop Services
+API runs on: **http://localhost:5265**
+
+**3. In a second terminal, start the frontend:**
 
 ```bash
-# Stop .NET applications
-# Press Ctrl+C in each terminal
-
-# Stop database
-docker-compose down
+cd dotnet/Frontend
+dotnet restore
+dotnet run
 ```
+
+Frontend runs on: **http://localhost:3000**
 
 ---
 
-## 💻 Development
-
-### Available Commands
+## 💻 Development Commands
 
 ```bash
 # Backend (dotnet/Backend/)
-dotnet restore             # Restore NuGet packages
-dotnet build               # Build the project
-dotnet run                 # Run the application
-dotnet watch run           # Run with hot reload
-dotnet test                # Run tests (when implemented)
-dotnet ef database update  # Apply migrations
-dotnet ef migrations add   # Create new migration
+dotnet restore               # Restore NuGet packages
+dotnet build                 # Build the project
+dotnet run                   # Run the application
+dotnet watch run             # Run with hot reload
+dotnet ef database update    # Apply migrations
+dotnet ef migrations add     # Create a new migration
 
-# Frontend (dotnet/Frontend/) - Coming soon
+# Frontend (dotnet/Frontend/)
 dotnet restore
 dotnet run
+dotnet watch run             # Hot reload
 ```
 
 ---
 
 ## 🔧 Configuration
 
-### appsettings.json
+### Connection String
 
-The connection string and other settings are in `Backend/appsettings.json`:
+The backend uses SQLite by default — no configuration needed. The database file is created at `dotnet/Backend/fanhub.db`.
+
+Settings live in `Backend/appsettings.json`:
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=fanhub;Username=fanhub;Password=fanhub_dev_password"
+    "DefaultConnection": "Data Source=fanhub.db"
   },
   "Jwt": {
-    "SecretKey": "change_this_in_production_use_a_long_random_string",
+    "Secret": "dev_secret_change_in_production",
     "Issuer": "FanHub",
     "Audience": "FanHub"
   }
 }
 ```
 
-**Note:** These values are intentionally insecure for workshop purposes!
+> These values are intentionally insecure for workshop purposes!
 
----
-
-## 🗄️ Database Management
-
-### Access Database Shell
+### Reset the Database
 
 ```bash
-docker exec -it fanhub-dotnet-db-1 psql -U fanhub -d fanhub
-```
-
-### Useful Queries
-
-```sql
--- View characters
-SELECT * FROM "Characters";
-
--- View episodes
-SELECT * FROM "Episodes";
-
--- View shows
-SELECT * FROM "Shows";
-```
-
-### Reset Database
-
-```bash
-# Drop database and recreate
-docker-compose down -v
-docker-compose up -d db
-
-# Wait for database to be ready, then:
-cd Backend
+# Delete the database file and recreate
+cd dotnet/Backend
+rm fanhub.db         # Mac/Linux
+del fanhub.db        # Windows
 dotnet ef database update
 ```
 
 ---
 
-## 🐛 Debugging
+## 🔍 Available API Endpoints
 
-### Check Docker Containers
+- `GET /api/characters` — List all characters
+- `GET /api/characters/{id}` — Get character by ID
+- `POST /api/characters` — Create a character
+- `GET /api/shows` — List all shows
+- `GET /api/episodes` — List all episodes
+- `GET /api/quotes` — List all quotes
+- `POST /auth/register` — Register a user
+- `POST /auth/login` — Login
+
+OpenAPI docs: **http://localhost:5265/openapi/v1.json**
+
+---
+
+## 🆘 Troubleshooting
+
+### Port Already in Use
 
 ```bash
-docker ps
+# Find process using port 5265
+netstat -ano | findstr :5265  # Windows
+lsof -i :5265                  # Mac/Linux
 ```
 
-### View Database Logs
+Change the port in `Backend/Properties/launchSettings.json` if needed.
+
+### Migration Errors
 
 ```bash
-docker logs fanhub-dotnet-db-1 -f
+# Remove all migrations and start fresh
+rm -rf Migrations/
+dotnet ef migrations add InitialCreate
+dotnet ef database update
 ```
 
-### Check Database Connection
+### NuGet Package Issues
 
 ```bash
-docker exec fanhub-dotnet-db-1 pg_isready -U fanhub
+dotnet nuget locals all --clear
+dotnet restore --force
 ```
 
-### Enable Detailed Logging
+### Logging
 
-In `appsettings.Development.json`:
+Enable detailed EF Core logging in `appsettings.Development.json`:
 
 ```json
 {
@@ -220,57 +194,36 @@ In `appsettings.Development.json`:
 
 ---
 
-## 🆘 Troubleshooting
+## 🎓 Workshop Learning Path
 
-### Port Already in Use
+This implementation contains **10+ intentional bugs** for learning purposes!
 
-```bash
-# Find process using port 5000
-netstat -ano | findstr :5000  # Windows
-lsof -i :5000                  # Mac/Linux
+### Intentional Bugs
 
-# Kill the process if needed
-```
+1. **Null Reference Exceptions** — No null checks in controllers
+2. **Missing Async/Await** — `SaveChangesAsync` not awaited in `UpdateCharacter`
+3. **No Error Handling** — Controllers missing try/catch blocks
+4. **Missing Validation** — No `[Required]` attributes on models
+5. **Hardcoded Secrets** — JWT secret in `Program.cs`
+6. **CORS Wide Open** — `AllowAnyOrigin` security issue
+7. **Wrong HTTP Status Codes** — POST returns 200 instead of 201
+8. **Missing Navigation Properties** — Incomplete EF Core relationships
+9. **No OnModelCreating** — DbContext missing configuration
+10. **UseHttpsRedirection** — But created with `--no-https`
 
-### Database Connection Errors
+### Using GitHub Copilot
 
-```bash
-# Restart database
-docker-compose restart db
-
-# Check database is running
-docker ps | grep postgres
-```
-
-### Migration Errors
-
-```bash
-# Remove all migrations and start fresh
-rm -rf Migrations/
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
-### NuGet Package Issues
-
-```bash
-# Clear NuGet cache
-dotnet nuget locals all --clear
-
-# Restore packages
-dotnet restore --force
-```
+- Find bugs: *"Find security vulnerabilities in this file"*
+- Get fixes: *"How should I handle this error?"*
+- Refactor: *"Add proper async/await to this method"*
+- Write tests: *"Generate unit tests for this controller"*
 
 ---
 
 ## 📚 Additional Resources
 
-- [Main README](../README.md) - Workshop overview
-- [dotnet/BUGS.md](./BUGS.md) - .NET-specific bugs catalog
-- [dotnet/README.md](./README.md) - Detailed .NET workshop guide
+- [Main README](../README.md) — Workshop overview
+- [dotnet/BUGS.md](./BUGS.md) — .NET-specific bugs catalog
+- [dotnet/README.md](./README.md) — Detailed .NET workshop guide
 - [Microsoft .NET Docs](https://docs.microsoft.com/dotnet/)
 - [Entity Framework Core Docs](https://docs.microsoft.com/ef/core/)
-
----
-
-**Need help?** Check the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for detailed modules and troubleshooting guides.

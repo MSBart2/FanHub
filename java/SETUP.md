@@ -1,409 +1,143 @@
 # FanHub Java/Spring Boot - Setup Guide
 
+Complete setup instructions for the Java/Spring Boot version of FanHub.
+
 > ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops. Contains 36+ bugs by design.
 
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Java 17 or higher** (JDK)
-  ```bash
-  java -version  # Should show 17+
-  ```
-  
-- **Maven 3.6+** (included via Maven Wrapper)
-  ```bash
-  ./mvnw -version
-  ```
-
-- **Docker Desktop** (for database and containerized development)
-  ```bash
-  docker --version
-  docker-compose --version
-  ```
-
-- **Git** (for version control)
-
-- **Node.js 18+** (for React frontend)
-
 ---
 
-## 🚀 Quick Start (Recommended)
+## 🚀 Quick Start
 
-### Option 1: Docker Compose (Easiest)
+### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
 
-This starts all services (database, backend, frontend) with one command:
-
-```bash
-# From the java/ directory
-cd java
-
-# Start all services
-npm start
-# OR
-docker-compose up
-
-# Application URLs:
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:5265
-# PostgreSQL: localhost:5434
-```
-
-**First time setup:**
-```bash
-# Copy environment variables
-cp .env.example .env
-
-# Start services
-docker-compose up
-```
-
-### Option 2: Local Development (More Control)
-
-Run services individually without Docker:
+1. Click **Code → Open with Codespaces** on the repository page.
+2. Wait for the container to build (the devcontainer handles all prerequisites).
+3. In the terminal, start the backend:
 
 ```bash
-# 1. Start PostgreSQL (using Docker)
-docker-compose up -d db
-
-# 2. Start Backend (Spring Boot)
-cd backend
+cd java/backend
 ./mvnw spring-boot:run
-# Backend runs on http://localhost:5265
+```
 
-# 3. In a new terminal, start Frontend (React)
-cd frontend
+The API starts on **http://localhost:5265** — check the **Ports** tab for the forwarded URL.
+
+In a second terminal, start the frontend:
+
+```bash
+cd java/frontend
 npm install
 npm start
-# Frontend runs on http://localhost:3000
 ```
+
+The frontend starts on **http://localhost:3000**.
 
 ---
 
-## 🏗️ Detailed Setup Instructions
+### Option 2: Local Dev Container 🐳 (Consistent local environment)
 
-### 1. Clone and Navigate
+**Requires:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-```bash
-git clone <repository-url>
-cd FanHub/java
-```
-
-### 2. Environment Configuration
-
-Create a `.env` file from the example:
-
-```bash
-cp .env.example .env
-```
-
-**Environment Variables:**
-```bash
-# Database
-DATABASE_URL=jdbc:postgresql://localhost:5434/fanhub
-DB_USERNAME=fanhub
-DB_PASSWORD=fanhub_dev_password
-
-# Backend
-JWT_SECRET=change_this_in_production
-SPRING_PROFILES_ACTIVE=dev
-
-# Frontend
-PORT=3000
-REACT_APP_API_URL=http://localhost:5265
-```
-
-### 3. Install Dependencies
-
-**Backend (Maven):**
-```bash
-cd backend
-./mvnw clean install
-```
-
-**Frontend (npm):**
-```bash
-cd frontend
-npm install
-```
-
-**Or install both at once:**
-```bash
-npm run install:all
-```
-
-### 4. Database Setup
-
-**Option A: Using Docker Compose**
-```bash
-# Start only the database
-docker-compose up -d db
-
-# Verify database is running
-docker ps | grep fanhub-java-db
-```
-
-**Option B: Local PostgreSQL**
-
-If you have PostgreSQL installed locally:
-
-```bash
-# Create database
-createdb -U postgres fanhub
-
-# Run schema
-psql -U postgres -d fanhub -f backend/src/main/resources/schema.sql
-
-# Run seed data (includes duplicate Jesse Pinkman bug!)
-psql -U postgres -d fanhub -f backend/src/main/resources/seed.sql
-```
-
-### 5. Verify Setup
-
-**Check database connection:**
-```bash
-docker exec -it fanhub-java-db psql -U fanhub -d fanhub -c "SELECT COUNT(*) FROM characters;"
-```
-
-**Expected output:** `count: 6` (includes duplicate Jesse!)
-
-**Test backend API:**
-```bash
-curl http://localhost:5265/api/characters
-```
-
-**Test frontend:**
-Open http://localhost:3000 in your browser
+1. Open the repository in VS Code.
+2. Click **"Reopen in Container"** when prompted.
+3. Follow Option 1's terminal steps above — all tools are pre-installed.
 
 ---
 
-## 🐳 Docker Commands
+### Option 3: Local Runtime 💻 (No Docker required)
 
-### Start All Services
-```bash
-docker-compose up
-# Or in detached mode:
-docker-compose up -d
-```
+**Requires:** [Java 17+ JDK](https://adoptium.net/) · [Node.js 18+](https://nodejs.org/)
 
-### Stop All Services
-```bash
-docker-compose down
-# Or with volumes (resets database):
-docker-compose down -v
-```
+No database server needed — SQLite creates a `fanhub.db` file automatically.
 
-### View Logs
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f db
-```
-
-### Rebuild After Code Changes
-```bash
-# Rebuild backend image
-docker-compose build backend
-
-# Rebuild and restart
-docker-compose up -d --build
-```
-
-### Reset Database
-```bash
-# Stop and remove volumes
-docker-compose down -v
-
-# Start database only (will reinitialize)
-docker-compose up -d db
-
-# OR use npm script
-npm run db:reset
-```
-
----
-
-## 💻 Development Workflow
-
-### Running Backend Locally
+**1. Start the backend:**
 
 ```bash
-cd backend
-
-# Run with Maven
+cd java/backend
 ./mvnw spring-boot:run
-
-# Run with hot reload (spring-boot-devtools)
-./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Dagent"
-
-# Build JAR
-./mvnw clean package
-
-# Run JAR
-java -jar target/fanhub-backend-0.1.0.jar
 ```
 
-### Running Frontend Locally
+API runs on: **http://localhost:5265**
+
+**2. In a second terminal, start the frontend:**
 
 ```bash
-cd frontend
-
-# Development server (port 3000)
-npm start
-
-# Build for production
-npm run build
-
-# Run tests (not configured yet - intentional)
-npm test
-```
-
-### Available Scripts
-
-From the `java/` root directory:
-
-```bash
-npm start              # Start all services with Docker
-npm stop               # Stop all services
-npm run backend        # Start backend only (local)
-npm run frontend       # Start frontend only (local)
-npm run install:all    # Install all dependencies
-npm run db:reset       # Reset database
-```
-
----
-
-## 🗄️ Database Management
-
-### Access Database Shell
-
-```bash
-docker exec -it fanhub-java-db psql -U fanhub -d fanhub
-```
-
-### Useful SQL Queries
-
-```sql
--- View all characters (should see duplicate Jesse!)
-SELECT id, name, actor_name FROM characters;
-
--- Check quotes attribution
-SELECT q.id, c.name, q.quote_text 
-FROM quotes q 
-LEFT JOIN characters c ON q.character_id = c.id;
-
--- View episodes by season
-SELECT season_id, COUNT(*) 
-FROM episodes 
-GROUP BY season_id;
-
--- Check database size
-SELECT pg_size_pretty(pg_database_size('fanhub'));
-```
-
-### Verify Intentional Bugs
-
-**Duplicate Jesse Pinkman:**
-```sql
-SELECT name, COUNT(*) 
-FROM characters 
-GROUP BY name 
-HAVING COUNT(*) > 1;
-```
-
-Expected: `Jesse Pinkman | 2`
-
----
-
-## 🔧 Troubleshooting
-
-### Backend Won't Start
-
-**Error: "Could not connect to database"**
-```bash
-# Check if database is running
-docker ps | grep fanhub-java-db
-
-# Check database logs
-docker-compose logs db
-
-# Verify connection string in application.properties
-```
-
-**Error: "Port 5265 already in use"**
-```bash
-# Find process using port 5265
-lsof -i :5265  # Mac/Linux
-netstat -ano | findstr :5265  # Windows
-
-# Kill the process or change port in application.properties
-server.port=8081
-```
-
-**Error: "BUILD FAILURE - dependency resolution"**
-```bash
-# Clean Maven cache
-./mvnw clean
-
-# Force update dependencies
-./mvnw clean install -U
-```
-
-### Frontend Won't Start
-
-**Error: "Port 3000 already in use"**
-```bash
-# Change port
-PORT=3001 npm start
-```
-
-**Error: "Module not found"**
-```bash
-# Reinstall dependencies
-rm -rf node_modules package-lock.json
+cd java/frontend
 npm install
+npm start
 ```
 
-**Error: "Proxy error: Could not proxy request"**
+Frontend runs on: **http://localhost:3000**
+
+---
+
+## 💻 Development Commands
+
 ```bash
-# Ensure backend is running on port 5265
-curl http://localhost:5265/api/characters
+# Backend (java/backend/)
+./mvnw spring-boot:run                    # Run the application
+./mvnw spring-boot:run \
+  -Dspring-boot.run.jvmArguments="-Dagent" # Hot reload (devtools)
+./mvnw clean install                      # Build and run tests
+./mvnw clean package                      # Build JAR
+java -jar target/fanhub-backend-*.jar     # Run built JAR
+./mvnw clean                              # Clean build artifacts
 
-# Check package.json has correct proxy
-"proxy": "http://localhost:5265"
+# Frontend (java/frontend/)
+npm install             # Install dependencies
+npm start               # Start dev server (port 3000)
+npm run build           # Production build
 ```
 
-### Docker Issues
+---
 
-**Error: "Cannot connect to Docker daemon"**
+## 🔧 Configuration
+
+The backend uses SQLite by default — no configuration needed. The database file is created at `java/backend/fanhub.db`.
+
+Settings live in `backend/src/main/resources/application.properties`:
+
+```properties
+server.port=5265
+spring.datasource.url=${DATABASE_URL:jdbc:sqlite:./fanhub.db}
+spring.datasource.driver-class-name=org.sqlite.JDBC
+```
+
+> These values are intentionally insecure for workshop purposes!
+
+### Reset the Database
+
 ```bash
-# Start Docker Desktop
-# Verify Docker is running
-docker ps
+cd java/backend
+rm fanhub.db      # Mac/Linux
+del fanhub.db     # Windows
+./mvnw spring-boot:run   # Recreates automatically on next start
 ```
 
-**Error: "Network not found"**
-```bash
-# Remove all containers and volumes
-docker-compose down -v
+---
 
-# Restart
-docker-compose up
-```
+## 🔍 Available API Endpoints
 
-**Database won't initialize**
-```bash
-# Remove volumes and restart
-docker-compose down -v
-docker-compose up -d db
+### Characters
+- `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
+- `GET /api/characters/{id}` — Get character by ID
+- `POST /api/characters` — Create a character
 
-# Check logs
-docker-compose logs db
-```
+### Episodes
+- `GET /api/episodes` — List all episodes
+- `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
+- `GET /api/episodes/{id}` — Get episode by ID
+
+### Shows
+- `GET /api/shows` — List all shows
+- `GET /api/shows/{id}` — Get show by ID
+
+### Quotes
+- `GET /api/quotes` — List all quotes
+- `POST /api/quotes` — Create a quote
+
+### Authentication (Incomplete)
+- `POST /auth/register` — Register (weak password validation!)
+- `POST /auth/login` — Login (incomplete JWT implementation)
 
 ---
 
@@ -411,113 +145,124 @@ docker-compose logs db
 
 ### Verify Bugs Are Present
 
-1. **Duplicate Jesse Pinkman**
-   - Visit http://localhost:3000
-   - Click "Characters"
-   - You should see TWO Jesse Pinkman cards
-
-2. **Cache Bug**
-   - Visit http://localhost:3000/episodes
-   - Filter by "Season 1"
-   - Filter by "Season 2"
-   - Filter back to "Season 1"
-   - May show wrong episodes due to cache bug
-
-3. **Inconsistent API Paths**
-   - Try: `curl http://localhost:5265/api/characters` ✅
-   - Try: `curl http://localhost:5265/auth/login` ✅
-   - Try: `curl http://localhost:5265/api/auth/login` ❌ (404)
-
-### Test API Endpoints
-
+**Duplicate Jesse Pinkman:**
 ```bash
-# Characters (should show duplicate Jesse)
 curl http://localhost:5265/api/characters
+```
+Expected: Two Jesse Pinkman entries.
 
-# Episodes
-curl http://localhost:5265/api/episodes
-
-# Episodes by season (cache bug test)
+**Cache bug:**
+```bash
 curl http://localhost:5265/api/episodes?seasonId=1
+curl http://localhost:5265/api/episodes?seasonId=2
+```
+Expected: Both return Season 1 episodes.
 
-# Shows
-curl http://localhost:5265/api/shows
-
-# Quotes
-curl http://localhost:5265/api/quotes
-
-# Register user (weak password validation)
-curl -X POST http://localhost:5265/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@test.com","password":"123456","username":"test"}'
+**Inconsistent API paths:**
+```bash
+curl http://localhost:5265/api/characters   # ✅ works
+curl http://localhost:5265/auth/login       # ✅ works (no /api prefix)
+curl http://localhost:5265/api/auth/login   # ❌ 404
 ```
 
 ---
 
-## 🎓 Next Steps for Workshop
+## 🆘 Troubleshooting
 
-After getting the app running:
+### Backend Won't Start
 
-1. **Explore the broken app** - Visit http://localhost:3000 and notice:
-   - Two Jesse Pinkman characters (duplicate bug!)
-   - Season filter doesn't work properly (cache bug!)
-   - Inconsistent API patterns
+**"Could not open JPA EntityManagerFactory"**
 
-2. **Review the issues** - Check out the [36+ documented bugs](BUGS.md)
+This usually means a schema or dependency issue. Try:
+```bash
+./mvnw clean install
+./mvnw spring-boot:run
+```
 
-3. **Start the workshop** - Head to the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for the full training modules
+**Port 5265 already in use:**
+```bash
+netstat -ano | findstr :5265  # Windows
+lsof -i :5265                  # Mac/Linux
+```
 
-4. **Try Copilot without config** - Ask Copilot to help fix something and see how it struggles without context
+Change port in `application.properties`: `server.port=5266`
 
-5. **Begin Module 1** - Add repository instructions and watch Copilot transform!
+### Frontend Won't Start
+
+**"Module not found":**
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**"Proxy error: Could not proxy request":**
+Ensure the backend is actually running on port 5265:
+```bash
+curl http://localhost:5265/api/characters
+```
+
+Check `java/frontend/package.json` has:
+```json
+{ "proxy": "http://localhost:5265" }
+```
+
+### Maven Issues
+
+```bash
+./mvnw clean              # Clear build output
+./mvnw clean install -U   # Force-update all dependencies
+```
+
+---
+
+## 🎓 Workshop Learning Path
+
+This implementation contains **36+ intentional bugs** for learning purposes!
+
+### Recommended Bug Hunting Order
+
+1. **Critical Security**
+   - Hardcoded JWT secret
+   - CORS wide open
+   - Weak password validation (any length accepted)
+   - Missing authorization on write endpoints
+
+2. **Spring Boot Mistakes**
+   - Missing `@Transactional` on write operations
+   - `@Autowired` on fields instead of constructor injection
+   - N+1 query problems (no `@EntityGraph`)
+   - Missing `@Valid` on request bodies
+
+3. **Data Issues**
+   - Duplicate seed data (Jesse Pinkman ×2)
+   - Missing foreign key constraints
+   - No pagination on list endpoints
+
+4. **Code Quality**
+   - Inconsistent API path prefixes (`/api/` vs `/`)
+   - Exception stack traces exposed in responses
+   - No logging
+   - No tests
+
+### Using GitHub Copilot
+
+- Find bugs: *"Find security vulnerabilities in this Spring Boot controller"*
+- Get fixes: *"How should I add proper validation here?"*
+- Refactor: *"Convert this to use constructor injection"*
+- Write tests: *"Generate unit tests for this service class"*
+
+### VS Code Setup for Java
+
+Install these extensions:
+- **Extension Pack for Java** (`vscjava.vscode-java-pack`)
+- **Spring Boot Extension Pack** (`vmware.vscode-boot-dev-pack`)
 
 ---
 
 ## 📚 Additional Resources
 
-### IntelliJ IDEA Setup
-
-1. Open the `java/backend` folder as a Maven project
-2. Trust the Maven project
-3. Ensure JDK 17 is configured: File → Project Structure → Project SDK
-4. Enable annotation processing for Lombok: Settings → Build → Compiler → Annotation Processors
-5. Install Lombok plugin: Settings → Plugins → search "Lombok"
-
-### VS Code Setup
-
-1. Install extensions:
-   - Extension Pack for Java
-   - Spring Boot Extension Pack
-   - Lombok Annotations Support
-2. Open the `java/backend` folder
-3. Trust workspace
-4. Java runtime will be detected automatically
-
-### Eclipse Setup
-
-1. Install Lombok:
-   - Download lombok.jar
-   - Run: `java -jar lombok.jar`
-   - Select Eclipse installation directory
-2. Import as Maven project
-3. Update project: Right-click → Maven → Update Project
-
----
-
-## 🐛 Remember
-
-**These bugs are intentional!** Don't fix them manually yet. The workshop teaches how to systematically address these using AI assistance and Copilot customization.
-
----
-
-## 📖 Documentation
-
-- [Java/Spring Boot README](README.md) - Architecture and project overview
-- [Java BUGS.md](BUGS.md) - Complete catalog of 36+ intentional bugs
-- [Root README](../README.md) - Overall workshop information
-
----
-
-**Ready to start the workshop?** 🚀
-
-This setup gets you running with a messy codebase full of intentional bugs. The real learning begins when you start using GitHub Copilot to transform this code into something production-ready!
+- [Main README](../README.md) — Workshop overview
+- [java/BUGS.md](./BUGS.md) — Java-specific bugs catalog
+- [java/README.md](./README.md) — Detailed Java workshop guide
+- [Spring Boot Docs](https://spring.io/projects/spring-boot)
+- [Spring Data JPA Docs](https://spring.io/projects/spring-data-jpa)

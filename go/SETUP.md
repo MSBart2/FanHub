@@ -1,343 +1,209 @@
 # FanHub Go Setup Guide
 
-Welcome to the Go/Gin implementation of the FanHub workshop! This guide will help you get the application running.
+Complete setup instructions for the Go/Gin version of FanHub.
 
-## Prerequisites
+> ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops. Contains ~42 bugs by design.
 
-Before you begin, ensure you have the following installed:
+---
 
-- **Go 1.21+** ([Download](https://go.dev/dl/))
-- **Docker Desktop** ([Download](https://www.docker.com/products/docker-desktop))
-- **Node.js 18+** (for frontend) ([Download](https://nodejs.org/))
-- **Git** ([Download](https://git-scm.com/downloads))
-- **VS Code** with GitHub Copilot extension ([Get Copilot](https://github.com/features/copilot))
+## 🚀 Quick Start
 
-### Verify Installation
+### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
+
+1. Click **Code → Open with Codespaces** on the repository page.
+2. Wait for the container to build (the devcontainer handles all prerequisites).
+3. In the terminal, start the backend:
 
 ```bash
-go version        # Should show Go 1.21 or higher
-docker --version  # Should show Docker 20.10 or higher
-node --version    # Should show Node 18 or higher
+cd go/backend
+go mod download
+go run main.go
 ```
 
-## Quick Start (Docker - Recommended)
+The API starts on **http://localhost:5265** — check the **Ports** tab for the forwarded URL.
 
-The easiest way to get started is using Docker Compose:
-
-### 1. Navigate to the Go directory
+In a second terminal, start the frontend:
 
 ```bash
-cd go
+cd go/frontend
+npm install
+npm start
 ```
 
-### 2. Create environment file
+The frontend starts on **http://localhost:3000**.
+
+---
+
+### Option 2: Local Dev Container 🐳 (Consistent local environment)
+
+**Requires:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+1. Open the repository in VS Code.
+2. Click **"Reopen in Container"** when prompted.
+3. Follow Option 1's terminal steps above — all tools are pre-installed.
+
+---
+
+### Option 3: Local Runtime 💻 (No Docker required)
+
+**Requires:** [Go 1.21+](https://go.dev/dl/) · [Node.js 18+](https://nodejs.org/)
+
+No database server needed — SQLite creates a `fanhub.db` file automatically.
+
+**1. Start the backend:**
 
 ```bash
-cp .env.example .env
+cd go/backend
+go mod download
+go run main.go
 ```
 
-### 3. Start all services
+API runs on: **http://localhost:5265**
+
+**2. In a second terminal, start the frontend:**
 
 ```bash
-docker-compose up --build
+cd go/frontend
+npm install
+npm start
 ```
 
-This will start:
-- **PostgreSQL** database on port `5435`
-- **Go backend** API on port `5265`
-- **React frontend** on port `3000`
+Frontend runs on: **http://localhost:3000**
 
-### 4. Access the application
+---
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5265/api/shows
-
-### 5. Stop the services
+## 💻 Development Commands
 
 ```bash
-docker-compose down
-```
+# Backend (go/backend/)
+go mod download         # Download dependencies
+go run main.go          # Run the application
+go build -o fanhub .    # Build binary
+go run -race main.go    # Run with race detector (finds concurrency bugs!)
+go mod tidy             # Clean up dependencies
 
-To remove volumes (database data):
+# Optional: hot reload with Air
+go install github.com/air-verse/air@latest
+air
 
-```bash
-docker-compose down -v
+# Frontend (go/frontend/)
+npm install             # Install dependencies
+npm start               # Start dev server (port 3000)
+npm run build           # Production build
 ```
 
 ---
 
-## Local Development Setup
+## 🔧 Configuration
 
-For active development and debugging, you can run services locally:
-
-### Backend Setup
-
-#### 1. Navigate to backend directory
-
-```bash
-cd go/backend
-```
-
-#### 2. Install dependencies
-
-```bash
-go mod download
-```
-
-#### 3. Set up PostgreSQL
-
-Option A - Use Docker for DB only:
-
-```bash
-docker run -d \
-  --name fanhub-go-db \
-  -e POSTGRES_DB=fanhub \
-  -e POSTGRES_USER=fanhub \
-  -e POSTGRES_PASSWORD=fanhub123 \
-  -p 5435:5432 \
-  postgres:15-alpine
-```
-
-Option B - Use local PostgreSQL:
-
-```sql
-CREATE DATABASE fanhub;
-CREATE USER fanhub WITH PASSWORD 'fanhub123';
-GRANT ALL PRIVILEGES ON DATABASE fanhub TO fanhub;
-```
-
-#### 4. Run database migrations
-
-The application will auto-migrate on startup, or you can use psql:
-
-```bash
-psql -h localhost -p 5435 -U fanhub -d fanhub -f database/schema.sql
-psql -h localhost -p 5435 -U fanhub -d fanhub -f database/seed.sql
-```
-
-#### 5. Configure environment
-
-Create `.env` file in `backend/` directory:
+The backend is configured via environment variables. Create a `.env` file in `go/backend/`:
 
 ```env
-DATABASE_URL=postgres://fanhub:fanhub123@localhost:5435/fanhub?sslmode=disable
 PORT=5265
+DB_PATH=./fanhub.db
 GIN_MODE=debug
 JWT_SECRET=your-secret-key-change-in-production
 ```
 
-#### 6. Run the backend
+The database file is created automatically at startup — no migration step required.
+
+### Reset the Database
 
 ```bash
-go run main.go
+cd go/backend
+rm fanhub.db     # Mac/Linux
+del fanhub.db    # Windows
+go run main.go   # Recreates and seeds automatically
 ```
-
-The API will be available at http://localhost:5265
-
-#### 7. Run with hot reload (Optional)
-
-Install Air for hot reloading:
-
-```bash
-go install github.com/cosmtrek/air@latest
-air
-```
-
-### Frontend Setup
-
-#### 1. Navigate to frontend directory
-
-```bash
-cd go/frontend
-```
-
-#### 2. Install dependencies
-
-```bash
-npm install
-```
-
-#### 3. Set environment variables
-
-Create `.env` file:
-
-```env
-REACT_APP_API_URL=http://localhost:5265
-PORT=3000
-```
-
-#### 4. Start the development server
-
-```bash
-npm start
-```
-
-The frontend will open at http://localhost:3000
 
 ---
 
-## Available API Endpoints
+## 🔍 Available API Endpoints
 
 ### Characters
-- `GET /api/characters` - List all characters
-- `GET /api/characters/:id` - Get character by ID
-- `GET /api/characters/search?name=Walter` - Search characters (has SQL injection bug!)
-- `POST /api/characters` - Create a new character
+- `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
+- `GET /api/characters/:id` — Get character by ID
+- `GET /api/characters/search?name=Walter` — Search (has SQL injection bug!)
+- `POST /api/characters` — Create a character
 
 ### Episodes
-- `GET /api/episodes` - List all episodes (pagination missing)
-- `GET /api/episodes?seasonId=1` - Filter by season (cache bug!)
-- `GET /api/episodes/:id` - Get episode by ID
-- `POST /api/episodes` - Create a new episode
+- `GET /api/episodes` — List all episodes
+- `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
+- `GET /api/episodes/:id` — Get episode by ID
+- `POST /api/episodes` — Create an episode
 
 ### Shows
-- `GET /api/shows` - List all shows
-- `GET /api/shows/:id` - Get show by ID
-- `POST /api/shows` - Create a new show
+- `GET /api/shows` — List all shows
+- `GET /api/shows/:id` — Get show by ID
+- `POST /api/shows` — Create a show
 
 ### Quotes
-- `GET /api/quotes` - List all quotes
-- `GET /api/quotes/random` - Get a random quote
-- `POST /api/quotes` - Create a new quote
+- `GET /api/quotes` — List all quotes
+- `GET /api/quotes/random` — Get a random quote
+- `POST /api/quotes` — Create a quote
 
 ### Authentication (Incomplete)
-- `POST /auth/register` - Register a new user (weak password validation!)
-- `POST /auth/login` - Login (incomplete JWT implementation)
+- `POST /auth/register` — Register (weak password validation!)
+- `POST /auth/login` — Login (incomplete JWT implementation)
 
 ---
 
-## Testing the Application
+## 🧪 Testing the App
 
-### Manual Testing
+### Verify Bugs Are Present
 
-#### 1. View all characters
-
+**Duplicate Jesse Pinkman:**
 ```bash
 curl http://localhost:5265/api/characters
 ```
+Expected: Two Jesse Pinkman entries.
 
-Expected: List of characters including **duplicate Jesse Pinkman** entries (bug!)
-
-#### 2. Test cache bug
-
+**Cache bug:**
 ```bash
-# Request episodes for season 1
 curl http://localhost:5265/api/episodes?seasonId=1
-
-# Request episodes for season 2
 curl http://localhost:5265/api/episodes?seasonId=2
 ```
+Expected: Both return Season 1 episodes.
 
-Expected: Both return season 1 episodes due to cache bug
-
-#### 3. Test SQL injection vulnerability
-
+**SQL injection:**
 ```bash
 curl "http://localhost:5265/api/characters/search?name='; DROP TABLE characters; --"
 ```
+Expected: SQL error visible in response.
 
-Expected: Shows SQL error (demonstrates vulnerability)
+### Race Detector
 
-### Run with Race Detector
-
-Go has built-in race detection. Run with:
-
+Go has built-in race detection:
 ```bash
 go run -race main.go
 ```
-
-Expected: Detects race condition in episode cache
-
-### Load Testing (Optional)
-
-```bash
-# Install hey
-go install github.com/rakyll/hey@latest
-
-# Test cache race condition
-hey -n 1000 -c 10 http://localhost:5265/api/episodes?seasonId=1
-```
+Expected: Detects race condition in episode cache.
 
 ---
 
-## Debugging Tips
+## 🆘 Troubleshooting
 
-### Enable Debug Logging
-
-Set `GIN_MODE=debug` in your `.env` file:
-
-```env
-GIN_MODE=debug
-```
-
-### Check Database Connection
-
-```bash
-# Connect to PostgreSQL
-docker exec -it fanhub-go-db psql -U fanhub -d fanhub
-
-# Run queries
-SELECT * FROM characters WHERE name LIKE '%Jesse%';
-\q  # Exit
-```
-
-### View Container Logs
-
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f db
-```
-
-### Common Issues
-
-#### Port Already in Use
-
-If ports 5265, 3000, or 5435 are already in use:
+### Port Already in Use
 
 ```bash
 # Find process using the port (Windows)
 netstat -ano | findstr :5265
 
-# Kill the process
-taskkill /PID <PID> /F
-
-# Or change ports in docker-compose.yml and .env
+# Mac/Linux
+lsof -i :5265
 ```
 
-#### Database Connection Failed
+### Go Module Issues
 
 ```bash
-# Check if PostgreSQL is running
-docker ps | grep postgres
-
-# Restart database
-docker-compose restart db
-
-# Check logs
-docker-compose logs db
-```
-
-#### Go Module Issues
-
-```bash
-# Clear module cache
 go clean -modcache
-
-# Re-download dependencies
 go mod download
-
-# Tidy dependencies
 go mod tidy
 ```
 
-#### Frontend Proxy Not Working
+### Frontend Proxy Not Working
 
-Ensure `package.json` has:
+Ensure `go/frontend/package.json` has:
 
 ```json
 {
@@ -345,65 +211,60 @@ Ensure `package.json` has:
 }
 ```
 
-If still not working, use direct API calls with full URL in React code.
+### Enable Debug Logging
+
+Set `GIN_MODE=debug` (it is by default in local dev).
 
 ---
 
-## Workshop Learning Path
+## 🎓 Workshop Learning Path
 
 This implementation contains **~42 intentional bugs** for learning purposes!
 
-### Recommended Bug Hunting Order:
+### Recommended Bug Hunting Order
 
-1. **Critical Security (Start Here!)**
+1. **Critical Security**
    - SQL injection in character search
-   - Hardcoded JWT secret
-   - CORS wide open
-   - Auth middleware not implemented
+   - Hardcoded JWT secret fallback
+   - CORS wide open (`AllowAllOrigins`)
+   - Auth middleware not applied to routes
 
 2. **Classic Go Mistakes**
-   - Missing `if err != nil` checks (most important!)
-   - Race condition in cache (run with `-race`)
+   - Missing `if err != nil` checks
+   - Race condition in episode cache (run with `-race`)
    - Goroutine leak in episode service
-   - No context.Context propagation
+   - No `context.Context` propagation
 
 3. **Design Issues**
-   - Global database variable
+   - Global database variable (no DI)
    - Mixed pointer/value receivers
    - Inconsistent JSON tags
    - No input validation
 
 4. **Performance**
-   - Cache doesn't use seasonID in key
+   - Cache key ignores `seasonId`
    - Missing pagination
    - N+1 query problems
 
 5. **Code Quality**
-   - Exposed error messages
-   - Inconsistent naming
+   - Exposed error messages in responses
+   - Inconsistent naming conventions
    - Missing documentation
    - No tests
 
 ### Using GitHub Copilot
 
-Throughout the workshop, use Copilot to:
-- Identify bugs using Copilot Chat: *"Find security vulnerabilities in this file"*
-- Get fix suggestions: *"How should I handle this error?"*
-- Refactor code: *"Refactor this to use context.Context"*
+- Find bugs: *"Find security vulnerabilities in this file"*
+- Get fixes: *"How should I handle this error in Go?"*
+- Refactor: *"Refactor this to use context.Context"*
 - Write tests: *"Generate unit tests for this handler"*
 
 ---
 
-## Next Steps
+## 📚 Additional Resources
 
-1. ✅ Get the application running
-2. 📖 Read [BUGS.md](./BUGS.md) to understand intentional issues
-3. 🐛 Start fixing bugs using GitHub Copilot
-4. 🧪 Add tests to verify your fixes
-5. 📝 Document your learnings
-
-For detailed bug information, see [BUGS.md](./BUGS.md).
-
-For workshop challenges, see [WORKSHOP.md](./WORKSHOP.md).
-
-Happy coding! 🚀
+- [Main README](../README.md) — Workshop overview
+- [go/BUGS.md](./backend/BUGS.md) — Go-specific bugs catalog
+- [go/WORKSHOP.md](./backend/WORKSHOP.md) — Workshop challenges
+- [Go Documentation](https://go.dev/doc/)
+- [Gin Framework Docs](https://gin-gonic.com/docs/)
