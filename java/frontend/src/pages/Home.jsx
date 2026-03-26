@@ -1,10 +1,10 @@
 // Home page - displays show overview and featured content
 // TODO: Add actual show data, this is all placeholder
 
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { showsApi, quotesApi } from '../services/api';
-import QuoteDisplay from '../components/QuoteDisplay';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { showsApi, quotesApi } from "../services/api";
+import QuoteDisplay from "../components/QuoteDisplay";
 
 const HeroSection = styled.section`
   background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d2100 100%);
@@ -107,15 +107,17 @@ function Home() {
 
       // Get a random famous quote
       try {
-        const quoteResponse = await quotesApi.getRandom({ famous_only: 'true' });
+        const quoteResponse = await quotesApi.getRandom({
+          famous_only: "true",
+        });
         setRandomQuote(quoteResponse.data);
       } catch (e) {
         // Quote might not exist, that's okay
-        console.log('No quotes available');
+        console.log("No quotes available");
       }
     } catch (err) {
-      console.error('Failed to load data:', err);
-      setError('Failed to load show data. Is the backend running?');
+      console.error("Failed to load data:", err);
+      setError("Failed to load show data. Is the backend running?");
     } finally {
       setLoading(false);
     }
@@ -136,9 +138,10 @@ function Home() {
   return (
     <div>
       <HeroSection>
-        <Title>{show?.title || 'Welcome to FanHub'}</Title>
+        <Title>{show?.title || "Welcome to FanHub"}</Title>
         <Subtitle>
-          {show?.description || 'Your ultimate destination for everything about your favorite show!'}
+          {show?.description ||
+            "Your ultimate destination for everything about your favorite show!"}
         </Subtitle>
       </HeroSection>
 
@@ -156,7 +159,7 @@ function Home() {
           <StatLabel>Characters</StatLabel>
         </StatCard>
         <StatCard>
-          <StatNumber>{show?.start_year || '—'}</StatNumber>
+          <StatNumber>{show?.startYear || "—"}</StatNumber>
           <StatLabel>First Aired</StatLabel>
         </StatCard>
       </StatsGrid>
@@ -164,26 +167,35 @@ function Home() {
       {randomQuote && (
         <Section>
           <SectionTitle>Quote of the Day</SectionTitle>
-          <QuoteDisplay
-            quote={randomQuote}
-            onLike={handleQuoteLike}
-          />
+          <QuoteDisplay quote={randomQuote} onLike={handleQuoteLike} />
         </Section>
       )}
 
       <Section>
         <SectionTitle>About the Show</SectionTitle>
-        <div style={{
-          background: 'white',
-          padding: '1.5rem',
-          borderRadius: '12px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.08)'
-        }}>
-          <p>{show?.description || 'No description available. Add one in the admin panel!'}</p>
-          <div style={{ marginTop: '1rem', color: '#666' }}>
-            <p><strong>Genre:</strong> {show?.genre || 'Unknown'}</p>
-            <p><strong>Network:</strong> {show?.network || 'Unknown'}</p>
-            <p><strong>Years:</strong> {show?.start_year || '?'} - {show?.end_year || 'Present'}</p>
+        <div
+          style={{
+            background: "white",
+            padding: "1.5rem",
+            borderRadius: "12px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+          }}
+        >
+          <p>
+            {show?.description ||
+              "No description available. Add one in the admin panel!"}
+          </p>
+          <div style={{ marginTop: "1rem", color: "#666" }}>
+            <p>
+              <strong>Genre:</strong> {show?.genre || "Unknown"}
+            </p>
+            <p>
+              <strong>Network:</strong> {show?.network || "Unknown"}
+            </p>
+            <p>
+              <strong>Years:</strong> {show?.startYear || "?"} -{" "}
+              {show?.endYear || "Present"}
+            </p>
           </div>
         </div>
       </Section>

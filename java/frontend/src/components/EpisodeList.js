@@ -107,9 +107,9 @@ function EpisodeList({ episodes, onEpisodeClick }) {
           }}
         >
           <div style={styles.thumbnail}>
-            {episode.thumbnail_url ? (
+            {episode.thumbnailUrl ? (
               <img
-                src={episode.thumbnail_url}
+                src={episode.thumbnailUrl}
                 alt={episode.title}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
@@ -121,16 +121,16 @@ function EpisodeList({ episodes, onEpisodeClick }) {
             <div style={styles.header}>
               <h3 style={styles.title}>{episode.title}</h3>
               <span style={styles.episodeNumber}>
-                S{episode.season_number || "?"}E{episode.episode_number}
+                S{episode.seasonId || "?"}E{episode.episodeNumber}
               </span>
             </div>
             <p style={styles.description}>
               {episode.description || "No description available."}
             </p>
             <div style={styles.meta}>
-              <span>📅 {formatDate(episode.air_date)}</span>
-              {episode.runtime_minutes && (
-                <span>⏱️ {episode.runtime_minutes} min</span>
+              <span>📅 {formatDate(episode.airDate)}</span>
+              {episode.runtimeMinutes && (
+                <span>⏱️ {episode.runtimeMinutes} min</span>
               )}
               {episode.rating && (
                 <span style={styles.rating}>⭐ {episode.rating}/10</span>

@@ -1,15 +1,17 @@
 // CharacterCard component - uses STYLED-COMPONENTS
 // Different naming convention (.jsx) than Footer (.js)
 
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Card = styled.div`
   background: white;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 
   &:hover {
@@ -66,11 +68,14 @@ const StatusBadge = styled.span`
   font-size: 0.75rem;
   font-weight: bold;
   text-transform: uppercase;
-  background: ${props => {
+  background: ${(props) => {
     switch (props.$status) {
-      case 'alive': return '#4caf50';
-      case 'deceased': return '#f44336';
-      default: return '#9e9e9e';
+      case "alive":
+        return "#4caf50";
+      case "deceased":
+        return "#f44336";
+      default:
+        return "#9e9e9e";
     }
   }};
   color: white;
@@ -91,9 +96,9 @@ const MainCharacterBadge = styled.span`
 const CharacterCard = ({ character, onClick }) => {
   const getInitials = (name) => {
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -101,28 +106,32 @@ const CharacterCard = ({ character, onClick }) => {
   return (
     <Card onClick={() => onClick && onClick(character)}>
       <ImageWrapper>
-        {character.image_url ? (
+        {character.imageUrl ? (
           <CharacterImage
-            src={character.image_url}
+            src={character.imageUrl}
             alt={character.name}
             onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
+              e.target.style.display = "none";
+              e.target.nextSibling.style.display = "flex";
             }}
           />
         ) : null}
-        <PlaceholderImage style={{ display: character.image_url ? 'none' : 'flex' }}>
+        <PlaceholderImage
+          style={{ display: character.imageUrl ? "none" : "flex" }}
+        >
           {getInitials(character.name)}
         </PlaceholderImage>
       </ImageWrapper>
       <CardContent>
         <CharacterName>
           {character.name}
-          {character.is_main_character && <MainCharacterBadge>MAIN</MainCharacterBadge>}
+          {character.isMainCharacter && (
+            <MainCharacterBadge>MAIN</MainCharacterBadge>
+          )}
         </CharacterName>
-        <ActorName>Played by {character.actor_name || 'Unknown'}</ActorName>
+        <ActorName>Played by {character.actorName || "Unknown"}</ActorName>
         <StatusBadge $status={character.status}>
-          {character.status || 'Unknown'}
+          {character.status || "Unknown"}
         </StatusBadge>
       </CardContent>
     </Card>

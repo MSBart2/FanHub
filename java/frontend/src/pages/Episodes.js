@@ -62,10 +62,10 @@ const Episodes = () => {
   const extractSeasons = useCallback((episodeList) => {
     const seasonMap = new Map();
     episodeList.forEach((ep) => {
-      if (ep.season_number && !seasonMap.has(ep.season_number)) {
-        seasonMap.set(ep.season_number, {
-          number: ep.season_number,
-          id: ep.season_id,
+      if (ep.seasonId && !seasonMap.has(ep.seasonId)) {
+        seasonMap.set(ep.seasonId, {
+          number: ep.seasonId,
+          id: ep.seasonId,
         });
       }
     });

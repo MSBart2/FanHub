@@ -1,9 +1,9 @@
 // Header component - FUNCTIONAL with styled-components
 // This is ONE style approach (others use different approaches!)
 
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const HeaderWrapper = styled.header`
   background: #0d0d0d;
@@ -30,6 +30,8 @@ const Logo = styled(Link)`
 
   &:hover {
     color: #5ddb38;
+  }
+`;
 
 const NavLinks = styled.div`
   display: flex;
@@ -37,9 +39,9 @@ const NavLinks = styled.div`
 `;
 
 const NavLink = styled(Link)`
-  color: ${props => props.$active ? '#3eaf1a' : '#ccc'};
+  color: ${(props) => (props.$active ? "#3eaf1a" : "#ccc")};
   text-decoration: none;
-  font-weight: ${props => props.$active ? 'bold' : 'normal'};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -61,10 +63,18 @@ const Header = () => {
       <Nav>
         <Logo to="/">Breaking Bad Fan Hub</Logo>
         <NavLinks>
-          <NavLink to="/" $active={isActive('/')}>Home</NavLink>
-          <NavLink to="/characters" $active={isActive('/characters')}>Characters</NavLink>
-          <NavLink to="/episodes" $active={isActive('/episodes')}>Episodes</NavLink>
-          <NavLink to="/about" $active={isActive('/about')}>About</NavLink>
+          <NavLink to="/" $active={isActive("/")}>
+            Home
+          </NavLink>
+          <NavLink to="/characters" $active={isActive("/characters")}>
+            Characters
+          </NavLink>
+          <NavLink to="/episodes" $active={isActive("/episodes")}>
+            Episodes
+          </NavLink>
+          <NavLink to="/about" $active={isActive("/about")}>
+            About
+          </NavLink>
         </NavLinks>
       </Nav>
     </HeaderWrapper>
