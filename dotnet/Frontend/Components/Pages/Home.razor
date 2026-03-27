@@ -1,4 +1,6 @@
 @page "/"
+@inject HttpClient Http
+@using System.Linq
 
 <PageTitle>FanHub - Breaking Bad</PageTitle>
 
@@ -27,12 +29,12 @@
                 <span class="stat-label">Seasons</span>
             </div>
             <div class="summary-stat">
-                <span class="stat-number">62</span>
-                <span class="stat-label">Episodes</span>
+                <span class="stat-number">@characterCount</span>
+                <span class="stat-label">Characters</span>
             </div>
             <div class="summary-stat">
-                <span class="stat-number">2008</span>
-                <span class="stat-label">Premiered</span>
+                <span class="stat-number">62</span>
+                <span class="stat-label">Episodes</span>
             </div>
             <div class="summary-stat">
                 <span class="stat-number">AMC</span>
@@ -45,6 +47,18 @@
             What begins as a desperate act of survival transforms into something far darker.
         </p>
     </section>
+
+    @if (qotd != null)
+    {
+        <section class="qotd-section">
+            <div class="qotd-label">Quote of the Day</div>
+            <blockquote class="qotd-text">"@qotd.QuoteText"</blockquote>
+            @if (!string.IsNullOrEmpty(qotdCharacterName))
+            {
+                <p class="qotd-character">— @qotdCharacterName</p>
+            }
+        </section>
+    }
 
     <section class="nav-cards">
         <a href="/characters" class="nav-card">
@@ -258,4 +272,77 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+
+        .qotd-section {
+            background: #0d0d0d;
+            border-left: 4px solid #62d962;
+            border-radius: 4px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .qotd-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #62d962;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .qotd-text {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #f0f0f0;
+            line-height: 1.6;
+            margin: 0 0 1rem;
+            quotes: none;
+        }
+
+        .qotd-character {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 600;
+        }
     </style>
+
+@code {
+    private QuoteDto? qotd;
+    private string? qotdCharacterName;
+    private int characterCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var characters = await Http.GetFromJsonAsync<List<CharacterDto>>("api/characters");
+            characterCount = characters?.Count ?? 0;
+
+            var quotes = await Http.GetFromJsonAsync<List<QuoteDto>>("api/quotes");
+            if (quotes != null && quotes.Count > 0)
+            {
+                var famous = quotes.Where(q => q.IsFamous).ToList();
+                var pool = famous.Count > 0 ? famous : quotes;
+                var index = DateTime.UtcNow.DayOfYear % pool.Count;
+                qotd = pool[index];
+                qotdCharacterName = characters?.FirstOrDefault(c => c.Id == qotd.CharacterId)?.Name;
+            }
+        }
+        catch { }
+    }
+
+    private class QuoteDto
+    {
+        public int Id { get; set; }
+        public int CharacterId { get; set; }
+        public string QuoteText { get; set; } = "";
+        public bool IsFamous { get; set; }
+    }
+
+    private class CharacterDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+}

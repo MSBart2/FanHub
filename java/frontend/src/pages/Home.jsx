@@ -151,16 +151,16 @@ function Home() {
           <StatLabel>Seasons</StatLabel>
         </StatCard>
         <StatCard>
-          <StatNumber>{show?.episodes?.length || 0}</StatNumber>
-          <StatLabel>Episodes</StatLabel>
-        </StatCard>
-        <StatCard>
           <StatNumber>{show?.characters?.length || 0}</StatNumber>
           <StatLabel>Characters</StatLabel>
         </StatCard>
         <StatCard>
-          <StatNumber>{show?.startYear || "—"}</StatNumber>
-          <StatLabel>First Aired</StatLabel>
+          <StatNumber>{show?.episodes?.length || 0}</StatNumber>
+          <StatLabel>Episodes</StatLabel>
+        </StatCard>
+        <StatCard>
+          <StatNumber>{show?.network || '—'}</StatNumber>
+          <StatLabel>Network</StatLabel>
         </StatCard>
       </StatsGrid>
 

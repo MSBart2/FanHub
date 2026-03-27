@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models;
 
@@ -12,8 +14,11 @@ public class Episode
     public string Description { get; set; }
     public int RuntimeMinutes { get; set; }
     public DateTime AirDate { get; set; }
-    
+
     // BUG: Only one navigation property, missing Show
     public Season Season { get; set; }
     // Missing: public Show Show { get; set; }
+
+    [NotMapped]
+    public List<Character> Characters { get; set; } = new();
 }

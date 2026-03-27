@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(FanHubContext))]
-    [Migration("20260324170844_AddCharacterDetailsRelationships")]
-    partial class AddCharacterDetailsRelationships
+    [Migration("20260327003316_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,9 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CharacterId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CharacterType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
@@ -54,9 +55,11 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Tagline")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("CharacterId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ShowId");
 
@@ -79,10 +82,6 @@ namespace Backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CharacterId");
-
-                    b.HasIndex("RelatedCharacterId");
 
                     b.ToTable("CharacterRelationships");
                 });
@@ -120,8 +119,6 @@ namespace Backend.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.HasIndex("ShowId");
-
                     b.ToTable("Episodes");
                 });
 
@@ -153,10 +150,6 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CharacterId");
-
-                    b.HasIndex("EpisodeId");
-
-                    b.HasIndex("ShowId");
 
                     b.ToTable("Quotes");
                 });
@@ -249,27 +242,8 @@ namespace Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CharacterEpisode", b =>
-                {
-                    b.Property<int>("CharactersId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EpisodesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("CharactersId", "EpisodesId");
-
-                    b.HasIndex("EpisodesId");
-
-                    b.ToTable("CharacterEpisodes", (string)null);
-                });
-
             modelBuilder.Entity("Backend.Models.Character", b =>
                 {
-                    b.HasOne("Backend.Models.Character", null)
-                        .WithMany("RelatedCharacters")
-                        .HasForeignKey("CharacterId");
-
                     b.HasOne("Backend.Models.Show", "Show")
                         .WithMany()
                         .HasForeignKey("ShowId")
@@ -277,25 +251,6 @@ namespace Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Show");
-                });
-
-            modelBuilder.Entity("Backend.Models.CharacterRelationship", b =>
-                {
-                    b.HasOne("Backend.Models.Character", "Character")
-                        .WithMany()
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Character", "RelatedCharacter")
-                        .WithMany()
-                        .HasForeignKey("RelatedCharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Character");
-
-                    b.Navigation("RelatedCharacter");
                 });
 
             modelBuilder.Entity("Backend.Models.Episode", b =>
@@ -306,64 +261,18 @@ namespace Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Models.Show", "Show")
-                        .WithMany()
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Season");
-
-                    b.Navigation("Show");
                 });
 
             modelBuilder.Entity("Backend.Models.Quote", b =>
                 {
                     b.HasOne("Backend.Models.Character", "Character")
-                        .WithMany("Quotes")
+                        .WithMany()
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Models.Episode", "Episode")
-                        .WithMany()
-                        .HasForeignKey("EpisodeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Show", "Show")
-                        .WithMany()
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Character");
-
-                    b.Navigation("Episode");
-
-                    b.Navigation("Show");
-                });
-
-            modelBuilder.Entity("CharacterEpisode", b =>
-                {
-                    b.HasOne("Backend.Models.Character", null)
-                        .WithMany()
-                        .HasForeignKey("CharactersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Episode", null)
-                        .WithMany()
-                        .HasForeignKey("EpisodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Backend.Models.Character", b =>
-                {
-                    b.Navigation("Quotes");
-
-                    b.Navigation("RelatedCharacters");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,4 @@
-/* Global styles - minimal reset and basics */
+/* Global styles - Breaking Bad fan site theme */
 
 * {
   margin: 0;
@@ -11,8 +11,8 @@ body {
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: #111111;
+  color: #e0e0e0;
   line-height: 1.6;
 }
 
@@ -24,21 +24,41 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
 
 a {
-  color: #0066cc;
+  color: #62d962;
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: #80e880;
+  text-decoration: none;
 }
 
-/* TODO: Add show-specific theming */
-/* TODO: Add dark mode support */
-/* TODO: Make responsive */
+/* Headings */
+h1, h2, h3 {
+  color: #ffffff;
+}
+
+/* Cards */
+.card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* Shared section title style */
+h2.section-title {
+  font-size: 1.4rem;
+  color: #ffffff;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #62d962;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
