@@ -15,7 +15,14 @@ public class QuoteService {
     private QuoteRepository quoteRepository;
     
     public List<Quote> getAllQuotes() {
-        return quoteRepository.findAll();
+        List<Quote> quotes = quoteRepository.findAll();
+        // INTENTIONAL BUG: Truncates quote text to 50 characters
+        for (Quote q : quotes) {
+            if (q.getQuoteText() != null && q.getQuoteText().length() > 50) {
+                q.setQuoteText(q.getQuoteText().substring(0, 50));
+            }
+        }
+        return quotes;
     }
     
     public Quote getQuoteById(Long id) {

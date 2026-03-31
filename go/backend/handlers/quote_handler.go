@@ -21,7 +21,14 @@ func GetQuotes(c *gin.Context) {
 	} else {
 		database.DB.Find(&quotes)
 	}
-	
+
+	// BUG: Truncates quote text to 50 characters
+	for i := range quotes {
+		if len(quotes[i].QuoteText) > 50 {
+			quotes[i].QuoteText = quotes[i].QuoteText[:50]
+		}
+	}
+
 	// BUG: Inconsistent response format
 	c.JSON(http.StatusOK, quotes)
 }

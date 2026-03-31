@@ -70,8 +70,14 @@ router.get('/', async (req, res, next) => {
     
     const result = await db.query(sql, params);
     
+    // BUG: Truncates quote text to 50 characters
+    const rows = result.rows.map(q => ({
+      ...q,
+      quote_text: q.quote_text ? q.quote_text.substring(0, 50) : q.quote_text
+    }));
+    
     // Different response format - just the array
-    res.json(result.rows);
+    res.json(rows);
   } catch (error) {
     next(error);
   }

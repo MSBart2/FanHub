@@ -21,6 +21,9 @@ public class QuotesController : ControllerBase
     {
         // BUG: Missing Include() - Character navigation property will be null
         var quotes = await _context.Quotes.ToListAsync();
+        // BUG: Truncates quote text to 50 characters
+        foreach (var q in quotes)
+            q.QuoteText = q.QuoteText?.Length > 50 ? q.QuoteText.Substring(0, 50) : q.QuoteText;
         return Ok(quotes);
     }
     
