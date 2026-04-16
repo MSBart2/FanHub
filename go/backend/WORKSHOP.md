@@ -3,24 +3,26 @@
 ## Prerequisites
 
 - Go 1.21 or higher
-- PostgreSQL 14+
-- A PostgreSQL client (psql, pgAdmin, etc.)
+- (Optional) `sqlite3` CLI for inspecting the database file
 
 ## Setup Steps
 
 ### 1. Install Go (if not already installed)
 
 **Windows**:
+
 ```powershell
 winget install GoLang.Go
 ```
 
 **macOS**:
+
 ```bash
 brew install go
 ```
 
 **Linux**:
+
 ```bash
 sudo apt install golang-go
 ```
@@ -37,40 +39,37 @@ cd C:\Users\rmathis\source\FanHub\go\backend
 go mod download
 ```
 
-### 4. Set Up PostgreSQL Database
+### 4. Database Setup (Automatic)
 
-**Create Database**:
-```bash
-# Using psql
-psql -U postgres
-CREATE DATABASE fanhub;
-\q
-```
+No manual database setup is required. On first run the backend will:
 
-**Run Schema**:
-```bash
-psql -U postgres -d fanhub -f database/schema.sql
-```
+- Create a local SQLite database file at the path defined by `DB_PATH` (default `./fanhub.db`)
+- Run GORM `AutoMigrate` to create the schema
+- Call `SeedDB()` to load the Breaking Bad seed data
 
-**Load Seed Data**:
+If you want to inspect or reset the database manually:
+
 ```bash
-psql -U postgres -d fanhub -f database/seed.sql
+# Inspect with the sqlite3 CLI
+sqlite3 ./fanhub.db ".tables"
+sqlite3 ./fanhub.db "SELECT id, name FROM characters;"
+
+# Reset by deleting the file (it will be recreated on next run)
+rm ./fanhub.db
 ```
 
 ### 5. Configure Environment
 
 Copy the example environment file:
+
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` if your PostgreSQL settings differ:
+Edit `.env` if you want to change defaults:
+
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_NAME=fanhub
+DB_PATH=./fanhub.db
 PORT=8080
 JWT_SECRET=super-secret-key-do-not-use-in-production
 ```
@@ -82,6 +81,7 @@ go run main.go
 ```
 
 You should see:
+
 ```
 Server starting on port 8080
 Database connection established
@@ -110,75 +110,90 @@ curl -X POST http://localhost:8080/auth/register \
 ## Workshop Challenges
 
 ### Challenge 1: Fix Critical Error Handling
+
 **Goal**: Find and fix missing `if err != nil` checks
 **Hint**: Look in `database/db.go` first - the app might not even connect to the database!
 
 ### Challenge 2: Fix SQL Injection
+
 **Goal**: Fix the SQL injection vulnerability in character search
 **File**: `handlers/character_handler.go`
 **Hint**: Never concatenate user input into SQL queries
 
 ### Challenge 3: Fix Race Condition
+
 **Goal**: Fix the race condition in episode caching
 **File**: `services/episode_service.go`
 **Hint**: Use `sync.RWMutex`
 
 ### Challenge 4: Fix Goroutine Leak
+
 **Goal**: Stop the goroutine leak in episode service
 **File**: `services/episode_service.go`
 **Hint**: Remove or fix the `init()` function
 
 ### Challenge 5: Fix Cache Bug
+
 **Goal**: Fix cache key to properly distinguish between seasons
 **File**: `services/episode_service.go`
 **Hint**: The cache uses only seasonID but should use something more unique
 
 ### Challenge 6: Implement JWT Authentication
+
 **Goal**: Replace fake JWT with real implementation
 **File**: `services/auth_service.go`
 **Hint**: Use `github.com/golang-jwt/jwt/v5`
 
 ### Challenge 7: Implement Auth Middleware
+
 **Goal**: Implement actual JWT validation
 **File**: `middleware/auth.go`
 **Hint**: Extract token from Authorization header, validate it
 
 ### Challenge 8: Fix CORS
+
 **Goal**: Restrict CORS to specific origins
 **File**: `middleware/cors.go`
 **Hint**: Don't use `*` - configure allowed origins properly
 
 ### Challenge 9: Add Recovery Middleware
+
 **Goal**: Add panic recovery middleware to Gin
 **File**: `main.go`
 **Hint**: Gin has built-in recovery middleware
 
 ### Challenge 10: Fix Password Security
+
 **Goal**: Strengthen password requirements and fix exposed password hash
 **Files**: `services/auth_service.go`, `models/user.go`
 **Hint**: Minimum 8-12 characters, use `json:"-"` to hide fields
 
 ### Challenge 11: Add Graceful Shutdown
+
 **Goal**: Implement graceful shutdown with context
 **File**: `main.go`
 **Hint**: Use `signal.Notify()` and `context.WithTimeout()`
 
 ### Challenge 12: Add Dependency Injection
+
 **Goal**: Remove global DB variable
 **Files**: `database/db.go`, all handlers and services
 **Hint**: Create a struct to hold DB, pass it to handlers
 
 ### Challenge 13: Add Context Propagation
+
 **Goal**: Add context.Context to all service functions
 **Files**: All service files
 **Hint**: First parameter should be `ctx context.Context`
 
 ### Challenge 14: Fix Inconsistent Response Format
+
 **Goal**: Standardize API responses
 **Files**: All handler files
 **Hint**: Always wrap in consistent structure or never wrap
 
 ### Challenge 15: Fix the Duplicate Jesse
+
 **Goal**: Find and fix the duplicate character in seed data
 **File**: `database/seed.sql`
 **Hint**: Look for "Jesse Pinkman"
@@ -217,7 +232,7 @@ go build -o fanhub-server main.go
 
 ## Troubleshooting
 
-**Database connection fails**: Check if PostgreSQL is running and credentials are correct
+**Database connection fails**: Check that the directory for `DB_PATH` exists and is writable
 
 **Port already in use**: Change PORT in `.env`
 
@@ -226,6 +241,7 @@ go build -o fanhub-server main.go
 **Nil pointer errors**: Check for missing error handling
 
 **Race detector**: Run with race detector to find concurrency bugs
+
 ```bash
 go run -race main.go
 ```
@@ -233,6 +249,7 @@ go run -race main.go
 ## Next Steps
 
 Once you've fixed the bugs:
+
 1. Add unit tests
 2. Add integration tests
 3. Implement remaining CRUD operations

@@ -284,8 +284,8 @@ Delete `fanhub.db` and re-run `dotnet ef database update` to start fresh.
 
 **"Database does not exist"**
 
-- Run: `docker-compose up -d postgres`
-- Run: `dotnet ef database update`
+- Run: `dotnet ef database update` (creates the local `fanhub.db` SQLite file)
+- Or simply `dotnet run` — `SeedData` will create and populate `fanhub.db` on first start
 
 **"Port 5000 already in use"**
 

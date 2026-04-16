@@ -2,7 +2,7 @@
 
 > ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops. Contains 36+ bugs by design.
 
-A generic fan site application for TV shows featuring characters, episodes, quotes, and user authentication. Built with **Spring Boot**, **React**, and **PostgreSQL**.
+A generic fan site application for TV shows featuring characters, episodes, quotes, and user authentication. Built with **Spring Boot**, **React**, and **SQLite**.
 
 ---
 
@@ -21,6 +21,7 @@ A generic fan site application for TV shows featuring characters, episodes, quot
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Java 17+**
 - **Docker Desktop**
 - **Node.js 18+**
@@ -36,7 +37,7 @@ npm start
 # Application URLs:
 # Frontend: http://localhost:3000
 # Backend API: http://localhost:5265
-# PostgreSQL: localhost:5434
+# Database: SQLite file at /data/fanhub.db inside the backend container
 ```
 
 ### First Time Setup
@@ -49,7 +50,7 @@ cp .env.example .env
 docker-compose up
 
 # In another terminal, verify the database
-docker exec -it fanhub-java-db psql -U fanhub -d fanhub -c "SELECT COUNT(*) FROM characters;"
+docker exec -it fanhub-java-backend sqlite3 /data/fanhub.db "SELECT COUNT(*) FROM characters;"
 ```
 
 ### Stop Services
@@ -73,13 +74,15 @@ This codebase is **intentionally unconfigured** for GitHub Copilot. The workshop
 This Java implementation has the same missing Copilot configurations as the Node.js version:
 
 #### 1. ❌ Repository Instructions (Module 1)
+
 **File**: `.github/copilot-instructions.md`
 
 **What's needed for Java:**
+
 ```markdown
 # FanHub - Breaking Bad Fan Site (Java/Spring Boot)
 
-Tech Stack: Spring Boot 3.2, Spring Data JPA, Spring Security, PostgreSQL, React
+Tech Stack: Spring Boot 3.2, Spring Data JPA, Spring Security, SQLite, React
 Framework patterns: REST controllers, Service layer, JPA repositories
 Dependency Injection: Constructor injection (preferred)
 Error handling: Custom exceptions with @ControllerAdvice
@@ -89,20 +92,25 @@ Testing: JUnit 5, Mockito, Spring Boot Test
 ```
 
 #### 2. ❌ Custom Prompts Library (Module 3)
+
 **Example Java-specific prompts:**
+
 - `spring-controller.prompt` - Generate REST controllers
 - `jpa-repository.prompt` - Create Spring Data repositories
 - `test-service.prompt` - Generate service layer tests
 - `dto-mapper.prompt` - Create DTO classes with MapStruct
 
 #### 3. ❌ Custom Instructions (Module 4)
+
 **Example Java-specific instructions:**
 
 ```markdown
 # File: .github/instructions/spring-controllers.md
-applyTo: **/controller/*.java
+
+applyTo: \*_/controller/_.java
 
 All Spring REST controllers must:
+
 - Use constructor injection (not @Autowired field injection)
 - Return ResponseEntity for explicit status codes
 - Use @RestController and @RequestMapping
@@ -113,9 +121,11 @@ All Spring REST controllers must:
 
 ```markdown
 # File: .github/instructions/jpa-entities.md
-applyTo: **/model/*.java
+
+applyTo: \*_/model/_.java
 
 All JPA entities must:
+
 - Use Lombok @Data or @Getter/@Setter consistently
 - Include @Entity and @Table annotations
 - Use @Id with @GeneratedValue(strategy = IDENTITY)
@@ -124,6 +134,7 @@ All JPA entities must:
 ```
 
 #### 4. ❌ Agent Skills (Module 5)
+
 **Java-specific domain knowledge:**
 
 ```markdown
@@ -133,20 +144,23 @@ domain: spring-boot-best-practices
 # Spring Boot Best Practices
 
 ## Dependency Injection
+
 - Prefer constructor injection over field injection
 - Use final fields with constructor injection
 - Avoid @Autowired on fields
 
 ## Exception Handling
+
 - Create custom exception classes
 - Use @ControllerAdvice for global exception handling
 - Return proper HTTP status codes
 
 ## JPA Optimization
+
 - Use @Transactional on service methods
 - Avoid N+1 queries with @EntityGraph or JOIN FETCH
 - Use projections for read-only queries
-...
+  ...
 ```
 
 ---
@@ -156,23 +170,26 @@ domain: spring-boot-best-practices
 ### Tech Stack
 
 **Backend**:
+
 - Spring Boot 3.2.2
 - Spring Data JPA with Hibernate
 - Spring Security (incomplete implementation)
-- PostgreSQL 15 with JDBC driver
+- SQLite via the `sqlite-jdbc` driver (file-backed, no separate database service)
 - JWT authentication (not implemented)
 - BCrypt for password hashing
 - Lombok (inconsistently applied)
 
 **Frontend**:
+
 - React 18.2 with React Router 6
 - Styled-components (inconsistently applied)
 - Axios for API calls
 - No state management library
 
 **Infrastructure**:
+
 - Docker Compose for local development
-- PostgreSQL database (port 5434)
+- SQLite database (file-backed at `/data/fanhub.db`)
 - Maven for build management
 - No CI/CD configured
 
@@ -197,7 +214,7 @@ Service Layer (@Service)
          ↓
 Repository Layer (Spring Data JPA)
          ↓
-Database (PostgreSQL)
+Database (SQLite)
 ```
 
 ### API Structure
@@ -217,11 +234,13 @@ Database (PostgreSQL)
 This codebase has **36+ intentional bugs** documented in [`BUGS.md`](BUGS.md):
 
 ### Critical (3)
+
 - ❌ Duplicate Jesse Pinkman in seed data
 - ❌ Episode cache ignores season filter (`@Cacheable` missing key)
 - ❌ Inconsistent API paths (`/api/*` vs `/auth`)
 
 ### High Priority (10)
+
 - Missing error handling (no try-catch in controllers)
 - `Optional.get()` without `isPresent()` check
 - Weak password requirements (only 6 chars)
@@ -231,6 +250,7 @@ This codebase has **36+ intentional bugs** documented in [`BUGS.md`](BUGS.md):
 - Mixed HTTP status codes (200 vs 201 for POST)
 
 ### Medium Priority (10)
+
 - Inconsistent Lombok usage (`@Data` vs `@Getter/@Setter` vs manual)
 - Mixed dependency injection (field vs constructor)
 - Inconsistent response formats (raw vs wrapped in Map)
@@ -241,6 +261,7 @@ This codebase has **36+ intentional bugs** documented in [`BUGS.md`](BUGS.md):
 - No transaction management (`@Transactional` missing)
 
 ### Low Priority (8)
+
 - No pagination on list endpoints
 - Verbose logging in production (DEBUG level)
 - Deprecated SQL initialization
@@ -258,20 +279,24 @@ See **[BUGS.md](BUGS.md)** for complete list with code examples.
 This application is designed for a progressive workshop teaching AI-assisted Spring Boot development:
 
 ### Module 0: The Struggle (30 min)
+
 **Current State**: Try using Copilot now - watch it give confused, generic suggestions
 
 **Experience**:
+
 - Ask "Add a character endpoint" → Gets generic Spring suggestions
 - No awareness of Breaking Bad
 - Suggests wrong patterns
 - Doesn't follow conventions (because there aren't any!)
 
 ### Module 1: Repository Instructions (90 min)
+
 **Add**: `.github/copilot-instructions.md` with Spring Boot context
 
 **Transformation**: Ask the same question - now gets Breaking Bad + Spring Boot context!
 
 ### Modules 2-7: Progressive Copilot Customization
+
 - **Module 2**: Agent Plan Mode
 - **Module 3**: Custom Prompts (Spring-specific templates)
 - **Module 4**: Custom Instructions (file-scoped for controllers, services, repositories)
@@ -280,6 +305,7 @@ This application is designed for a progressive workshop teaching AI-assisted Spr
 - **Module 7**: Custom Agents - THE PAYOFF (autonomous Spring Boot feature development)
 
 ### Modules 8-10: Integration & Deployment
+
 - **Module 8**: GitHub.com integration
 - **Module 9**: Copilot CLI
 - **Module 10**: Orchestration - Ship the app
@@ -352,6 +378,7 @@ java/
 ```
 
 **Legend**:
+
 - ❌ Missing entirely
 - ⚠️ Exists but has issues
 - 🐛 Contains intentional bugs
@@ -387,10 +414,8 @@ npm test               # Run tests (not implemented)
 Create `.env` file from `.env.example`:
 
 ```bash
-# Database
-DATABASE_URL=jdbc:postgresql://localhost:5434/fanhub
-DB_USERNAME=fanhub
-DB_PASSWORD=fanhub_dev_password
+# Database (SQLite — file-backed, no separate service required)
+DATABASE_URL=jdbc:sqlite:./fanhub.db
 
 # Backend
 JWT_SECRET=change_this_in_production
@@ -405,7 +430,7 @@ REACT_APP_API_URL=http://localhost:5265
 
 ```bash
 # Access database shell
-docker exec -it fanhub-java-db psql -U fanhub -d fanhub
+docker exec -it fanhub-java-backend sqlite3 /data/fanhub.db
 
 # View characters (should see duplicate Jesse!)
 SELECT id, name, actor_name FROM characters;
@@ -419,6 +444,7 @@ npm run db:reset
 ## 🎯 Workshop TODO List
 
 ### Configuration Setup
+
 - [ ] Add `.github/copilot-instructions.md` (Module 1)
 - [ ] Create `.github/prompts/` with Spring-specific prompts (Module 3)
 - [ ] Add `.github/instructions/` with applyTo patterns (Module 4)
@@ -427,6 +453,7 @@ npm run db:reset
 - [ ] Build custom agents in `.github/copilot/agents/` (Module 7)
 
 ### Bug Fixes
+
 - [ ] Fix duplicate Jesse Pinkman in seed data
 - [ ] Fix episode cache to include seasonId in cache key
 - [ ] Standardize API paths (move /auth to /api/auth)
@@ -437,6 +464,7 @@ npm run db:reset
 - [ ] Standardize response formats
 
 ### Code Quality
+
 - [ ] Choose one Lombok approach (@Data everywhere)
 - [ ] Use constructor injection everywhere
 - [ ] Add @Repository annotations consistently
@@ -445,6 +473,7 @@ npm run db:reset
 - [ ] Create custom exception classes
 
 ### Features
+
 - [ ] Complete JWT authentication
 - [ ] Add character detail page
 - [ ] Add episode detail page
@@ -453,6 +482,7 @@ npm run db:reset
 - [ ] Add API documentation (Swagger/OpenAPI)
 
 ### Testing & CI/CD
+
 - [ ] Add unit tests for services
 - [ ] Add integration tests for controllers
 - [ ] Add repository tests
@@ -464,11 +494,13 @@ npm run db:reset
 ## 📚 Additional Resources
 
 ### Related Files
+
 - **[SETUP.md](SETUP.md)** - Complete setup instructions
 - **[BUGS.md](BUGS.md)** - Catalog of all 36+ bugs
 - **[Root README](../README.md)** - Workshop overview
 
 ### External Links
+
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 - [GitHub Copilot Documentation](https://docs.github.com/en/copilot)
@@ -478,22 +510,22 @@ npm run db:reset
 
 ## 🤔 FAQ
 
-**Q: Why Java/Spring Boot?**  
+**Q: Why Java/Spring Boot?**
 A: To provide a workshop option for Java developers and teams using Spring Boot in production.
 
-**Q: How is this different from the Node.js version?**  
+**Q: How is this different from the Node.js version?**
 A: Same conceptual bugs but implemented with Java-specific anti-patterns (Optional.get(), field injection, inconsistent Lombok usage, etc.)
 
-**Q: Should I fix the bugs first or add Copilot config first?**  
+**Q: Should I fix the bugs first or add Copilot config first?**
 A: Add Copilot config first! The workshop shows how proper configuration makes fixing bugs much easier.
 
-**Q: Why Spring Boot 3.2?**  
+**Q: Why Spring Boot 3.2?**
 A: Latest stable version with Jakarta EE 10, modern Java features, and Spring Security 6.
 
-**Q: Where are the tests?**  
+**Q: Where are the tests?**
 A: You'll write them in the workshop using Copilot's custom prompts!
 
-**Q: Is this production-ready?**  
+**Q: Is this production-ready?**
 A: Absolutely not! This is a learning project with intentional security issues and bugs.
 
 ---
@@ -503,6 +535,7 @@ A: Absolutely not! This is a learning project with intentional security issues a
 ### Java-Specific Anti-Patterns
 
 Unlike typical Spring Boot tutorials with perfect starter code:
+
 - ✅ **Real-world mess**: Inconsistent patterns like actual legacy codebases
 - ✅ **Java anti-patterns**: Optional.get(), field injection, Double for money
 - ✅ **Spring Boot issues**: Missing @Transactional, no @ControllerAdvice, CORS wide open
@@ -512,6 +545,7 @@ Unlike typical Spring Boot tutorials with perfect starter code:
 ### The "Aha!" Moment
 
 Most Java developers experience this in **Module 1** when they:
+
 1. Try Copilot without config → Generic Spring suggestions
 2. Add repository instructions with Breaking Bad + Spring Boot context
 3. Try the same prompt again → Now gets show-specific, Spring Boot best-practice code!

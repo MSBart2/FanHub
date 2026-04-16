@@ -3,21 +3,24 @@
 ## Overview
 
 This is the **Go/Gin** implementation of the FanHub backend, joining the existing implementations:
+
 - Node.js/Express (~36 bugs)
-- .NET/ASP.NET Core (~40 bugs)  
+- .NET/ASP.NET Core (~40 bugs)
 - Java/Spring Boot (~46 bugs)
 - **Go/Gin (~42 bugs)** ⬅️ NEW!
 
 ## Implementation Details
 
 ### Tech Stack
+
 - **Framework**: Gin Web Framework 1.10+
 - **ORM**: GORM 1.25+
-- **Database**: PostgreSQL with pgx driver
+- **Database**: SQLite via the GORM `sqlite` driver (file-backed, no separate service)
 - **Auth**: bcrypt + JWT (intentionally incomplete)
 - **Language**: Go 1.21+
 
 ### Directory Structure
+
 ```
 go/backend/
 ├── main.go                          # Entry point (global DB, no shutdown)
@@ -56,18 +59,19 @@ go/backend/
 ## Go-Specific Bugs Included
 
 ### Classic Go Mistakes
+
 1. **Missing `if err != nil` checks** - The #1 Go beginner mistake!
    - Database initialization continues even on error
    - Handler methods don't check binding errors
    - Service methods ignore DB errors
-   
+
 2. **Race Condition** - Map access without mutex
    - `episodeCache` in `episode_service.go`
    - Classic concurrency bug that `go run -race` will catch
 
 3. **Goroutine Leak** - Background goroutine with no way to stop
    - `init()` function in `episode_service.go`
-   
+
 4. **No Context Usage** - Missing context.Context parameters
    - All service methods
    - All handlers
@@ -82,6 +86,7 @@ go/backend/
    - Global config in `config/config.go`
 
 ### Additional Go Issues
+
 7. **No Graceful Shutdown** - Server stops abruptly
 8. **Missing Recovery Middleware** - Panics kill the server
 9. **Inconsistent JSON Tags** - Some omitempty, some not
@@ -91,11 +96,12 @@ go/backend/
 ## Bug Alignment with Other Implementations
 
 ### Shared Bugs Across All Implementations
+
 ✅ Duplicate Jesse Pinkman in database
 ✅ SQL injection vulnerability (character search)
 ✅ CORS wide open
 ✅ Weak password validation
-✅ Incomplete/stub JWT implementation  
+✅ Incomplete/stub JWT implementation
 ✅ Auth middleware not implemented
 ✅ Hardcoded JWT secret
 ✅ No input validation
@@ -106,6 +112,7 @@ go/backend/
 ✅ Inconsistent response formats
 
 ### Go-Specific Additions
+
 ✅ Race condition in cache (Go concurrency bug)
 ✅ Goroutine leak (Go-specific resource leak)
 ✅ Missing `if err != nil` checks (classic Go mistake)
@@ -118,6 +125,7 @@ go/backend/
 This implementation teaches:
 
 ### Go Fundamentals
+
 - Error handling patterns
 - Pointer vs value semantics
 - Context usage
@@ -125,6 +133,7 @@ This implementation teaches:
 - Race detection
 
 ### Web Development with Gin
+
 - Router setup
 - Middleware chain
 - JSON binding
@@ -132,6 +141,7 @@ This implementation teaches:
 - Error handling
 
 ### Database with GORM
+
 - Model definitions
 - Query patterns
 - Raw SQL usage
@@ -139,6 +149,7 @@ This implementation teaches:
 - Transactions (missing)
 
 ### Security
+
 - SQL injection
 - CORS configuration
 - JWT authentication
@@ -146,6 +157,7 @@ This implementation teaches:
 - Input validation
 
 ### Testing & Quality
+
 - Race detection (`go run -race`)
 - Error handling
 - Code organization
@@ -155,32 +167,37 @@ This implementation teaches:
 ## Workshop Flow Comparison
 
 ### Node.js Workshop (Express/Sequelize)
+
 - Focuses on: async/await, promises, middleware chain
 - Common bugs: callback hell, unhandled promises, weak typing
 
 ### .NET Workshop (ASP.NET Core/EF Core)
+
 - Focuses on: LINQ, async/await, DI, strongly typed
 - Common bugs: blocking async, missing validation, over-fetching
 
 ### Java Workshop (Spring Boot/JPA)
+
 - Focuses on: annotations, DI, streams, optional handling
 - Common bugs: N+1 queries, null pointers, verbose code
 
 ### Go Workshop (Gin/GORM) ⬅️ THIS ONE
+
 - Focuses on: error handling, concurrency, interfaces, context
 - Common bugs: ignored errors, race conditions, resource leaks
 
 ## How to Use This Implementation
 
 ### For Workshop Facilitators
+
 1. Ensure Go 1.21+ is installed
-2. Set up PostgreSQL database
-3. Run through the setup (see WORKSHOP.md)
-4. Guide participants through bug categories
-5. Use `-race` flag to demonstrate concurrency bugs
-6. Show how Copilot helps with Go patterns
+2. Run through the setup (see WORKSHOP.md) — SQLite is created automatically
+3. Guide participants through bug categories
+4. Use `-race` flag to demonstrate concurrency bugs
+5. Show how Copilot helps with Go patterns
 
 ### For Participants
+
 1. Start with critical bugs (database connection)
 2. Learn error handling patterns
 3. Fix race conditions (learn concurrency)
@@ -190,6 +207,7 @@ This implementation teaches:
 7. Add tests with Copilot's help
 
 ### Difficulty Progression
+
 1. **Easy** (15 min): Fix missing error checks, add recovery middleware
 2. **Medium** (30 min): Fix SQL injection, implement JWT, fix CORS
 3. **Hard** (45 min): Fix race condition, add context, refactor to DI
@@ -198,12 +216,15 @@ This implementation teaches:
 ## Testing the Implementation
 
 ### Run with Race Detector
+
 ```bash
 go run -race main.go
 ```
+
 This will immediately show the race condition in `episode_service.go`!
 
 ### Manual Testing
+
 ```bash
 # Test search SQL injection
 curl "http://localhost:8080/api/characters?search='; DROP TABLE characters; --"
@@ -219,7 +240,9 @@ curl "http://localhost:8080/api/episodes?season_id=2"  # Same cache key!
 ```
 
 ### Expected Fixes
+
 After workshop, code should:
+
 - ✅ Check all errors properly
 - ✅ Use context.Context everywhere
 - ✅ Fix race condition with mutex
@@ -233,16 +256,16 @@ After workshop, code should:
 
 ## Comparison to Other Implementations
 
-| Feature | Node.js | .NET | Java | Go |
-|---------|---------|------|------|-----|
-| Total Bugs | ~36 | ~40 | ~46 | ~42 |
-| Language Type | Dynamic | Static | Static | Static |
-| Concurrency | Async/Await | Async/Await | Threads/Futures | Goroutines |
-| Error Handling | try/catch | try/catch | try/catch | explicit errors |
-| Type Safety | Weak | Strong | Strong | Strong |
-| Null Safety | No | Nullable refs | Optionals | Pointers |
-| Unique Bugs | Promises, callbacks | Blocking async | Null pointers | Race conditions |
-| Learning Curve | Low | Medium | Medium-High | Medium |
+| Feature        | Node.js             | .NET           | Java            | Go              |
+| -------------- | ------------------- | -------------- | --------------- | --------------- |
+| Total Bugs     | ~36                 | ~40            | ~46             | ~42             |
+| Language Type  | Dynamic             | Static         | Static          | Static          |
+| Concurrency    | Async/Await         | Async/Await    | Threads/Futures | Goroutines      |
+| Error Handling | try/catch           | try/catch      | try/catch       | explicit errors |
+| Type Safety    | Weak                | Strong         | Strong          | Strong          |
+| Null Safety    | No                  | Nullable refs  | Optionals       | Pointers        |
+| Unique Bugs    | Promises, callbacks | Blocking async | Null pointers   | Race conditions |
+| Learning Curve | Low                 | Medium         | Medium-High     | Medium          |
 
 ## Files Created
 

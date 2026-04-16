@@ -2,7 +2,7 @@
 
 # FanHub Development Database Setup
 # Creates a SQLite development database for MCP integration testing
-# This mirrors the PostgreSQL production schema but uses SQLite for local development
+# Mirrors the application schema using SQLite for local development
 
 # Configuration
 DB_DIR="/workspaces/CopilotTraining/dev-data"

@@ -180,7 +180,7 @@ const About = () => {
           <ul>
             <li>React 18 with React Router</li>
             <li>Node.js + Express backend</li>
-            <li>PostgreSQL database</li>
+            <li>SQLite database</li>
             <li>Docker for containerization</li>
             <li>GitHub Copilot for AI-assisted development</li>
           </ul>

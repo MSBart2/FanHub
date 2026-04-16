@@ -1,4 +1,4 @@
--- FanHub Seed Data — Breaking Bad (PostgreSQL)
+-- FanHub Seed Data — Breaking Bad (SQLite)
 -- Full dataset with intentional duplicate Jesse Pinkman bug for testing
 
 -- Insert Breaking Bad

@@ -7,17 +7,20 @@ This is a **workshop project** designed to teach GitHub Copilot usage. The code 
 ## Intentional Bugs Included
 
 ### Architecture Issues
+
 - Global DB variable (no dependency injection)
 - No graceful shutdown
 - Missing context.Context usage
 - No recovery middleware
 
 ### Configuration Issues (`config/config.go`)
+
 - All global variables (anti-pattern)
 - Hardcoded JWT secret fallback
 - No validation of required values
 
 ### Model Issues (`models/`)
+
 - Mixed JSON tags (inconsistent `omitempty`)
 - Mixed pointer/value receivers
 - No validation tags
@@ -25,12 +28,14 @@ This is a **workshop project** designed to teach GitHub Copilot usage. The code 
 - Password hash exposed in JSON
 
 ### Database Issues (`database/db.go`)
+
 - Global DB variable
 - **Missing critical error checks**
 - No defer for cleanup
 - Mixed GORM and raw SQL
 
 ### Handler Issues (`handlers/`)
+
 - **Missing `if err != nil` checks** (most common Go bug!)
 - No context.Context propagation
 - Inconsistent response formats
@@ -40,6 +45,7 @@ This is a **workshop project** designed to teach GitHub Copilot usage. The code 
 - Auth on wrong path (`/auth` instead of `/api/auth`)
 
 ### Service Issues
+
 - **Race condition** in `episode_service.go` (map without mutex)
 - **Cache bug**: Doesn't include seasonID properly (like Java version)
 - **Goroutine leak**: Background task with no cancellation
@@ -49,46 +55,42 @@ This is a **workshop project** designed to teach GitHub Copilot usage. The code 
 - Incomplete JWT implementation (stub)
 
 ### Middleware Issues
+
 - CORS wide open (allows all origins) - security issue!
 - Auth middleware is stub only (not implemented)
 - Missing recovery middleware
 
 ### Database Bug
+
 - Duplicate "Jesse Pinkman" in seed data (test data issue)
 
 ## Tech Stack
 
 - **Framework**: Gin 1.10+
 - **ORM**: GORM 1.25+
-- **Database**: PostgreSQL with pgx driver
+- **Database**: SQLite via the GORM `sqlite` driver (file-backed, no separate service)
 - **Auth**: bcrypt + JWT (incomplete)
 - **Language**: Go 1.21+
 
 ## Setup
 
 1. **Install dependencies**:
+
    ```bash
    go mod download
    ```
 
-2. **Set up PostgreSQL**:
-   ```bash
-   # Create database
-   createdb fanhub
-   
-   # Run schema
-   psql fanhub < database/schema.sql
-   
-   # Run seed data
-   psql fanhub < database/seed.sql
-   ```
+2. **Configure environment** (copy `.env.example` to `.env`):
 
-3. **Configure environment** (copy `.env.example` to `.env`):
    ```bash
    cp .env.example .env
    ```
 
-4. **Run the server**:
+   The default `DB_PATH=./fanhub.db` creates a local SQLite file on first run.
+   The schema is created automatically by GORM `AutoMigrate`, and `SeedDB()`
+   loads Breaking Bad data on first start.
+
+3. **Run the server**:
    ```bash
    go run main.go
    ```
@@ -98,28 +100,33 @@ Server runs on `http://localhost:8080`
 ## API Endpoints
 
 ### Shows
+
 - `GET /api/shows` - List all shows
 - `GET /api/shows/:id` - Get show by ID
 - `POST /api/shows` - Create new show
 
 ### Characters
+
 - `GET /api/characters` - List all characters
 - `GET /api/characters/:id` - Get character by ID
 - `GET /api/characters?search=name` - Search characters (has SQL injection bug!)
 - `POST /api/characters` - Create new character
 
 ### Episodes
+
 - `GET /api/episodes` - List all episodes
 - `GET /api/episodes/:id` - Get episode by ID
 - `GET /api/episodes?season_id=1` - Get episodes by season (has cache bug!)
 - `POST /api/episodes` - Create new episode
 
 ### Quotes
+
 - `GET /api/quotes` - List all quotes
 - `GET /api/quotes?character_id=1` - Get quotes by character
 - `POST /api/quotes` - Create new quote
 
 ### Auth (Note: inconsistent path - bug!)
+
 - `POST /auth/register` - Register user (should be `/api/auth/register`)
 - `POST /auth/login` - Login (should be `/api/auth/login`)
 

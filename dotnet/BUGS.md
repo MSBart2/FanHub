@@ -137,26 +137,26 @@ private string HashPasswordMD5(string password)
 ---
 
 ### 6. **Hardcoded Database Connection String**
-**Location**: `Backend/Program.cs` (line 11)  
-**Type**: Security/Configuration Bug  
-**Impact**: Credentials exposed in source code
+**Location**: `Backend/Program.cs` (line 13)  
+**Type**: Configuration Bug  
+**Impact**: Connection string duplicated and not driven by configuration
 
 **Description**:
-- Database credentials hardcoded directly in Program.cs
-- Credentials would be committed to source control
+- Database connection string hardcoded directly in `Program.cs` instead of being read from `appsettings.json`
+- A proper `ConnectionStrings:DefaultConnection` value already exists in `appsettings.json` but is ignored
 - Comment even acknowledges it should use configuration!
 
 **Evidence**:
 ```csharp
 // BUG: Still hardcoded here instead of using configuration!
 builder.Services.AddDbContext<FanHubContext>(options =>
-    options.UseNpgsql("Host=localhost;Database=fanhub;Username=postgres;Password=postgres"));
+    options.UseSqlite("Data Source=fanhub.db"));
 ```
 
 **Expected Behavior**: 
 ```csharp
 builder.Services.AddDbContext<FanHubContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 ```
 
 **Workshop Learning**: Configuration management, secrets handling, 12-factor app principles

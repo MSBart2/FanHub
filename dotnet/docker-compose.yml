@@ -1,24 +1,14 @@
 version: '3.8'
 
-services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: fanhub-dotnet-db
-    environment:
-      POSTGRES_DB: fanhub
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+# The .NET backend uses a local SQLite database (fanhub.db) created by
+# EF Core / SeedData on first run. No separate database service is required.
+#
+# Usage:
+#   docker-compose up --build       # build and run the API in a container
+#   dotnet run --project Backend    # or run directly without Docker
 
-  # Backend API (optional - can run locally with dotnet run)
+services:
+  # Backend API (optional - can run locally with `dotnet run`)
   backend:
     build:
       context: ./Backend
@@ -26,12 +16,11 @@ services:
     container_name: fanhub-dotnet-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=fanhub;Username=postgres;Password=postgres
+      - ConnectionStrings__DefaultConnection=Data Source=/data/fanhub.db
     ports:
       - "5000:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    volumes:
+      - fanhub_dotnet_data:/data
 
 volumes:
-  postgres_data:
+  fanhub_dotnet_data:

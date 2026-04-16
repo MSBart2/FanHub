@@ -144,9 +144,10 @@ Quick start (inside the **FanHub – .NET** container):
 
 ```bash
 cd dotnet
-docker-compose up -d db
 cd Backend && dotnet ef database update && dotnet run
 ```
+
+This creates a local SQLite database (`fanhub.db`) on first run — no separate database service required.
 
 Visit http://localhost:5000
 

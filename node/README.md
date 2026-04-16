@@ -2,7 +2,7 @@
 
 > ⚠️ **Workshop Material**: This is an intentionally flawed codebase designed for GitHub Copilot training workshops. Contains 46+ bugs by design.
 
-A generic fan site application for TV shows featuring characters, episodes, quotes, and user authentication. Built with React, Node.js, Express, and PostgreSQL.
+A generic fan site application for TV shows featuring characters, episodes, quotes, and user authentication. Built with React, Node.js, Express, and SQLite.
 
 ---
 
@@ -37,7 +37,7 @@ npm start
 # Application URLs:
 # Frontend: http://localhost:3000
 # Backend API: http://localhost:5265
-# PostgreSQL: localhost:5432
+# Database: SQLite file at backend/data/fanhub.db
 ```
 
 ### First Time Setup
@@ -50,7 +50,7 @@ cp .env.example .env
 npm start
 
 # In another terminal, verify the database
-docker exec -it fanhub-db-1 psql -U fanhub -d fanhub -c "SELECT COUNT(*) FROM characters;"
+docker exec -it fanhub-backend-1 sqlite3 /app/data/fanhub.db "SELECT COUNT(*) FROM characters;"
 ```
 
 ### Stop Services
@@ -89,7 +89,7 @@ This codebase is **intentionally unconfigured** for GitHub Copilot. The workshop
 
 This is a React + Node.js application for Breaking Bad fans.
 Main characters: Walter White, Jesse Pinkman, Skyler White, Hank Schrader...
-Tech stack: React 18, Express, PostgreSQL, styled-components...
+Tech stack: React 18, Express, SQLite, styled-components...
 ```
 
 ---
@@ -192,7 +192,7 @@ domain: fanhub-breaking-bad
 **File**: `.vscode/mcp.json`
 
 **Purpose**: Connect Copilot to external systems
-- Database queries (PostgreSQL)
+- Database queries (SQLite)
 - GitHub API integration
 - Deployment awareness
 - Log analysis
@@ -206,10 +206,10 @@ domain: fanhub-breaking-bad
 ```json
 {
   "mcpServers": {
-    "postgres": {
+    "sqlite": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres", 
-               "postgresql://fanhub:fanhub_dev_password@localhost/fanhub"]
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", 
+               "./backend/data/fanhub.db"]
     },
     "github": {
       "command": "npx",
@@ -275,13 +275,13 @@ tools:
 
 **Backend**:
 - Node.js with Express 4.18
-- PostgreSQL 15 with pg driver
+- SQLite via better-sqlite3
 - JWT authentication (incomplete)
 - bcrypt for password hashing
 
 **Infrastructure**:
 - Docker Compose for local development
-- PostgreSQL database
+- SQLite (file-backed, no separate database service)
 - No CI/CD configured
 
 ### Database Schema
@@ -476,8 +476,8 @@ npm test               # Run tests (not implemented)
 Create `.env` file from `.env.example`:
 
 ```bash
-# Database
-DATABASE_URL=postgres://fanhub:fanhub_dev_password@localhost:5432/fanhub
+# Database (SQLite — file-backed, no separate service required)
+DATABASE_PATH=./data/fanhub.db
 
 # Backend
 PORT=5265
@@ -492,7 +492,7 @@ REACT_APP_API_URL=http://localhost:5265
 
 ```bash
 # Access database shell
-docker exec -it fanhub-db-1 psql -U fanhub -d fanhub
+docker exec -it fanhub-backend-1 sqlite3 /app/data/fanhub.db
 
 # View characters (should see duplicate Jesse!)
 SELECT id, name, actor_name FROM characters;
@@ -517,11 +517,8 @@ docker logs fanhub-backend-1 -f
 # View frontend logs
 docker logs fanhub-frontend-1 -f
 
-# View database logs
-docker logs fanhub-db-1 -f
-
-# Check database connection
-docker exec fanhub-db-1 pg_isready -U fanhub
+# Inspect the SQLite database file
+docker exec fanhub-backend-1 ls -lh /app/data/fanhub.db
 ```
 
 ---
