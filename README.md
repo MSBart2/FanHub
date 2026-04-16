@@ -10,9 +10,24 @@ FanHub is a **workshop starter project** used to teach AI-assisted development w
 - 🐛 **Buggy** — Contains deliberate bugs and edge cases
 - 🔀 **Inconsistent** — Mixed patterns and incomplete implementations
 - 🚧 **Incomplete** — Half-finished features requiring completion
-- 🎨 **Generic** — Requires theming and customization
+- 🎨 **Unstyled** — Generic UI styling that needs theming and polish
 
 **The Challenge**: Transform this messy codebase into a production-ready fan site using GitHub Copilot's customization features.
+
+## 📺 Pre-Branded as _Breaking Bad_
+
+FanHub ships **pre-loaded with _Breaking Bad_ content** as the default fan domain across every language track:
+
+- **Seed data** for all backends (Node, .NET, Java, Go) inserts the show "Breaking Bad" with its characters, seasons, episodes, and quotes
+- **Reference lore** lives in [docs/breaking-bad-universe.md](docs/breaking-bad-universe.md) — a comprehensive guide to characters, factions, locations, and trivia for Copilot to draw on
+- **MCP server** ([mcp-servers/fanhub-api-server.js](mcp-servers/fanhub-api-server.js)) defaults `showId: 1` to Breaking Bad
+- **Frontend** components reference Breaking Bad by name in places like the Go track's `Header.jsx`, but the UI styling itself is intentionally generic and unthemed
+
+Why this matters for the workshop:
+
+- ✅ Participants get a **rich, opinionated dataset** instead of "lorem ipsum" — making theming, search, and feature work feel real
+- ✅ Copilot has a **concrete domain** to reason about (Heisenberg colors, Los Pollos Hermanos, Walt/Jesse relationships) once instructions are added
+- ✅ Want a different show? **Reskinning is itself an exercise** — swap the seed data and lore doc for _The Office_, _Stranger Things_, or your own pick. See [GOOD-IDEAS.md](GOOD-IDEAS.md) for inspiration.
 
 ## 📚 Related Resources
 
@@ -297,14 +312,13 @@ Workshop participants will:
 - Configure test automation
 - Establish coverage requirements
 
-## 🎨 Theming (Generic)
+## 🎨 Theming (Generic UI, Breaking Bad Content)
 
-The current UI is deliberately generic. Workshop participants customize it for their chosen TV show:
+The **content** is pre-loaded with _Breaking Bad_ characters, episodes, and quotes (see [docs/breaking-bad-universe.md](docs/breaking-bad-universe.md)), but the **UI styling** is deliberately generic — bland colors, no logo, no show personality. Workshop participants either:
 
-- The Office
-- Stranger Things
-- Breaking Bad
-- Their own choice!
+- 🎨 **Theme it for Breaking Bad** — add Heisenberg yellow/green palette, desert textures, periodic-table flourishes
+- 🔄 **Reskin for a different show** — swap seed data + lore doc for _The Office_, _Stranger Things_, _Game of Thrones_, _Ted Lasso_, or your own pick
+- 🆕 **Build something new** — see [GOOD-IDEAS.md](GOOD-IDEAS.md) for an extensive menu of features and creative directions
 
 ## 🤝 Contributing
 
