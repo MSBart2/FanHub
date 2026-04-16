@@ -33,12 +33,12 @@ A generic fan site application for TV shows featuring:
 
 FanHub is available in **four language implementations** to accommodate different developer preferences:
 
-| Language    | Path      | Stack                              | Status              |
-| ----------- | --------- | ---------------------------------- | ------------------- |
-| **Node.js** | `node/`   | Express + React + PostgreSQL       | ✅ Original version |
-| **.NET**    | `dotnet/` | ASP.NET Core + Blazor + PostgreSQL | ✅ C# version       |
-| **Java**    | `java/`   | Spring Boot + React + PostgreSQL   | ✅ Java version     |
-| **Go**      | `go/`     | Gin + React + PostgreSQL           | ✅ Go version       |
+| Language    | Path      | Stack                          | Status              |
+| ----------- | --------- | ------------------------------ | ------------------- |
+| **Node.js** | `node/`   | Express + React + SQLite       | ✅ Original version |
+| **.NET**    | `dotnet/` | ASP.NET Core + Blazor + SQLite | ✅ C# version       |
+| **Java**    | `java/`   | Spring Boot + React + SQLite   | ✅ Java version     |
+| **Go**      | `go/`     | Gin + React + SQLite           | ✅ Go version       |
 
 All implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
 

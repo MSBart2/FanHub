@@ -1,12 +1,24 @@
 {
   "servers": {
-    "fanhub-db": {
+    "fanhub-db-dotnet": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-sqlite",
         "${workspaceFolder}/dotnet/Backend/fanhub.db"
       ]
+    },
+    "fanhub-db-node": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "${workspaceFolder}/node/backend/fanhub.db"]
+    },
+    "fanhub-db-java": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "${workspaceFolder}/java/backend/fanhub.db"]
+    },
+    "fanhub-db-go": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "${workspaceFolder}/go/backend/fanhub.db"]
     },
     "fanhub-api": {
       "type": "stdio",
