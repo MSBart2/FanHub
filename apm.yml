@@ -7,4 +7,4 @@ dependencies:
   mcp: []
 scripts:
   install-docs: "curl -fsSL --create-dirs -o dotnet/docs/architecture.md https://raw.githubusercontent.com/MSBart2/apm/main/docs/architecture.md && curl -fsSL --create-dirs -o dotnet/docs/breaking-bad-universe.md https://raw.githubusercontent.com/MSBart2/apm/main/docs/breaking-bad-universe.md && curl -fsSL --create-dirs -o .github/copilot-instructions.md https://raw.githubusercontent.com/MSBart2/apm/main/.apm/instructions/copilot-instructions.instructions.md"
-  uninstall-docs: "pwsh -NoProfile -Command \"Remove-Item -Force -ErrorAction SilentlyContinue 'dotnet/docs/architecture.md','dotnet/docs/breaking-bad-universe.md','.github/copilot-instructions.md'\""
+  uninstall-docs: "node -e \"const fs = require('fs'); ['dotnet/docs/architecture.md','dotnet/docs/breaking-bad-universe.md','.github/copilot-instructions.md'].forEach(f => { try { fs.unlinkSync(f); } catch(e) {} })\""
