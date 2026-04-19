@@ -6,6 +6,33 @@ Complete setup instructions for the .NET/C# version of FanHub.
 
 ---
 
+## ⚡ One-Command Start
+
+**Requires:** [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+
+From the repo root:
+
+```powershell
+# Windows (PowerShell)
+.\dotnet\start.ps1
+```
+
+```bash
+# Linux / macOS
+chmod +x dotnet/start.sh && ./dotnet/start.sh
+```
+
+The script installs dependencies, runs the EF migration, starts the backend in a separate window (Windows) or background process (Linux/macOS), waits for it to be ready, then launches the frontend.
+
+| Service     | URL                   |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:3000 |
+| Backend API | http://localhost:5265 |
+
+Press **Ctrl+C** in the frontend terminal to stop both processes.
+
+---
+
 ## 🚀 Quick Start
 
 ### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
@@ -213,10 +240,10 @@ This implementation contains **10+ intentional bugs** for learning purposes!
 
 ### Using GitHub Copilot
 
-- Find bugs: *"Find security vulnerabilities in this file"*
-- Get fixes: *"How should I handle this error?"*
-- Refactor: *"Add proper async/await to this method"*
-- Write tests: *"Generate unit tests for this controller"*
+- Find bugs: _"Find security vulnerabilities in this file"_
+- Get fixes: _"How should I handle this error?"_
+- Refactor: _"Add proper async/await to this method"_
+- Write tests: _"Generate unit tests for this controller"_
 
 ---
 

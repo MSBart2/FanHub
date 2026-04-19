@@ -6,6 +6,33 @@ Complete setup instructions for the Go/Gin version of FanHub.
 
 ---
 
+## ⚡ One-Command Start
+
+**Requires:** [Go 1.21+](https://go.dev/dl/) · [Node.js 18+](https://nodejs.org/)
+
+From the repo root:
+
+```powershell
+# Windows (PowerShell)
+.\go\start.ps1
+```
+
+```bash
+# Linux / macOS
+chmod +x go/start.sh && ./go/start.sh
+```
+
+The script downloads Go modules, starts the backend in a separate window (Windows) or background process (Linux/macOS), waits for it to be ready, then launches the frontend.
+
+| Service     | URL                   |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:3000 |
+| Backend API | http://localhost:5265 |
+
+Press **Ctrl+C** in the frontend terminal to stop both processes.
+
+---
+
 ## 🚀 Quick Start
 
 ### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
@@ -121,28 +148,33 @@ go run main.go   # Recreates and seeds automatically
 ## 🔍 Available API Endpoints
 
 ### Characters
+
 - `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
 - `GET /api/characters/:id` — Get character by ID
 - `GET /api/characters/search?name=Walter` — Search (has SQL injection bug!)
 - `POST /api/characters` — Create a character
 
 ### Episodes
+
 - `GET /api/episodes` — List all episodes
 - `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
 - `GET /api/episodes/:id` — Get episode by ID
 - `POST /api/episodes` — Create an episode
 
 ### Shows
+
 - `GET /api/shows` — List all shows
 - `GET /api/shows/:id` — Get show by ID
 - `POST /api/shows` — Create a show
 
 ### Quotes
+
 - `GET /api/quotes` — List all quotes
 - `GET /api/quotes/random` — Get a random quote
 - `POST /api/quotes` — Create a quote
 
 ### Authentication (Incomplete)
+
 - `POST /auth/register` — Register (weak password validation!)
 - `POST /auth/login` — Login (incomplete JWT implementation)
 
@@ -153,30 +185,38 @@ go run main.go   # Recreates and seeds automatically
 ### Verify Bugs Are Present
 
 **Duplicate Jesse Pinkman:**
+
 ```bash
 curl http://localhost:5265/api/characters
 ```
+
 Expected: Two Jesse Pinkman entries.
 
 **Cache bug:**
+
 ```bash
 curl http://localhost:5265/api/episodes?seasonId=1
 curl http://localhost:5265/api/episodes?seasonId=2
 ```
+
 Expected: Both return Season 1 episodes.
 
 **SQL injection:**
+
 ```bash
 curl "http://localhost:5265/api/characters/search?name='; DROP TABLE characters; --"
 ```
+
 Expected: SQL error visible in response.
 
 ### Race Detector
 
 Go has built-in race detection:
+
 ```bash
 go run -race main.go
 ```
+
 Expected: Detects race condition in episode cache.
 
 ---
@@ -254,10 +294,10 @@ This implementation contains **~42 intentional bugs** for learning purposes!
 
 ### Using GitHub Copilot
 
-- Find bugs: *"Find security vulnerabilities in this file"*
-- Get fixes: *"How should I handle this error in Go?"*
-- Refactor: *"Refactor this to use context.Context"*
-- Write tests: *"Generate unit tests for this handler"*
+- Find bugs: _"Find security vulnerabilities in this file"_
+- Get fixes: _"How should I handle this error in Go?"_
+- Refactor: _"Refactor this to use context.Context"_
+- Write tests: _"Generate unit tests for this handler"_
 
 ---
 

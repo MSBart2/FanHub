@@ -6,6 +6,33 @@ Complete setup instructions for the Node.js/Express + React version of FanHub.
 
 ---
 
+## ⚡ One-Command Start
+
+**Requires:** [Node.js 18+](https://nodejs.org/)
+
+From the repo root:
+
+```powershell
+# Windows (PowerShell)
+.\node\start.ps1
+```
+
+```bash
+# Linux / macOS
+chmod +x node/start.sh && ./node/start.sh
+```
+
+The script installs dependencies, starts the backend in a separate window (Windows) or background process (Linux/macOS), waits for it to be ready, then launches the frontend.
+
+| Service     | URL                   |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:3000 |
+| Backend API | http://localhost:5265 |
+
+Press **Ctrl+C** in the frontend terminal to stop both processes.
+
+---
+
 ## 🚀 Quick Start
 
 ### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
@@ -118,24 +145,29 @@ npm start
 ## 🔍 Available API Endpoints
 
 ### Characters
+
 - `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
 - `GET /api/characters/:id` — Get character by ID
 - `POST /api/characters` — Create a character
 
 ### Episodes
+
 - `GET /api/episodes` — List all episodes
 - `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
 - `GET /api/episodes/:id` — Get episode by ID
 
 ### Shows
+
 - `GET /api/shows` — List all shows
 - `GET /api/shows/:id` — Get show by ID
 
 ### Quotes
+
 - `GET /api/quotes` — List all quotes
 - `GET /api/quotes/random` — Get a random quote
 
 ### Authentication (Incomplete)
+
 - `POST /auth/register` — Register (no password strength validation!)
 - `POST /auth/login` — Login (incomplete JWT implementation)
 
@@ -146,12 +178,15 @@ npm start
 ### Verify Bugs Are Present
 
 **Duplicate Jesse Pinkman:**
+
 ```bash
 curl http://localhost:5265/api/characters
 ```
+
 Expected: Two Jesse Pinkman entries.
 
 **Inconsistent API paths:**
+
 ```bash
 curl http://localhost:5265/api/characters   # ✅ works
 curl http://localhost:5265/auth/login       # ✅ works (no /api prefix)
@@ -183,11 +218,13 @@ npm install
 ### Frontend Can't Reach Backend
 
 Ensure the backend is running on port 5265:
+
 ```bash
 curl http://localhost:5265/api/characters
 ```
 
 Check `node/frontend/package.json` has:
+
 ```json
 { "proxy": "http://localhost:5265" }
 ```
@@ -200,10 +237,10 @@ This implementation contains **intentional bugs** for learning purposes!
 
 ### Using GitHub Copilot
 
-- Find bugs: *"Find security vulnerabilities in this Express middleware"*
-- Get fixes: *"How should I validate user input here?"*
-- Refactor: *"Add proper error handling to this route"*
-- Write tests: *"Generate unit tests for this controller"*
+- Find bugs: _"Find security vulnerabilities in this Express middleware"_
+- Get fixes: _"How should I validate user input here?"_
+- Refactor: _"Add proper error handling to this route"_
+- Write tests: _"Generate unit tests for this controller"_
 
 ---
 

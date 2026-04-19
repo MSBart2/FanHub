@@ -75,10 +75,14 @@ const Episodes = () => {
   // Load episodes
   const loadEpisodes = useCallback(
     async (seasonId = null) => {
-      // Attempt to use cache (but cache doesn't account for seasonId!)
+      // Only use cache for unfiltered (all episodes) requests
       const now = Date.now();
-      if (episodeCache && cacheTimestamp && now - cacheTimestamp < 30000) {
-        // BUG: Using cached data regardless of which season was requested
+      if (
+        !seasonId &&
+        episodeCache &&
+        cacheTimestamp &&
+        now - cacheTimestamp < 30000
+      ) {
         setEpisodes(episodeCache);
         setLoading(false);
         return;

@@ -29,13 +29,11 @@
     }
     else if (episodes != null)
     {
-        @* BUG: Cache bug equivalent to Node.js version! *@
         <div class="episode-list">
             @foreach (var episode in episodes)
             {
                 <div class="episode-item">
-                    <h3>S@episode.SeasonId E@episode.EpisodeNumber: @episode.Title</h3>
-                    @* BUG: No null check before formatting date *@
+                    <h3>S@(episode.SeasonId) E@(episode.EpisodeNumber): @episode.Title</h3>
                     <p class="air-date">Aired: @episode.AirDate.ToString("MMM dd, yyyy")</p>
                     <p>@episode.Description</p>
                 </div>
@@ -46,7 +44,6 @@
 
 @code {
     private Episode[]? episodes;
-    private Episode[]? cachedEpisodes; // BUG: Cache without considering season filter!
     private bool isLoading = true;
     private int? selectedSeason;
 
@@ -57,51 +54,27 @@
 
     private async Task OnSeasonChanged(ChangeEventArgs e)
     {
-        // BUG: StateHasChanged before async work
-        StateHasChanged();
-
         var value = e.Value?.ToString();
         selectedSeason = string.IsNullOrEmpty(value) ? null : int.Parse(value);
-
         await LoadEpisodes();
-
-        // BUG: StateHasChanged after async (redundant)
-        StateHasChanged();
     }
 
     private async Task LoadEpisodes()
     {
         isLoading = true;
 
-        // BUG: Cache ignores season filter! (Same as Node.js bug)
-        if (cachedEpisodes != null)
-        {
-            episodes = cachedEpisodes;
-            isLoading = false;
-            return; // Returns ALL episodes even if season filter selected!
-        }
-
         try
         {
-            var url = "api/episodes";
-
-            if (selectedSeason.HasValue)
-            {
-                // BUG: Wrong query parameter name (should match backend)
-                url += $"?season={selectedSeason.Value}";
-            }
+            var url = selectedSeason.HasValue
+                ? $"api/episodes?season={selectedSeason.Value}"
+                : "api/episodes";
 
             var response = await Http.GetFromJsonAsync<EpisodeResponse>(url);
-
-            // BUG: Backend returns wrapped response, but we're not handling it correctly
             episodes = response?.Data;
-
-            // BUG: Caching ALL episodes regardless of filter
-            cachedEpisodes = episodes;
         }
         catch
         {
-            // BUG: Silent failure
+            episodes = Array.Empty<Episode>();
         }
         finally
         {

@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
 
@@ -27,27 +28,11 @@ public static class SeedData
 
     public static void Initialize(FanHubContext context)
     {
-        // Ensure database is created
-        context.Database.EnsureCreated();
+        // Apply any pending migrations
+        context.Database.Migrate();
 
         // Check if already seeded
-        if (context.Shows.Any())
-        {
-            // Backfill ImageUrl for any characters missing it or on external/placeholder URLs
-            var missing = context.Characters
-                .Where(c => c.ImageUrl == null || c.ImageUrl.Contains("placehold.co") || c.ImageUrl.Contains("wikimedia.org"))
-                .ToList();
-            if (missing.Any())
-            {
-                foreach (var c in missing)
-                {
-                    if (CharacterImages.TryGetValue(c.Name, out var url))
-                        c.ImageUrl = url;
-                }
-                context.SaveChanges();
-            }
-            return;  // DB has been seeded
-        }
+        if (context.Shows.Any()) return;
 
         // Insert Breaking Bad show
         var show = new Show
@@ -153,15 +138,12 @@ public static class SeedData
         context.SaveChanges();
 
         // Insert characters
-        // BUG: DUPLICATE JESSE PINKMAN! (Same as Node.js version bug)
         var characters = new[]
         {
             new Character { ShowId = show.Id, Name = "Walter White",         ActorName = "Bryan Cranston",       Bio = "A mild-mannered high school chemistry teacher who transforms into a ruthless methamphetamine manufacturer known as \"Heisenberg\". His diagnosis of inoperable lung cancer sets the entire story in motion.", Tagline = "I am the danger", CharacterType = "Antihero,Villain", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Walter White"] },
             new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and small-time meth dealer turned manufacturing partner. Jesse struggles with guilt, addiction, and his own moral code throughout the series.", Tagline = "Yeah, science!", CharacterType = "Antihero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
             new Character { ShowId = show.Id, Name = "Skyler White",         ActorName = "Anna Gunn",            Bio = "Walter's pregnant wife and mother of Walt Jr. A meticulous bookkeeper who grows increasingly suspicious of Walt's activities before becoming an unwilling accomplice in money laundering.", Tagline = "The collateral damage of Walt's ambition", CharacterType = "Hero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Skyler White"] },
             new Character { ShowId = show.Id, Name = "Hank Schrader",        ActorName = "Dean Norris",          Bio = "Walter's boisterous brother-in-law and DEA agent whose investigation of Heisenberg leads him ever closer to the truth. Killed by Jack Welker's gang in the New Mexico desert.", Tagline = "A man with principles and a bouncer's heart", CharacterType = "Hero", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Hank Schrader"] },
-            // BUG: DUPLICATE JESSE PINKMAN - Same as Node.js seed data bug!
-            new Character { ShowId = show.Id, Name = "Jesse Pinkman",        ActorName = "Aaron Paul",           Bio = "Walt's former student and partner in the methamphetamine business.", Tagline = "Just a small-time dealer", CharacterType = "Antihero", IsMainCharacter = true,  Status = "alive",    ImageUrl = CharacterImages["Jesse Pinkman"] },
             new Character { ShowId = show.Id, Name = "Saul Goodman",         ActorName = "Bob Odenkirk",         Bio = "Flamboyant criminal lawyer Jimmy McGill who operates under the alias Saul Goodman. Provides legal counsel and criminal connections to Walt and Jesse, eventually fleeing to Omaha as 'Gene Takavic'.", Tagline = "Better call Saul!", CharacterType = "Comic Relief", IsMainCharacter = false, Status = "alive",    ImageUrl = CharacterImages["Saul Goodman"] },
             new Character { ShowId = show.Id, Name = "Gustavo Fring",        ActorName = "Giancarlo Esposito",   Bio = "The polite, meticulous owner of the Los Pollos Hermanos fast food chain who secretly operates a massive methamphetamine distribution network. His composed exterior masks a calculating and ruthless cartel operator.", Tagline = "Pollo hermano with cold-blooded precision", CharacterType = "Villain", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Gustavo Fring"] },
             new Character { ShowId = show.Id, Name = "Mike Ehrmantraut",     ActorName = "Jonathan Banks",       Bio = "Gus Fring's fixer and enforcer — a former Philadelphia cop with a strict moral code and quiet competence. Becomes a reluctant partner to Walt and Jesse. Shot by Walt in a petulant rage.", Tagline = "Measure twice, cut once", CharacterType = "Antihero", IsMainCharacter = true,  Status = "deceased", ImageUrl = CharacterImages["Mike Ehrmantraut"] },
@@ -206,11 +188,10 @@ public static class SeedData
                 IsFamous = true,
                 Likes = 0
             },
-            // BUG: This quote references the DUPLICATE Jesse (index 4)!
             new Quote
             {
                 ShowId = show.Id,
-                CharacterId = characters[4].Id,   // Jesse DUPLICATE!
+                CharacterId = characters[1].Id,   // Jesse Pinkman
                 EpisodeId = episodes[1].Id,        // Cat's in the Bag
                 QuoteText = "Yeah, Mr. White! Yeah, science!",
                 IsFamous = false,
@@ -219,7 +200,7 @@ public static class SeedData
             new Quote
             {
                 ShowId = show.Id,
-                CharacterId = characters[6].Id,   // Gus Fring
+                CharacterId = characters[5].Id,   // Gus Fring
                 EpisodeId = episodes[27].Id,       // S3E7 One Minute
                 QuoteText = "I will kill your wife. I will kill your son. I will kill your infant daughter.",
                 IsFamous = true,
@@ -237,7 +218,7 @@ public static class SeedData
             new Quote
             {
                 ShowId = show.Id,
-                CharacterId = characters[5].Id,   // Saul
+                CharacterId = characters[4].Id,   // Saul
                 EpisodeId = episodes[14].Id,       // S2E8 Better Call Saul
                 QuoteText = "Better call Saul!",
                 IsFamous = true,
@@ -275,7 +256,7 @@ public static class SeedData
         // Gus Fring appears in later episodes (starting Season 2, roughly episode 13)
         for (int i = 13; i < Math.Min(38, episodes.Length); i++)
         {
-            episodes[i].Characters.Add(characters[6]);
+            episodes[i].Characters.Add(characters[5]);
         }
 
         context.SaveChanges();
@@ -286,13 +267,13 @@ public static class SeedData
             new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[2].Id, RelationshipType = "spouse" },           // Walt ↔ Skyler
             new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[3].Id, RelationshipType = "brother-in-law" }, // Walt ↔ Hank
             new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[1].Id, RelationshipType = "partner" },       // Walt ↔ Jesse
-            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[5].Id, RelationshipType = "employee" },      // Walt → Saul (legal)
-            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[6].Id, RelationshipType = "employer" },      // Walt → Gus
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[4].Id, RelationshipType = "employee" },      // Walt → Saul (legal)
+            new CharacterRelationship { CharacterId = characters[0].Id, RelatedCharacterId = characters[5].Id, RelationshipType = "employer" },      // Walt → Gus
             new CharacterRelationship { CharacterId = characters[1].Id, RelatedCharacterId = characters[2].Id, RelationshipType = "neighbor" },      // Jesse ↔ Skyler
             new CharacterRelationship { CharacterId = characters[2].Id, RelatedCharacterId = characters[3].Id, RelationshipType = "sister" },       // Skyler ↔ Hank
-            new CharacterRelationship { CharacterId = characters[3].Id, RelatedCharacterId = characters[8].Id, RelationshipType = "spouse" },       // Hank ↔ Marie
-            new CharacterRelationship { CharacterId = characters[5].Id, RelatedCharacterId = characters[0].Id, RelationshipType = "client" },       // Saul ← Walt
-            new CharacterRelationship { CharacterId = characters[6].Id, RelatedCharacterId = characters[7].Id, RelationshipType = "associate" },    // Gus ↔ Mike
+            new CharacterRelationship { CharacterId = characters[3].Id, RelatedCharacterId = characters[7].Id, RelationshipType = "spouse" },       // Hank ↔ Marie
+            new CharacterRelationship { CharacterId = characters[4].Id, RelatedCharacterId = characters[0].Id, RelationshipType = "client" },       // Saul ← Walt
+            new CharacterRelationship { CharacterId = characters[5].Id, RelatedCharacterId = characters[6].Id, RelationshipType = "associate" },    // Gus ↔ Mike
         };
         context.CharacterRelationships.AddRange(relationships);
         context.SaveChanges();

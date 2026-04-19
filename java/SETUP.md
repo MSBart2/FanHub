@@ -6,6 +6,33 @@ Complete setup instructions for the Java/Spring Boot version of FanHub.
 
 ---
 
+## ⚡ One-Command Start
+
+**Requires:** [Java 17+ JDK](https://adoptium.net/) · [Node.js 18+](https://nodejs.org/)
+
+From the repo root:
+
+```powershell
+# Windows (PowerShell)
+.\java\start.ps1
+```
+
+```bash
+# Linux / macOS
+chmod +x java/start.sh && ./java/start.sh
+```
+
+The script starts the backend (via Maven wrapper) in a separate window (Windows) or background process (Linux/macOS), waits for it to be ready, then launches the frontend. First run may take a minute while Maven downloads dependencies.
+
+| Service     | URL                   |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:3000 |
+| Backend API | http://localhost:5265 |
+
+Press **Ctrl+C** in the frontend terminal to stop both processes.
+
+---
+
 ## 🚀 Quick Start
 
 ### Option 1: GitHub Codespaces ☁️ (Recommended — zero setup)
@@ -118,24 +145,29 @@ del fanhub.db     # Windows
 ## 🔍 Available API Endpoints
 
 ### Characters
+
 - `GET /api/characters` — List all characters (includes duplicate Jesse Pinkman!)
 - `GET /api/characters/{id}` — Get character by ID
 - `POST /api/characters` — Create a character
 
 ### Episodes
+
 - `GET /api/episodes` — List all episodes
 - `GET /api/episodes?seasonId=1` — Filter by season (has cache bug!)
 - `GET /api/episodes/{id}` — Get episode by ID
 
 ### Shows
+
 - `GET /api/shows` — List all shows
 - `GET /api/shows/{id}` — Get show by ID
 
 ### Quotes
+
 - `GET /api/quotes` — List all quotes
 - `POST /api/quotes` — Create a quote
 
 ### Authentication (Incomplete)
+
 - `POST /auth/register` — Register (weak password validation!)
 - `POST /auth/login` — Login (incomplete JWT implementation)
 
@@ -146,19 +178,24 @@ del fanhub.db     # Windows
 ### Verify Bugs Are Present
 
 **Duplicate Jesse Pinkman:**
+
 ```bash
 curl http://localhost:5265/api/characters
 ```
+
 Expected: Two Jesse Pinkman entries.
 
 **Cache bug:**
+
 ```bash
 curl http://localhost:5265/api/episodes?seasonId=1
 curl http://localhost:5265/api/episodes?seasonId=2
 ```
+
 Expected: Both return Season 1 episodes.
 
 **Inconsistent API paths:**
+
 ```bash
 curl http://localhost:5265/api/characters   # ✅ works
 curl http://localhost:5265/auth/login       # ✅ works (no /api prefix)
@@ -174,12 +211,14 @@ curl http://localhost:5265/api/auth/login   # ❌ 404
 **"Could not open JPA EntityManagerFactory"**
 
 This usually means a schema or dependency issue. Try:
+
 ```bash
 ./mvnw clean install
 ./mvnw spring-boot:run
 ```
 
 **Port 5265 already in use:**
+
 ```bash
 netstat -ano | findstr :5265  # Windows
 lsof -i :5265                  # Mac/Linux
@@ -190,6 +229,7 @@ Change port in `application.properties`: `server.port=5266`
 ### Frontend Won't Start
 
 **"Module not found":**
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -197,11 +237,13 @@ npm install
 
 **"Proxy error: Could not proxy request":**
 Ensure the backend is actually running on port 5265:
+
 ```bash
 curl http://localhost:5265/api/characters
 ```
 
 Check `java/frontend/package.json` has:
+
 ```json
 { "proxy": "http://localhost:5265" }
 ```
@@ -246,14 +288,15 @@ This implementation contains **36+ intentional bugs** for learning purposes!
 
 ### Using GitHub Copilot
 
-- Find bugs: *"Find security vulnerabilities in this Spring Boot controller"*
-- Get fixes: *"How should I add proper validation here?"*
-- Refactor: *"Convert this to use constructor injection"*
-- Write tests: *"Generate unit tests for this service class"*
+- Find bugs: _"Find security vulnerabilities in this Spring Boot controller"_
+- Get fixes: _"How should I add proper validation here?"_
+- Refactor: _"Convert this to use constructor injection"_
+- Write tests: _"Generate unit tests for this service class"_
 
 ### VS Code Setup for Java
 
 Install these extensions:
+
 - **Extension Pack for Java** (`vscjava.vscode-java-pack`)
 - **Spring Boot Extension Pack** (`vmware.vscode-boot-dev-pack`)
 
