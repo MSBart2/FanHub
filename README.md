@@ -4,361 +4,381 @@
 
 ## 🎯 Purpose
 
-FanHub is a **workshop starter project** used to teach AI-assisted development with GitHub Copilot. This codebase is intentionally:
+FanHub is a **workshop starter project** used to teach AI-assisted development with GitHub Copilot. This codebase is intentionally messy to reflect real-world legacy codebases. Participants learn to systematically improve it using Copilot's configuration features.
 
-- 📝 **Poorly documented** — Minimal or missing documentation
-- 🐛 **Buggy** — Contains deliberate bugs and edge cases
-- 🔀 **Inconsistent** — Mixed patterns and incomplete implementations
-- 🚧 **Incomplete** — Half-finished features requiring completion
-- 🎨 **Unstyled** — Generic UI styling that needs theming and polish
+The project ships **pre-loaded with _Breaking Bad_ content** as the default fan domain across all language implementations, providing a rich dataset for participants to work with.
 
-**The Challenge**: Transform this messy codebase into a production-ready fan site using GitHub Copilot's customization features.
+---
 
-## 📺 Pre-Branded as _Breaking Bad_
+## 📋 Prerequisites
 
-FanHub ships **pre-loaded with _Breaking Bad_ content** as the default fan domain across every language track:
+Choose your language track and install the required runtime:
 
-- **Seed data** for all backends (Node, .NET, Java, Go) inserts the show "Breaking Bad" with its characters, seasons, episodes, and quotes
-- **Reference lore** lives in [docs/breaking-bad-universe.md](docs/breaking-bad-universe.md) — a comprehensive guide to characters, factions, locations, and trivia for Copilot to draw on
-- **MCP server** ([mcp-servers/fanhub-api-server.js](mcp-servers/fanhub-api-server.js)) defaults `showId: 1` to Breaking Bad
-- **Frontend** components reference Breaking Bad by name in places like the Go track's `Header.jsx`, but the UI styling itself is intentionally generic and unthemed
+| Track | Language | Minimum Version | Installation |
+|-------|----------|-----------------|--------------|
+| **Node.js** | Node.js | 18+ | https://nodejs.org/ |
+| **.NET** | .NET SDK | 10.0 | https://dotnet.microsoft.com/download/dotnet/10.0 |
+| **Java** | JDK | 17+ | https://adoptium.net/ |
+| **Go** | Go | 1.21+ | https://go.dev/dl/ |
 
-Why this matters for the workshop:
+**For all tracks**, one of:
+- **GitHub Codespaces** (recommended - no local setup required)
+- **Docker Desktop** + VS Code Dev Containers extension
+- **Native runtime** (platform-specific tools above)
 
-- ✅ Participants get a **rich, opinionated dataset** instead of "lorem ipsum" — making theming, search, and feature work feel real
-- ✅ Copilot has a **concrete domain** to reason about (Heisenberg colors, Los Pollos Hermanos, Walt/Jesse relationships) once instructions are added
-- ✅ Want a different show? **Reskinning is itself an exercise** — swap the seed data and lore doc for _The Office_, _Stranger Things_, or your own pick. See [GOOD-IDEAS.md](GOOD-IDEAS.md) for inspiration.
-
-## 📚 Related Resources
-
-This is a fork/variant of the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) training repository, which provides:
-
-- **Complete workshop modules** (11+ hours of training)
-- **Story-driven learning** with developer personas
-- **Progressive skill building** from basics to advanced techniques
-- **Comprehensive guides** on Copilot customization
-
-For the full training experience, visit: **https://github.com/MSBart2/CopilotWorkshop**
-
-## 🏗️ What Is FanHub?
-
-A generic fan site application for TV shows featuring:
-
-### 🌐 Multi-Language Support
-
-FanHub is available in **four language implementations** to accommodate different developer preferences:
-
-| Language    | Path      | Stack                          | Status              |
-| ----------- | --------- | ------------------------------ | ------------------- |
-| **Node.js** | `node/`   | Express + React + SQLite       | ✅ Original version |
-| **.NET**    | `dotnet/` | ASP.NET Core + Blazor + SQLite | ✅ C# version       |
-| **Java**    | `java/`   | Spring Boot + React + SQLite   | ✅ Java version     |
-| **Go**      | `go/`     | Gin + React + SQLite           | ✅ Go version       |
-
-All implementations contain **intentionally similar bugs** for consistent workshop learning, but use **language-appropriate patterns** and anti-patterns specific to each ecosystem.
-
-**Filtering GitHub Issues by Language:**
-
-- Node.js issues: [`is:issue label:lang:node`](../../issues?q=is%3Aissue+label%3Alang%3Anode)
-- .NET issues: [`is:issue label:lang:dotnet`](../../issues?q=is%3Aissue+label%3Alang%3Adotnet)
-- Java issues: [`is:issue label:lang:java`](../../issues?q=is%3Aissue+label%3Alang%3Ajava)
-- Go issues: [`is:issue label:lang:go`](../../issues?q=is%3Aissue+label%3Alang%3Ago)
-- By severity: Add `label:severity:critical`, `label:severity:high`, etc.
-
-### Current (Incomplete) Features
-
-- Basic character and episode listing
-- Simple API with inconsistent patterns
-- Minimal frontend with generic styling
-- Partial authentication scaffolding
-- Database with intentional data issues
-
-### What Participants Will Build
-
-Through the workshop, participants transform FanHub by:
-
-- ✅ Adding search functionality
-- ✅ Implementing admin dashboard features
-- ✅ Creating show-specific theming
-- ✅ Building new API endpoints
-- ✅ Writing comprehensive tests
-- ✅ Adding proper documentation
-- ✅ Establishing coding standards
+---
 
 ## 🚀 Getting Started
 
-This repo has **four language-specific dev container configurations** — one per workshop track. You pick the one you want when creating a Codespace or reopening locally in a container.
+### Quick Start (Choose Your Path)
 
-### Option 1: GitHub Codespaces (Recommended — zero local setup)
+#### Option 1: GitHub Codespaces (Zero Setup) ☁️
 
-> ⚠️ **Don't use the big green "Code" button's default codespace link** — it may not let you pick your configuration. Instead:
+1. Click **Code** → **Codespaces** → **New codespace**
+2. Select dev container config:
+   - `FanHub – Node.js` (Express + React)
+   - `FanHub – .NET` (ASP.NET Core + Blazor)
+   - `FanHub – Java` (Spring Boot + React)
+   - `FanHub – Go` (Gin + React)
+3. Wait ~2 minutes for container to build
+4. Follow language-specific commands below
 
-1. Click **"Code"** → **"Codespaces"** tab → **"New codespace"**
-2. In the **"Dev container configuration"** dropdown, pick your language:
-   | Choice | For |
-   |--------|-----|
-   | **FanHub – Node.js** | `node/` track |
-   | **FanHub – Go** | `go/` track |
-   | **FanHub – Java** | `java/` track |
-   | **FanHub – .NET** | `dotnet/` track |
-3. Select a machine type (2-core is sufficient) and click **"Create codespace"**
-4. Wait ~2 minutes for the container to build
-5. Follow your language's quick-start below
+#### Option 2: Docker + Dev Container 🐳
 
-See [.devcontainer/README.md](.devcontainer/README.md) for full details on how the configurations are structured.
+```bash
+# Clone and open in VS Code
+git clone https://github.com/MSBart2/FanHub.git
+cd FanHub
+code .
 
-### Option 2: Local VS Code Dev Container
+# Click "Reopen in Container" when prompted
+# Choose your language track from the picker
+```
 
-1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. Clone the repo and open it in VS Code
-3. When prompted **"Reopen in Container"**, click it — VS Code will show a picker for the four configurations
-4. Select your language track and wait for the build
+#### Option 3: Native Runtime 💻
 
-### Option 3: Manual / Local Installation
+Install only the language runtime you need from Prerequisites section, then:
 
-Install the required runtimes for your chosen language and follow the language-specific SETUP.md.
+```bash
+# Navigate to your language track
+cd node        # or: dotnet, java, go
+```
 
----
+And follow language-specific commands:
 
-Choose your language/framework and follow the setup guide:
-
-### Node.js / React Version
-
-📖 **[Complete Node.js Setup Guide →](node/SETUP.md)**
-
-Quick start (inside the **FanHub – Node.js** container):
+### Node.js Track
 
 ```bash
 cd node
-npm run install:all
-npm start
+npm run install:all      # Install all dependencies
+npm start                # Start with Docker Compose
+
+# OR locally (no Docker):
+cd backend && npm run dev        # Terminal 1: Backend (auto-reload)
+cd frontend && npm start         # Terminal 2: Frontend
 ```
 
-Visit http://localhost:3000
+**Services**:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5265
 
-### .NET / C# Version
-
-📖 **[Complete .NET Setup Guide →](dotnet/SETUP.md)**
-
-Quick start (inside the **FanHub – .NET** container):
+### .NET Track
 
 ```bash
 cd dotnet
-cd Backend && dotnet ef database update && dotnet run
+./start.ps1              # Windows: One-command start
+chmod +x start.sh && ./start.sh  # Linux/macOS
+
+# OR locally:
+cd Backend
+dotnet ef database update
+dotnet run               # Starts on http://localhost:5265
+
+cd ../Frontend           # Terminal 2
+dotnet run               # Starts on http://localhost:3000
 ```
 
-This creates a local SQLite database (`fanhub.db`) on first run — no separate database service required.
+**Services**:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5265
 
-Visit http://localhost:5000
-
-### Java / Spring Boot Version
-
-📖 **[Complete Java Setup Guide →](java/SETUP.md)**
-
-Quick start (inside the **FanHub – Java** container):
+### Java Track
 
 ```bash
 cd java
-npm start
+./start.ps1              # Windows: One-command start
+chmod +x start.sh && ./start.sh  # Linux/macOS
+
+# OR locally:
+cd backend
+./mvnw spring-boot:run   # Starts on http://localhost:5265
+
+cd ../frontend           # Terminal 2
+npm install && npm start # Starts on http://localhost:3000
 ```
 
-Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
+**Services**:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5265
 
-### Go / Gin Version
-
-📖 **[Complete Go Setup Guide →](go/SETUP.md)**
-
-Quick start (inside the **FanHub – Go** container):
+### Go Track
 
 ```bash
 cd go
-docker-compose up --build
+./start.ps1              # Windows: One-command start
+chmod +x start.sh && ./start.sh  # Linux/macOS
+
+# OR locally:
+cd backend
+go mod download
+go run main.go           # Starts on http://localhost:5265
+
+cd ../frontend           # Terminal 2
+npm install && npm start # Starts on http://localhost:3000
 ```
 
-Visit http://localhost:3000 (frontend) and http://localhost:5265 (backend API)
+**Services**:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5265
+
+### First Run Checklist
+
+After starting the app (any track):
+
+1. ✅ Visit http://localhost:3000 - should see Breaking Bad characters
+2. ✅ Look for intentional bugs:
+   - Two "Jesse Pinkman" entries (duplicate bug!)
+   - Season filter doesn't work correctly
+   - Generic, unthemed UI styling
+3. ✅ Check API: `curl http://localhost:5265/api/characters`
+
+### Environment Configuration
+
+Each track uses `.env.example` as a template. Create `.env` in your language's backend directory:
+
+```bash
+# Database (SQLite - file-backed, no server required)
+DATABASE_URL=sqlite:./fanhub.db
+
+# Backend
+PORT=5265
+JWT_SECRET=dev_secret_change_in_production
+NODE_ENV=development
+
+# Frontend
+REACT_APP_API_URL=http://localhost:5265
+```
 
 ---
 
-## 🎯 Next Steps
+## 🧪 Testing
 
-After getting the app running with any of the options above:
+### Current Status: Tests Not Configured (Intentional)
 
-1. **Explore the broken app** - Visit http://localhost:3000 and notice:
-   - Two Jesse Pinkman characters (duplicate bug!)
-   - Season filter doesn't work properly
-   - Inconsistent styling across pages
+All tracks have placeholder test scripts:
 
-2. **Review the issues** - Check out the [46+ documented bugs](BUGS.md)
+```bash
+# Node.js (root)
+npm test                 # Returns: "No tests configured yet"
 
-3. **Start the workshop** - Head to the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for the full training modules
+# Node.js backend
+cd node/backend && npm test
 
-4. **Try Copilot without config** - Ask Copilot to help fix something and see how it struggles without context
+# Node.js frontend
+cd node/frontend && npm test
 
-5. **Begin Module 1** - Add repository instructions and watch Copilot transform!
+# .NET
+dotnet test
 
-## 📂 Project Structure
+# Java
+./mvnw test
 
-```
-node/
-├── backend/           # Node.js/Express API (inconsistent patterns)
-│   ├── src/
-│   │   ├── routes/    # API endpoints (some incomplete)
-│   │   ├── models/    # Database models (partial)
-│   │   └── utils/     # Helper functions (minimal)
-│   └── package.json
-├── frontend/          # React application (generic styling)
-│   ├── src/
-│   │   ├── components/ # UI components (needs theming)
-│   │   ├── pages/      # Page components
-│   │   └── api/        # API client (incomplete)
-│   └── package.json
-├── docker-compose.yml # Container orchestration
-└── package.json       # Root scripts
+# Go
+go test ./...
 ```
 
-## 🐛 Known Issues (By Design)
+### Workshop Exercise
 
-These issues are **intentional** for workshop learning purposes:
+Part of the workshop is configuring testing frameworks and writing tests. This is intentional - you'll add:
+- Unit test frameworks (Jest, xUnit, JUnit, Go testing)
+- Integration test suites
+- GitHub Actions CI/CD for automated test runs
+- Code coverage reporting
 
-### Documentation Issues
+---
 
-- ❌ No architecture documentation
-- ❌ Missing API documentation
-- ❌ No coding standards defined
-- ❌ Incomplete setup instructions
+## 🏗️ Architecture
 
-### Code Quality Issues
+### Multi-Language Implementation
 
-- ❌ Inconsistent API patterns
-- ❌ Mixed error handling approaches
-- ❌ Incomplete input validation
-- ❌ Missing edge case handling
+FanHub is implemented in 4 languages with equivalent bugs and features to demonstrate Copilot's language-agnostic utility:
 
-### Feature Gaps
+| Component | Node.js | .NET | Java | Go |
+|-----------|---------|------|------|-----|
+| Backend | Express 4.18 | ASP.NET Core 10 | Spring Boot 3.2 | Gin |
+| Frontend | React 18.2 | Blazor Server | React 18.2 | React 18.2 |
+| Database | SQLite | SQLite | SQLite | SQLite |
+| Auth | JWT (incomplete) | JWT (incomplete) | JWT (incomplete) | JWT (incomplete) |
+| ORM | Raw SQL / better-sqlite3 | Entity Framework Core | Spring Data JPA | Native SQL |
 
-- ❌ No authentication implemented
-- ❌ No search functionality
-- ❌ No admin capabilities
-- ❌ No test coverage
-- ❌ Generic, unthemed UI
-
-### Development Workflow Issues
-
-- ❌ No CI/CD pipeline
-- ❌ No linting configured
-- ❌ No pre-commit hooks
-- ❌ No automated testing
-
-**Do NOT fix these yet!** The workshop teaches how to systematically address these using AI assistance.
-
-## 🎓 Using This for Workshops
-
-### For Participants
-
-1. **Fork this repository** to your own GitHub account
-2. **Clone your fork** locally
-3. **Get the app running** using the Quick Start above
-4. **Experience the struggle** — Try using basic Copilot without configuration
-5. **Follow the workshop modules** to transform the codebase
-
-### For Instructors
-
-This starter project is designed to demonstrate:
-
-1. **The "Before" State** — Copilot struggles with unconfigured, undocumented code
-2. **Progressive Improvement** — Each configuration technique improves suggestions
-3. **Compounding Value** — Later exercises benefit from earlier customizations
-4. **Real-World Messiness** — Realistic scenarios, not perfect toy examples
-
-### Workshop Learning Path
-
-The typical workshop progression:
-
-1. **Module 0-1**: Document architecture → Repository instructions → Immediate improvement
-2. **Module 2**: Agent plan mode → Structured thinking and AI collaboration
-3. **Module 3**: Custom prompts → Reusable test/spec templates
-4. **Module 4**: Custom instructions → File-scoped context with applyTo patterns
-5. **Module 5**: Agent Skills → Domain expertise encoding
-6. **Module 6**: MCP Servers → External system connectivity
-7. **Module 7**: Custom agents → Autonomous development (the payoff!)
-8. **Module 8**: GitHub.com integration → Product management workflows
-9. **Module 9**: Copilot CLI → Terminal automation
-10. **Module 10**: Orchestration → Ship the complete app
-
-## 📖 API Documentation (Incomplete)
-
-### Available Endpoints
+### Database Schema
 
 ```
-GET  /api/characters     # List characters (pagination incomplete)
-GET  /api/characters/:id # Get character details (error handling incomplete)
-GET  /api/episodes       # List episodes (filtering incomplete)
-POST /api/auth/login     # Authentication (not implemented)
+shows
+  ├── seasons
+  │   ├── episodes
+  │   └── character_episodes (join)
+  ├── characters
+  │   └── quotes
+  └── users
+      └── user_favorites (join)
 ```
 
-**Note**: API documentation is intentionally sparse. Workshop participants will improve this.
-
-## 🧪 Testing (Not Configured)
-
-Currently, running `npm test` returns:
+### API Endpoints (All Tracks)
 
 ```
-No tests configured yet
+GET    /api/shows              - List all shows
+GET    /api/shows/:id          - Get show details
+GET    /api/characters         - List characters (includes duplicate!)
+GET    /api/characters/:id     - Get character details
+POST   /api/characters         - Create character
+GET    /api/episodes           - List episodes
+GET    /api/episodes?seasonId=1 - Filter by season (has cache bug!)
+GET    /api/episodes/:id       - Get episode details
+GET    /api/quotes             - List quotes
+GET    /api/quotes/random      - Random quote
+
+POST   /auth/register          - Register user (weak validation)
+POST   /auth/login             - Login (incomplete)
 ```
 
-Workshop participants will:
+### Known Intentional Issues
 
-- Set up testing frameworks
-- Write unit and integration tests
-- Configure test automation
-- Establish coverage requirements
+**Critical** (3):
+- Duplicate Jesse Pinkman in seed data
+- Episode cache ignores season filter
+- Inconsistent API paths (/api/* vs /auth inconsistency)
 
-## 🎨 Theming (Generic UI, Breaking Bad Content)
+**High Priority** (15):
+- Missing error handling on routes
+- Weak password requirements
+- CORS wide open (AllowAnyOrigin)
+- No input validation
+- SQL injection vulnerability in Go search
 
-The **content** is pre-loaded with _Breaking Bad_ characters, episodes, and quotes (see [docs/breaking-bad-universe.md](docs/breaking-bad-universe.md)), but the **UI styling** is deliberately generic — bland colors, no logo, no show personality. Workshop participants either:
+**Code Quality** (19):
+- 4 different component styling approaches
+- Mixed class/functional components
+- Inconsistent async patterns
+- Missing tests entirely
+- Generic UI with no theming
 
-- 🎨 **Theme it for Breaking Bad** — add Heisenberg yellow/green palette, desert textures, periodic-table flourishes
-- 🔄 **Reskin for a different show** — swap seed data + lore doc for _The Office_, _Stranger Things_, _Game of Thrones_, _Ted Lasso_, or your own pick
-- 🆕 **Build something new** — see [GOOD-IDEAS.md](GOOD-IDEAS.md) for an extensive menu of features and creative directions
+See [BUGS.md](BUGS.md) for the complete 46+ bug catalog with examples.
+
+### Project Structure
+
+```
+fanhub/
+├── node/                  # Node.js/Express + React track
+│   ├── backend/
+│   ├── frontend/
+│   ├── SETUP.md          # Detailed Node.js setup guide
+│   └── README.md         # Node.js workshop guide
+├── dotnet/                # ASP.NET Core + Blazor track
+│   ├── Backend/
+│   ├── Frontend/
+│   ├── SETUP.md
+│   └── README.md
+├── java/                  # Spring Boot + React track
+│   ├── backend/
+│   ├── frontend/
+│   ├── SETUP.md
+│   └── README.md
+├── go/                    # Gin + React track
+│   ├── backend/
+│   ├── frontend/
+│   ├── SETUP.md
+│   └── backend/README.md
+├── docs/
+│   └── breaking-bad-universe.md  # Domain reference for Copilot
+├── mcp-servers/           # MCP server implementations
+├── BUGS.md                # Complete bug catalog
+├── CONTRIBUTING.md
+└── README.md              # This file
+```
+
+---
 
 ## 🤝 Contributing
 
-This repository is primarily for workshop use. However:
-
-- **Bug reports** for actual (non-intentional) issues are welcome
-- **Suggestions** for better workshop scenarios appreciated
-- **Translations** or adaptations for other languages/frameworks encouraged
-
-Please note that many "bugs" are intentional for training purposes.
-
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
 ### For Workshop Participants
 
-- Check the main [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) repository for detailed modules
-- Review the troubleshooting guide in the workshop materials
-- Ask your instructor or workshop facilitator
+1. **Fork** this repository
+2. **Create a branch** for your exercise (e.g., `module-1-instructions`)
+3. **Make your changes** using Copilot
+4. **Test locally** before pushing
+5. **Open a PR** and reference the workshop module
 
-### For General Questions
+### For Maintainers
 
-- Open an issue in this repository
-- Reference the [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop) materials
+- **Bug reports** for actual (non-intentional) issues: welcome
+- **Suggestions** for workshop improvements: welcome
+- **Translations** for other frameworks: encouraged
+- **Note**: Many "bugs" are intentional for training - check [BUGS.md](BUGS.md) before reporting
 
-## 🎯 Success Criteria
+### Documentation Contributions
 
-By the end of the workshop, participants should have:
-
-- ✅ **Working application** with show-specific theming
-- ✅ **Comprehensive documentation** and coding standards
-- ✅ **Test coverage** for critical functionality
-- ✅ **Copilot configuration** that produces context-aware suggestions
-- ✅ **CI/CD pipeline** (basic)
-- ✅ **Confidence** in AI-assisted development workflows
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- Language-specific bug documentation
+- Workshop module suggestions
+- Dev container improvements
+- API endpoint documentation
 
 ---
 
-**Remember**: The messiness is the point! This starter project teaches you to transform chaos into quality using AI assistance. Embrace the challenge! 🚀
+## 📚 Language-Specific Guides
+
+Each language track has detailed setup and workshop guides:
+
+- **[Node.js SETUP](node/SETUP.md)** | **[Node.js README](node/README.md)**
+- **.NET SETUP** | **.NET README**
+- **[Java SETUP](java/SETUP.md)** | **[Java README](java/README.md)**
+- **[Go SETUP](go/SETUP.md)** | **[Go Backend README](go/backend/README.md)**
+
+Start with the SETUP.md for your language, then read the README for conceptual workshop content.
+
+---
+
+## 🎓 Workshop Learning Path
+
+The typical progression is:
+
+1. **Module 0-1** (1.5-2 hrs): Add repository instructions, see Copilot's suggestions improve
+2. **Module 2** (1.5 hrs): Use Agent plan mode for structured development
+3. **Module 3** (1.5 hrs): Create custom prompt templates for tests, components, endpoints
+4. **Module 4** (1.5 hrs): Add custom instructions with file-scoped context
+5. **Module 5** (1.5 hrs): Build Agent Skills encoding domain expertise
+6. **Module 6** (1.5 hrs): Configure MCP servers for database/GitHub access
+7. **Module 7** (1.5 hrs): Build custom agents - the payoff moment!
+8. **Modules 8-10** (4 hrs): Deploy using Copilot CLI and GitHub integration
+
+For full workshop materials, see [CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop).
+
+---
+
+## 📖 Additional Resources
+
+- **[BUGS.md](BUGS.md)** - Complete catalog of 46+ intentional bugs with examples
+- **[GOOD-IDEAS.md](GOOD-IDEAS.md)** - Feature ideas for participants
+- **[Breaking Bad Lore](docs/breaking-bad-universe.md)** - Reference for Copilot domain knowledge
+- **[CopilotWorkshop](https://github.com/MSBart2/CopilotWorkshop)** - Full training curriculum (11+ hours)
+
+---
+
+## 📜 License
+
+MIT License - See [LICENSE](LICENSE) for details.
+
+---
+
+**Remember**: The messiness is intentional! This teaches you to transform real-world code using AI assistance. Embrace the challenge! 🚀
