@@ -169,6 +169,17 @@ NODE_ENV=development
 REACT_APP_API_URL=http://localhost:5265
 ```
 
+### Detailed Setup & Reference Guides
+
+For comprehensive setup instructions, architecture details, and workshop-specific content, see your language track's guides:
+
+- **Node.js**: [SETUP](node/SETUP.md) | [Workshop Guide](node/README.md)
+- **.NET**: [SETUP](dotnet/SETUP.md) | [Workshop Guide](dotnet/README.md)
+- **Java**: [SETUP](java/SETUP.md) | [Workshop Guide](java/README.md)
+- **Go**: [SETUP](go/SETUP.md) | [Workshop Guide](go/backend/README.md)
+
+Each SETUP guide includes troubleshooting, database management, and dev environment configuration specific to your language.
+
 ---
 
 ## 🧪 Testing
@@ -333,19 +344,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
 - Workshop module suggestions
 - Dev container improvements
 - API endpoint documentation
-
----
-
-## 📚 Language-Specific Guides
-
-Each language track has detailed setup and workshop guides:
-
-- **[Node.js SETUP](node/SETUP.md)** | **[Node.js README](node/README.md)**
-- **.NET SETUP** | **.NET README**
-- **[Java SETUP](java/SETUP.md)** | **[Java README](java/README.md)**
-- **[Go SETUP](go/SETUP.md)** | **[Go Backend README](go/backend/README.md)**
-
-Start with the SETUP.md for your language, then read the README for conceptual workshop content.
 
 ---
 
