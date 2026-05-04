@@ -1,6 +1,81 @@
 # FanHub Known Bugs & Issues
 
 > **Purpose**: This document catalogs intentional bugs, misconfigurations, and code quality issues in the FanHub workshop starter project. These are designed for learning purposes - participants will fix them using AI-assisted development techniques.
+>
+> ⏱ **Time estimates** are for fixing with Copilot (not from scratch). Actual time varies by familiarity.
+
+---
+
+## ⚡ 45-Minute Bug-Fix Sessions
+
+Don't wade through 46 bugs. Pick a menu, work top-to-bottom, and let Copilot drive the fixes.
+
+### Menu A: "The Quick-Wins Blitz" (max bugs squashed)
+Rapid-fire fixes that each take 3–5 minutes. Great for building momentum.
+
+| # | Bug | Est. | Why it's fast |
+|---|-----|------|---------------|
+| 1 | #1 — Duplicate Jesse in seed data | ~5 min | Delete one row, fix FK refs |
+| 2 | #6 — Mixed HTTP status codes (200 vs 201) | ~3 min | One-line fix |
+| 3 | #8 — Invalid bcrypt hash in seed | ~5 min | Generate a real hash, replace |
+| 4 | #16 — Inconsistent route variable names | ~3 min | Rename + find-replace |
+| 5 | #15 — Mixed database import names | ~3 min | Pick one name, apply everywhere |
+| 6 | #13 — .js vs .jsx file extensions | ~5 min | Rename + update imports |
+| 7 | #34 — Footer `<a>` tags → React Router `<Link>` | ~3 min | Swap tags |
+| 8 | #3 — Inconsistent API path (`/auth` → `/api/auth`) | ~5 min | One-line + frontend update |
+| 9 | #28 — Unnecessary dual module export | ~3 min | Delete 1 line |
+| | _~10 bugs in 45 min, buffer included_ | | |
+
+### Menu B: "The API Consistency Pass" (clean REST design)
+Make every endpoint follow the same conventions. Great for learning API design.
+
+| # | Bug | Est. |
+|---|-----|------|
+| 1 | #3 — Inconsistent API paths | ~5 min |
+| 2 | #6 — Mixed HTTP status codes | ~3 min |
+| 3 | #10 — Mixed PUT vs PATCH | ~5 min |
+| 4 | #9 — Inconsistent response formats | ~15 min |
+| 5 | #17 — Mixed error response formats | ~10 min |
+| | _5 related bugs, one coherent PR_ | |
+
+### Menu C: "The Security Sweep" (harden the app)
+Every fix here closes a real vulnerability class.
+
+| # | Bug | Est. |
+|---|-----|------|
+| 1 | #7 — Weak password requirements | ~5 min |
+| 2 | #8 — Invalid bcrypt hash | ~5 min |
+| 3 | #20 — CORS wide open | ~5 min |
+| 4 | #18 — Error details exposed to client | ~5 min |
+| 5 | #19 — Missing input validation | ~15 min |
+| 6 | #32 — No env var validation | ~5 min |
+| | _6 bugs, ship a safer app_ | |
+
+### Menu D: "Error Handling Overhaul" (robustness)
+Go from crash-prone to bulletproof across all route files.
+
+| # | Bug | Est. |
+|---|-----|------|
+| 1 | #4 — Missing try/catch in characters GET | ~5 min |
+| 2 | #5 — DELETE without try/catch | ~5 min |
+| 3 | #14 — Mixed async/await vs .then() | ~10 min |
+| 4 | #17 — Mixed error response formats | ~10 min |
+| 5 | #18 — Exposed error details | ~5 min |
+| 6 | #35 — No loading state for quote like | ~5 min |
+| | _Consistent error handling everywhere_ | |
+
+### Menu E: "The Frontend Cleanup" (one consistent codebase)
+Pick this if you prefer working in React.
+
+| # | Bug | Est. |
+|---|-----|------|
+| 1 | #2 — Episode cache ignores season filter | ~10 min |
+| 2 | #34 — Footer links cause full reload | ~3 min |
+| 3 | #11 — Class vs functional components | ~15 min |
+| 4 | #12 — Four styling approaches → pick one | ~15 min |
+| | _2 bugs + 2 refactors = consistent frontend_ | |
+
+> **Tip:** After finishing a menu, grab loose quick-wins from bugs #28, #33, #16, or #31 to fill remaining time.
 
 ---
 
@@ -774,15 +849,15 @@ No optimized production builds.
 
 ## 📝 Summary by Category
 
-| Category | Count |
-|----------|-------|
-| **Critical Bugs** | 3 |
-| **High Priority** | 15 |
-| **Medium Priority** | 19 |
-| **Low Priority** | 13 |
-| **Configuration Issues** | 3 |
-| **Missing Features** | 7 |
-| **TOTAL** | **60** |
+| Category | Bugs | Count |
+|----------|------|-------|
+| **🔴 Critical Bugs** | #1 – #3 | 3 |
+| **⚠️ High Priority** | #4 – #9 | 6 |
+| **🟡 Medium Priority** | #10 – #23 | 14 |
+| **🟢 Low Priority / Code Quality** | #24 – #36 | 13 |
+| **📊 Configuration Issues** | #37 – #39 | 3 |
+| **🔧 Missing Features (TODO)** | #40 – #46 | 7 |
+| **TOTAL** | | **46** |
 
 ---
 

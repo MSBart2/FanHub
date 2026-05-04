@@ -13,8 +13,51 @@
 - 🟢 **Beginner** — One sitting, mostly UI or single-endpoint work
 - 🟡 **Intermediate** — Multiple files, a new model, or some design thought
 - 🔴 **Ambitious** — Cross-cutting, agentic, or requires a new service
+- ⏱ **Time estimates** are for vibe-coding with Copilot (not from scratch)
+- 🔥 = High wow-factor — looks great in a demo or screenshot
 
 Pick one, fork a branch, and let Copilot drive. If you build something cool, add it to a `SHOWCASE.md`.
+
+---
+
+## ⚡ 45-Minute Session Menus
+
+Don't waste time choosing. Pick a menu, paste the prompts in order, and let Copilot cook.
+
+### Menu A: "The Crowd-Pleaser" (visual, shareable)
+| # | Idea | Est. |
+|---|------|------|
+| 1 | Quote of the day on the homepage | ~10 min |
+| 2 | Quote-to-meme generator | ~15 min |
+| 3 | Heisenberg Mode toggle | ~15 min |
+| | _Buffer: polish & screenshots_ | ~5 min |
+
+### Menu B: "The Fan Experience" (interactive, fun)
+| # | Idea | Est. |
+|---|------|------|
+| 1 | "Walt or Jesse?" quote quiz | ~15 min |
+| 2 | Episode rating + reviews | ~15 min |
+| 3 | Most-quoted character chart | ~10 min |
+| | _Buffer: polish & screenshots_ | ~5 min |
+
+### Menu C: "The Deep Cut" (one meaty feature)
+| # | Idea | Est. |
+|---|------|------|
+| 1 | Character DM simulator | ~30 min |
+| 2 | "Ask the Showrunner" chat widget | ~10 min |
+| | _These share a chat UI — build one, clone the other_ | |
+
+### Menu D: "The Builder" (backend + admin focus)
+| # | Idea | Est. |
+|---|------|------|
+| 1 | Markdown-powered episode editor | ~20 min |
+| 2 | Bulk-import via CSV / JSON | ~20 min |
+| | _Buffer: polish & testing_ | ~5 min |
+
+### Menu E: "The One Big Thing" (pick exactly one 🟡)
+Spend the full 45 minutes on a single intermediate idea. Best for participants who want depth over breadth. Good picks: **Spoiler-aware browsing**, **Season tier-list builder**, or **Show-aware skinning engine**.
+
+> **🔴 Ambitious ideas are multi-session projects.** Don't start one in a 45-minute window unless you're okay with a half-finished prototype. They're here for hackathons and weekend projects.
 
 ---
 
