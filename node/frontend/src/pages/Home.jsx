@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { showsApi, quotesApi } from '../services/api';
 import QuoteDisplay from '../components/QuoteDisplay';
+import QuoteSpotlight from '../components/QuoteSpotlight';
 
 const HeroSection = styled.section`
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1f0d 100%);
@@ -254,6 +255,10 @@ function Home() {
           />
         </Section>
       )}
+
+      <Section>
+        <QuoteSpotlight />
+      </Section>
 
       <Section>
         <SectionTitle>About the Show</SectionTitle>

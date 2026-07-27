@@ -121,6 +121,57 @@ router.get('/random', async (req, res) => {
 });
 
 /**
+ * Get a spotlight quote for the active program
+ * @route GET /api/quotes/spotlight
+ */
+router.get('/spotlight', async (req, res) => {
+  const activeSeries = req.universe;
+
+  if (!activeSeries) {
+    return res.status(404).json({ error: 'No quotes found for this program' });
+  }
+
+  try {
+    let result = await db.query(
+      `SELECT q.*, c.name as character_name
+       FROM quotes q
+       LEFT JOIN characters c ON q.character_id = c.id
+       WHERE q.show_id = $1
+         AND q.is_famous = true
+       ORDER BY RANDOM()
+       LIMIT 1`,
+      [activeSeries.id]
+    );
+
+    if (result.rows.length === 0) {
+      result = await db.query(
+        `SELECT q.*, c.name as character_name
+         FROM quotes q
+         LEFT JOIN characters c ON q.character_id = c.id
+         WHERE q.show_id = $1
+         ORDER BY RANDOM()
+         LIMIT 1`,
+        [activeSeries.id]
+      );
+    }
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'No quotes found for this program' });
+    }
+
+    res.json({
+      quote: result.rows[0],
+      program: {
+        programId: activeSeries.id,
+        title: activeSeries.title,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get spotlight quote' });
+  }
+});
+
+/**
  * Get single quote
  * @route GET /api/quotes/:id
  */

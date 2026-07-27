@@ -1,11 +1,15 @@
 package com.fanhub.controller;
 
 import com.fanhub.model.Quote;
+import com.fanhub.model.Show;
 import com.fanhub.service.QuoteService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/quotes")
@@ -21,6 +25,27 @@ public class QuoteController {
             return quoteService.getQuotesByCharacterId(characterId);
         }
         return quoteService.getAllQuotes();
+    }
+
+    @GetMapping("/spotlight")
+    public ResponseEntity<?> getSpotlightQuote(HttpServletRequest request) {
+        Show activeSeries = (Show) request.getAttribute("universe");
+        if (activeSeries == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "No active program context"));
+        }
+
+        Quote quote = quoteService.getSpotlightQuote(activeSeries.getId());
+        if (quote == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "No quotes found for this program"));
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "quote", quote,
+                "program", Map.of(
+                        "programId", activeSeries.getId(),
+                        "title", activeSeries.getTitle()
+                )
+        ));
     }
     
     @GetMapping("/{id}")
