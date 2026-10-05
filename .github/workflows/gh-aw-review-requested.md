@@ -3,6 +3,7 @@ on:
   pull_request:
     types: [labeled]
     names: [lifecycle:review-requested]
+runs-on-slim: ubuntu-latest
 permissions:
   contents: read
   issues: read
