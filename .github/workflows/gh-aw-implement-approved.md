@@ -11,7 +11,7 @@ permissions:
   copilot-requests: write
 engine:
   id: copilot
-  model: claude-sonnet-4.5
+  model: claude-sonnet-5
 tools:
   github:
     toolsets: [issues, repos, pull_requests]
