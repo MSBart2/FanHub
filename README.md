@@ -337,6 +337,28 @@ fanhub/
 - **Translations** for other frameworks: encouraged
 - **Note**: Many "bugs" are intentional for training - check [BUGS.md](BUGS.md) before reporting
 
+### Issue-to-PR workflow pilot
+
+Maintainers request each stage by changing a label. These are independent
+[GitHub Agentic Workflows](.github/workflows/); their status labels do not
+start the next stage automatically.
+
+| Apply to | Request label | Result to inspect before continuing |
+|---|---|---|
+| Issue | `gh-aw-research-requested` | Repository research and a provisional plan in one issue comment |
+| Issue | `lifecycle:plan-requested` | Bounded plan comment and `lifecycle:plan-ready`, or a stop comment |
+| Issue | `lifecycle:implement-approved` | Code, tests, and one draft PR after an authorized maintainer approves the latest plan |
+| Draft PR | `lifecycle:review-requested` | Advisory `COMMENT` review against the plan and current CI |
+
+Resolve `lifecycle:needs-input` or `lifecycle:blocked` before requesting
+implementation. A maintainer removes and reapplies a request label for a
+deliberate retry; reapplying may produce another comment or PR attempt. A
+revised plan needs a fresh approval label event. Check the PR's actual test
+output and required CI before requesting review. `lifecycle:reviewed` is a
+routing signal, not an approval: a human reviewer decides whether to merge.
+No GitHub App token is needed because a person, not a workflow, applies each
+request label.
+
 ### Documentation Contributions
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
