@@ -354,7 +354,10 @@ Resolve `lifecycle:needs-input` or `lifecycle:blocked` before requesting
 implementation. A maintainer removes and reapplies a request label for a
 deliberate retry; reapplying may produce another comment or PR attempt. A
 revised plan needs a fresh approval label event. Check the PR's actual test
-output and required CI before requesting review. `lifecycle:reviewed` is a
+output and required CI before requesting review. Frontend changes run a
+targeted .NET project build in CI; it does not replace a browser smoke check
+or test other language projects. An automated draft PR may require a
+maintainer to approve its CI workflow run. `lifecycle:reviewed` is a
 routing signal, not an approval: a human reviewer decides whether to merge.
 No GitHub App token is needed because a person, not a workflow, applies each
 request label.

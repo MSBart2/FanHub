@@ -1,0 +1,21 @@
+name: Validate .NET frontend
+
+on:
+  pull_request:
+    paths:
+      - "dotnet/Frontend/**"
+      - ".github/workflows/validate-dotnet-frontend.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+      - run: dotnet restore dotnet/Frontend/Frontend.csproj
+      - run: dotnet build dotnet/Frontend/Frontend.csproj --no-restore --nologo

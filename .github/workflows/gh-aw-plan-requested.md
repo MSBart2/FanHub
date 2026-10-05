@@ -50,8 +50,11 @@ complete comment starting with
 - the expected observable fix and acceptance criteria;
 - in-scope and out-of-scope files, consumers, and compatibility concerns;
 - ordered changes, including the tests to add or update;
-- the exact validation commands and expected signals, without claiming they
-  ran unless they did;
+- the exact validation commands and expected signals; inspect project and
+  solution references so the proposed commands target files that exist.
+  If a repository-wide command is already broken, name the baseline failure
+  and propose the narrowest valid project check instead. Do not claim a
+  command ran unless it did;
 - rollback, unresolved assumptions, and the named human plan approver;
 - links to the issue evidence and inspected code.
 
