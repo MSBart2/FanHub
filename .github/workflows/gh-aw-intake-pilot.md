@@ -5,6 +5,9 @@ permissions:
   contents: read
   issues: read
   copilot-requests: write
+engine:
+  id: copilot
+  model: gpt-5
 tools:
   github:
     toolsets: [issues, repos]
