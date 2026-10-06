@@ -359,6 +359,8 @@ targeted .NET project build in CI; it does not replace a browser smoke check
 or test other language projects. An automated draft PR may require a
 maintainer to approve its CI workflow run. `lifecycle:reviewed` is a
 routing signal, not an approval: a human reviewer decides whether to merge.
+The implementation job verifies the triggering label actor and event through
+GitHub's API before the agent compares it to the latest plan's named approver.
 No GitHub App token is needed because a person, not a workflow, applies each
 request label. Opening draft PRs with the workflow token requires **Allow
 GitHub Actions to create and approve pull requests** at both organization and

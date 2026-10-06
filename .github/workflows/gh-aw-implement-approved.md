@@ -18,16 +18,34 @@ tools:
   github:
     toolsets: [issues, repos, pull_requests]
 steps:
-  - name: Require a maintainer to apply the approval label
+  - name: Verify the approval label event
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       LABEL_ACTOR: ${{ github.actor }}
+      LABEL_NAME: ${{ github.event.label.name }}
+      EVENT_ACTION: ${{ github.event.action }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      ISSUE_UPDATED_AT: ${{ github.event.issue.updated_at }}
       REPOSITORY: ${{ github.repository }}
     run: |
+      if [ "$EVENT_ACTION" != "labeled" ] || [ "$LABEL_NAME" != "lifecycle:implement-approved" ]; then
+        echo "::error::Expected an implementation approval label event"
+        exit 1
+      fi
       permission=$(gh api "repos/$REPOSITORY/collaborators/$LABEL_ACTOR/permission" --jq .permission)
       if [ "$permission" != "admin" ] && [ "$permission" != "maintain" ]; then
-        echo '{"type":"noop","message":"Implementation requires a maintainer-applied approval label"}' >> "$GH_AW_SAFE_OUTPUTS"
+        echo "::error::Implementation requires a maintainer-applied approval label"
+        exit 1
       fi
+      event=$(gh api --paginate "repos/$REPOSITORY/issues/$ISSUE_NUMBER/events?per_page=100" \
+        --jq '.[] | select(.event == "labeled" and .label.name == "lifecycle:implement-approved") | {id, created_at, actor: .actor.login}' \
+        | jq -s 'sort_by(.created_at, .id) | last')
+      if ! jq -e --arg actor "$LABEL_ACTOR" --arg updated "$ISSUE_UPDATED_AT" \
+        '.actor == $actor and .created_at == $updated and .id != null' <<< "$event" > /dev/null; then
+        echo "::error::Cannot verify the current implementation approval label event"
+        exit 1
+      fi
+      printf '%s\n' "$event" > "$RUNNER_TEMP/gh-aw/implementation-approval-event.json"
 safe-outputs:
   create-pull-request:
     title-prefix: "[lifecycle] "
@@ -51,8 +69,14 @@ workflow provenance and substantive scope, tests, validation, rollback, and
 named approver sections, and check that it precedes this label event.
 The planning marker, when present, is supporting evidence rather than the
 sole way to identify a plan. Check the label event actor, issue history,
-and plan freshness.
-If the actor cannot be verified as an authorized approver, the plan is missing
+and plan freshness. The trusted pre-agent step verifies the current label event
+and maintainer permission using the GitHub API; read
+`$RUNNER_TEMP/gh-aw/implementation-approval-event.json` for its actor, timestamp, and
+event ID. The workflow's GitHub context also identifies the triggering actor.
+Use that evidence rather than requiring the agent's read-only GitHub tools to
+expose the issue timeline. Compare the event timestamp to the latest complete
+plan comment and its named approver. If the evidence file is missing or the
+actor cannot be verified as the named approver, the plan is missing
 or superseded, or the issue has `lifecycle:needs-input` or
 `lifecycle:blocked`, post one stop comment and call `noop`. A label alone
 does not supply missing acceptance criteria or authorize unrelated changes.
@@ -70,7 +94,8 @@ or branch protection to make the run appear successful.
 
 On success, create exactly one draft pull request against the repository's
 default branch. Its body must link the issue, the approved plan comment, and
-the approval label event; list changed files and deviations; give actual test
+the approval label event (`#event-<id>` on the issue); list changed files and
+deviations; give actual test
 commands/results and remaining checks; and name a human reviewer. Never
 merge or mark the PR ready for merge. CI after PR creation is separate from
 the tests run here. Review starts only when a maintainer applies
