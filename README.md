@@ -364,6 +364,8 @@ does not attach a PR check; link its run in the review evidence. `lifecycle:revi
 routing signal, not an approval: a human reviewer decides whether to merge.
 The implementation job verifies the triggering label actor and event through
 GitHub's API before the agent compares it to the latest plan's named approver.
+The advisory review verifies that linked approval event independently, then
+compares it to the plan and current-head evidence.
 No GitHub App token is needed because a person, not a workflow, applies each
 request label. Opening draft PRs with the workflow token requires **Allow
 GitHub Actions to create and approve pull requests** at both organization and
