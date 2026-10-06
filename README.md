@@ -360,7 +360,10 @@ or test other language projects. An automated draft PR may require a
 maintainer to approve its CI workflow run. `lifecycle:reviewed` is a
 routing signal, not an approval: a human reviewer decides whether to merge.
 No GitHub App token is needed because a person, not a workflow, applies each
-request label.
+request label. Opening draft PRs with the workflow token requires **Allow
+GitHub Actions to create and approve pull requests** at both organization and
+repository level; if disabled, the safe-output handler preserves the validated
+patch on a branch and posts an issue with a manual PR link.
 
 Recompile agentic workflows with `gh-aw` v0.91.0 or newer. The older v0.89.21
 compiler pins a firewall that rejects a Copilot GPT tool-call continuation
