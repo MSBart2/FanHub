@@ -1,6 +1,12 @@
 name: Validate .NET frontend
 
 on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "PR head commit SHA to build"
+        required: true
+        type: string
   pull_request:
     paths:
       - "dotnet/Frontend/**"
@@ -14,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
