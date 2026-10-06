@@ -4,6 +4,8 @@ on:
     types: [labeled]
     names: [lifecycle:implement-approved]
 runs-on-slim: ubuntu-latest
+network:
+  allowed: [defaults, dotnet]
 permissions:
   contents: read
   issues: read

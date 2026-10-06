@@ -365,7 +365,9 @@ request label.
 Recompile agentic workflows with `gh-aw` v0.91.0 or newer. The older v0.89.21
 compiler pins a firewall that rejects a Copilot GPT tool-call continuation
 after a file edit (`ctc_call` versus `fc`), so a successful edit in the runner
-can still leave the stage failed with no PR.
+can still leave the stage failed with no PR. The implementation stage
+allowlists the .NET package ecosystem for the scoped build; a blocked package source
+can otherwise surface as a TLS certificate mismatch during restore.
 
 ### Documentation Contributions
 
