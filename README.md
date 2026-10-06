@@ -362,6 +362,11 @@ routing signal, not an approval: a human reviewer decides whether to merge.
 No GitHub App token is needed because a person, not a workflow, applies each
 request label.
 
+Recompile agentic workflows with `gh-aw` v0.91.0 or newer. The older v0.89.21
+compiler pins a firewall that rejects a Copilot GPT tool-call continuation
+after a file edit (`ctc_call` versus `fc`), so a successful edit in the runner
+can still leave the stage failed with no PR.
+
 ### Documentation Contributions
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
