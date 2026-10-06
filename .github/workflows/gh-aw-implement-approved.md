@@ -45,7 +45,7 @@ steps:
         echo "::error::Cannot verify the current implementation approval label event"
         exit 1
       fi
-      printf '%s\n' "$event" > "$RUNNER_TEMP/gh-aw/implementation-approval-event.json"
+      printf '%s\n' "$event" > /tmp/gh-aw/implementation-approval-event.json
 safe-outputs:
   create-pull-request:
     title-prefix: "[lifecycle] "
@@ -71,7 +71,7 @@ The planning marker, when present, is supporting evidence rather than the
 sole way to identify a plan. Check the label event actor, issue history,
 and plan freshness. The trusted pre-agent step verifies the current label event
 and maintainer permission using the GitHub API; read
-`$RUNNER_TEMP/gh-aw/implementation-approval-event.json` for its actor, timestamp, and
+`/tmp/gh-aw/implementation-approval-event.json` for its actor, timestamp, and
 event ID. The workflow's GitHub context also identifies the triggering actor.
 Use that evidence rather than requiring the agent's read-only GitHub tools to
 expose the issue timeline. Compare the event timestamp to the latest complete
