@@ -79,6 +79,26 @@ test("ignores a filtered response that arrives after returning to all seasons", 
   expect(container.textContent).toContain("Seven Thirty-Seven");
 });
 
+test("ignores a filtered request failure after returning to all seasons", async () => {
+  let rejectFiltered;
+  episodesApi.getAll.mockImplementation(({ season_id } = {}) =>
+    season_id
+      ? new Promise((resolve, reject) => { rejectFiltered = reject; })
+      : Promise.resolve({ data: { data: allEpisodes } }),
+  );
+
+  await act(async () => root.render(<Episodes />));
+  await clickSeason("Season 2");
+  await clickSeason("All Seasons");
+
+  await act(async () => {
+    rejectFiltered(new Error("Previous season request failed"));
+  });
+  expect(container.textContent).not.toContain("Failed to load episodes");
+  expect(container.textContent).toContain("Pilot");
+  expect(container.textContent).toContain("Seven Thirty-Seven");
+});
+
 test("restores the season buttons when mounting from the all-episodes cache", async () => {
   episodesApi.getAll.mockResolvedValue({ data: { data: allEpisodes } });
 
