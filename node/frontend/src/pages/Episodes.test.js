@@ -111,3 +111,26 @@ test("restores the season buttons when mounting from the all-episodes cache", as
     .toEqual(["All Seasons", "Season 1", "Season 2"]);
   expect(episodesApi.getAll).toHaveBeenCalledTimes(1);
 });
+
+test("ignores an old response after unmounting and remounting", async () => {
+  let resolveOldRequest;
+  episodesApi.getAll
+    .mockImplementationOnce(() => new Promise((resolve) => { resolveOldRequest = resolve; }))
+    .mockResolvedValue({ data: { data: allEpisodes } });
+
+  await act(async () => root.render(<Episodes />));
+  await act(async () => root.unmount());
+  root = createRoot(container);
+  await act(async () => root.render(<Episodes />));
+
+  await act(async () => {
+    resolveOldRequest({ data: { data: [allEpisodes[0]] } });
+  });
+  await act(async () => root.unmount());
+  root = createRoot(container);
+  await act(async () => root.render(<Episodes />));
+
+  expect(container.textContent).toContain("Pilot");
+  expect(container.textContent).toContain("Seven Thirty-Seven");
+  expect(episodesApi.getAll).toHaveBeenCalledTimes(2);
+});

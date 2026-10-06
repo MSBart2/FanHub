@@ -132,6 +132,9 @@ const Episodes = () => {
   // Initial load
   useEffect(() => {
     loadEpisodes();
+    return () => {
+      latestRequest.current += 1;
+    };
   }, [loadEpisodes]);
 
   // Handle season filter
