@@ -358,8 +358,9 @@ output and required CI before requesting review. Frontend changes run a
 targeted .NET project build in CI; it does not replace a browser smoke check
 or test other language projects. A draft PR created with `GITHUB_TOKEN` does
 not trigger another `pull_request` workflow; dispatch **Validate .NET
-frontend** against its head branch and inspect the result before requesting
-review. `lifecycle:reviewed` is a
+frontend** on `main` with the draft PR's head commit SHA as `ref`, then inspect
+the checkout SHA and build result before requesting review. This dispatch
+does not attach a PR check; link its run in the review evidence. `lifecycle:reviewed` is a
 routing signal, not an approval: a human reviewer decides whether to merge.
 The implementation job verifies the triggering label actor and event through
 GitHub's API before the agent compares it to the latest plan's named approver.
