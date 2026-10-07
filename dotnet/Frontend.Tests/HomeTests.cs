@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using Bunit;
 using Frontend.Components.Pages;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -10,12 +12,19 @@ namespace Frontend.Tests;
 public class HomeTests : TestContext
 {
     [Fact]
+    public void HomeEnablesInteractiveServerRenderingForRetry()
+    {
+        var renderMode = Assert.Single(typeof(Home).GetCustomAttributes(typeof(RenderModeAttribute), false));
+        Assert.IsType<InteractiveServerRenderMode>(((RenderModeAttribute)renderMode).Mode);
+    }
+
+    [Fact]
     public void SuccessfulLoadRendersCharacterCountAndQuote()
     {
         var handler = new QueueHttpMessageHandler(
             Response(HttpStatusCode.OK, new[] { new Character(1, "Walter White"), new Character(2, "Jesse Pinkman") }),
             Response(HttpStatusCode.OK, new[] { new Quote(1, 1, "I am the one who knocks.", true) }));
-        Services.AddSingleton<HttpClient>(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        RegisterHttpClient(handler);
 
         var cut = RenderComponent<Home>();
 
@@ -32,7 +41,7 @@ public class HomeTests : TestContext
     {
         var handler = new QueueHttpMessageHandler(
             new HttpRequestExceptionResponse("character backend failed"));
-        Services.AddSingleton<HttpClient>(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        RegisterHttpClient(handler);
 
         var cut = RenderComponent<Home>();
 
@@ -51,7 +60,7 @@ public class HomeTests : TestContext
         var handler = new QueueHttpMessageHandler(
             Response(HttpStatusCode.OK, new[] { new Character(1, "Walter White") }),
             new HttpRequestExceptionResponse("quote backend failed"));
-        Services.AddSingleton<HttpClient>(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        RegisterHttpClient(handler);
 
         var cut = RenderComponent<Home>();
 
@@ -70,7 +79,7 @@ public class HomeTests : TestContext
             new HttpRequestExceptionResponse("temporary failure"),
             Response(HttpStatusCode.OK, new[] { new Character(1, "Walter White") }),
             Response(HttpStatusCode.OK, new[] { new Quote(1, 1, "Recovered quote", true) }));
-        Services.AddSingleton<HttpClient>(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        RegisterHttpClient(handler);
 
         var cut = RenderComponent<Home>();
         cut.WaitForAssertion(() => Assert.True(cut.FindAll("[role='alert']").Count == 1));
@@ -85,8 +94,43 @@ public class HomeTests : TestContext
         });
     }
 
+    [Fact]
+    public async Task RetryKeepsAlertVisibleUntilBothRequestsSucceed()
+    {
+        var pendingQuote = new DeferredResponse();
+        var handler = new QueueHttpMessageHandler(
+            new HttpRequestExceptionResponse("temporary failure"),
+            Response(HttpStatusCode.OK, new[] { new Character(1, "Walter White") }),
+            pendingQuote);
+        RegisterHttpClient(handler);
+
+        var cut = RenderComponent<Home>();
+        cut.WaitForElement("[role='alert']");
+
+        var retry = cut.Find(".btn-retry").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        cut.WaitForAssertion(() =>
+        {
+            Assert.Contains("Retrying...", cut.Find("[role='alert']").TextContent);
+            Assert.True(cut.Find(".btn-retry").HasAttribute("disabled"));
+        });
+
+        pendingQuote.Completion.SetResult(Response(HttpStatusCode.OK, new[] { new Quote(1, 1, "Recovered quote", true) }));
+        await retry;
+
+        cut.WaitForAssertion(() =>
+        {
+            Assert.Empty(cut.FindAll("[role='alert']"));
+            Assert.Contains("Recovered quote", cut.Markup);
+        });
+    }
+
     private static HttpResponseMessage Response<T>(HttpStatusCode statusCode, T value) =>
         new(statusCode) { Content = JsonContent.Create(value) };
+
+    private void RegisterHttpClient(QueueHttpMessageHandler handler)
+    {
+        Services.AddSingleton<HttpClient>(_ => new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+    }
 
     private sealed record Character(int Id, string Name);
 
@@ -95,6 +139,12 @@ public class HomeTests : TestContext
     private sealed class HttpRequestExceptionResponse(string message) : HttpResponseMessage(HttpStatusCode.InternalServerError)
     {
         public string ErrorMessage { get; } = message;
+    }
+
+    private sealed class DeferredResponse : HttpResponseMessage
+    {
+        public TaskCompletionSource<HttpResponseMessage> Completion { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
     private sealed class QueueHttpMessageHandler(params HttpResponseMessage[] responses) : HttpMessageHandler
@@ -115,6 +165,10 @@ public class HomeTests : TestContext
             if (response is HttpRequestExceptionResponse failure)
             {
                 throw new HttpRequestException(failure.ErrorMessage);
+            }
+            if (response is DeferredResponse pending)
+            {
+                return pending.Completion.Task;
             }
 
             return Task.FromResult(response);

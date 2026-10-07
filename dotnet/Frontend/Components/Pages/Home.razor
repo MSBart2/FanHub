@@ -1,4 +1,5 @@
 @page "/"
+@rendermode InteractiveServer
 @inject HttpClient Http
 @inject ILogger<Home> Logger
 @using System.Linq
@@ -366,7 +367,6 @@
     private async Task LoadHomeDataAsync()
     {
         isLoading = true;
-        loadError = false;
         characterCount = 0;
         qotd = null;
         qotdCharacterName = null;
@@ -385,16 +385,34 @@
                 qotd = pool[index];
                 qotdCharacterName = characters?.FirstOrDefault(c => c.Id == qotd.CharacterId)?.Name;
             }
+            loadError = false;
         }
-        catch (Exception ex)
+        catch (HttpRequestException ex)
         {
-            loadError = true;
-            Logger.LogError(ex, "Unable to load home page data");
+            ReportLoadError(ex);
+        }
+        catch (System.Text.Json.JsonException ex)
+        {
+            ReportLoadError(ex);
+        }
+        catch (NotSupportedException ex)
+        {
+            ReportLoadError(ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            ReportLoadError(ex);
         }
         finally
         {
             isLoading = false;
         }
+    }
+
+    private void ReportLoadError(Exception exception)
+    {
+        loadError = true;
+        Logger.LogError(exception, "Unable to load home page data");
     }
 
     private class QuoteDto
