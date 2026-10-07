@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models;
 
@@ -10,7 +11,9 @@ public class Episode
     public int ShowId { get; set; }
     public int SeasonId { get; set; }
     public int EpisodeNumber { get; set; }
+    [Required]
     public string Title { get; set; }
+    [Required]
     public string Description { get; set; }
     public int RuntimeMinutes { get; set; }
     public DateTime AirDate { get; set; }

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.Models;
 
 public class Quote
@@ -6,6 +8,7 @@ public class Quote
     public int ShowId { get; set; }
     public int CharacterId { get; set; }
     public int EpisodeId { get; set; }
+    [Required]
     public string QuoteText { get; set; }
     public bool IsFamous { get; set; }
     public int Likes { get; set; }
