@@ -1,5 +1,6 @@
 @page "/"
 @inject HttpClient Http
+@inject ILogger<Home> Logger
 @using System.Linq
 
 <PageTitle>FanHub - Breaking Bad</PageTitle>
@@ -22,6 +23,16 @@
 </div>
 
 <div class="home-content">
+    @if (loadError)
+    {
+        <div class="home-load-error" role="alert" aria-live="assertive">
+            <p>We couldn't load the latest FanHub information. Please try again.</p>
+            <button type="button" class="btn-retry" @onclick="LoadHomeDataAsync" disabled="@isLoading">
+                @(isLoading ? "Retrying..." : "Retry")
+            </button>
+        </div>
+    }
+
     <section class="show-summary">
         <div class="summary-card">
             <div class="summary-stat">
@@ -305,15 +316,61 @@
             color: #888;
             font-weight: 600;
         }
+
+        .home-load-error {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: #fff4f2;
+            border-left: 4px solid #c0392b;
+            border-radius: 4px;
+            color: #5c1f1a;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .home-load-error p {
+            margin: 0;
+        }
+
+        .btn-retry {
+            background: #c0392b;
+            border: 0;
+            border-radius: 3px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 0.6rem 1rem;
+            white-space: nowrap;
+        }
+
+        .btn-retry:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
     </style>
 
 @code {
     private QuoteDto? qotd;
     private string? qotdCharacterName;
     private int characterCount;
+    private bool isLoading;
+    private bool loadError;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadHomeDataAsync();
+    }
+
+    private async Task LoadHomeDataAsync()
+    {
+        isLoading = true;
+        loadError = false;
+        characterCount = 0;
+        qotd = null;
+        qotdCharacterName = null;
+
         try
         {
             var characters = await Http.GetFromJsonAsync<List<CharacterDto>>("api/characters");
@@ -329,7 +386,15 @@
                 qotdCharacterName = characters?.FirstOrDefault(c => c.Id == qotd.CharacterId)?.Name;
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            loadError = true;
+            Logger.LogError(ex, "Unable to load home page data");
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     private class QuoteDto
