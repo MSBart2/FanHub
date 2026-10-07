@@ -1,0 +1,29 @@
+name: Demo Code Quality coverage
+
+on:
+  pull_request:
+    branches: [demo/code-quality-base]
+
+permissions:
+  contents: read
+  code-quality: write
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+      - name: Test with coverage
+        run: dotnet test dotnet/Frontend.Tests/Frontend.Tests.csproj --collect:"XPlat Code Coverage" --results-directory dotnet/Frontend.Tests/TestResults
+      - name: Prepare Cobertura report
+        run: cp dotnet/Frontend.Tests/TestResults/*/coverage.cobertura.xml coverage.xml
+      - uses: actions/upload-code-coverage@v1
+        with:
+          file: coverage.xml
+          language: C#
+          label: code-coverage/dotnet-frontend
