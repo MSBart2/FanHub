@@ -37,6 +37,46 @@ public class HomeTests : TestContext
     }
 
     [Fact]
+    public void EmptyQuotesWithCharactersOffersCharacterLink()
+    {
+        var handler = new QueueHttpMessageHandler(
+            Response(HttpStatusCode.OK, new[] { new Character(1, "Walter White") }),
+            Response(HttpStatusCode.OK, Array.Empty<Quote>()));
+        RegisterHttpClient(handler);
+
+        var cut = RenderComponent<Home>();
+
+        cut.WaitForAssertion(() =>
+        {
+            var status = cut.Find(".qotd-section[role='status']");
+            Assert.Contains("No quotes are available yet", status.TextContent);
+            Assert.Equal("/characters", status.QuerySelector("a")?.GetAttribute("href"));
+            Assert.Empty(cut.FindAll("[role='alert']"));
+            Assert.Equal(2, handler.RequestCount);
+        });
+    }
+
+    [Fact]
+    public void EmptyQuotesAndCharactersOffersCheckBackMessage()
+    {
+        var handler = new QueueHttpMessageHandler(
+            Response(HttpStatusCode.OK, Array.Empty<Character>()),
+            Response(HttpStatusCode.OK, Array.Empty<Quote>()));
+        RegisterHttpClient(handler);
+
+        var cut = RenderComponent<Home>();
+
+        cut.WaitForAssertion(() =>
+        {
+            var status = cut.Find(".qotd-section[role='status']");
+            Assert.Contains("No quotes or characters are available yet. Please check back later.", status.TextContent);
+            Assert.Null(status.QuerySelector("a"));
+            Assert.Empty(cut.FindAll("[role='alert']"));
+            Assert.Equal(2, handler.RequestCount);
+        });
+    }
+
+    [Fact]
     public void CharacterFailureRendersAccessibleRetryMessageWithoutExceptionDetails()
     {
         var handler = new QueueHttpMessageHandler(
