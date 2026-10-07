@@ -71,6 +71,20 @@
             }
         </section>
     }
+    else if (!isLoading && !loadError)
+    {
+        <section class="qotd-section" role="status">
+            <div class="qotd-label">Quote of the Day</div>
+            @if (characterCount > 0)
+            {
+                <p>No quotes are available yet. <a href="/characters">Browse the characters</a> instead.</p>
+            }
+            else
+            {
+                <p>No quotes or characters are available yet. Please check back later.</p>
+            }
+        </section>
+    }
 
     <section class="nav-cards">
         <a href="/characters" class="nav-card">
