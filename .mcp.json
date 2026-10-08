@@ -1,0 +1,65 @@
+{
+	"mcpServers": {
+		"fanhub-api": {
+			"type": "local",
+			"command": "node",
+			"args": [
+				"./mcp-servers/fanhub-api-server.js"
+			],
+			"tools": [
+				"*"
+			],
+			"env": {
+				"FANHUB_API_URL": "http://localhost:5265"
+			}
+		},
+		"fanhub-db-dotnet": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"-y",
+				"mcp-sqlite",
+				"dotnet/Backend/fanhub.db"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"fanhub-db-go": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"-y",
+				"mcp-sqlite",
+				"go/backend/fanhub.db"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"fanhub-db-java": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"-y",
+				"mcp-sqlite",
+				"java/backend/fanhub.db"
+			],
+			"tools": [
+				"*"
+			]
+		},
+		"fanhub-db-node": {
+			"type": "local",
+			"command": "npx",
+			"args": [
+				"-y",
+				"mcp-sqlite",
+				"node/backend/fanhub.db"
+			],
+			"tools": [
+				"*"
+			]
+		}
+	}
+}
