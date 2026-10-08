@@ -24,12 +24,15 @@ public class CharactersController : ControllerBase
         return Ok(characters);
     }
     
-    // BUG: No null check! Will throw NullReferenceException
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCharacter(int id)
     {
         var character = await _context.Characters.FindAsync(id);
-        return Ok(character.Name);  // BOOM if character is null!
+
+        if (character == null)
+            return NotFound();
+
+        return Ok(character.Name);
     }
     
     // BUG: No validation! Can create character without required fields

@@ -15,11 +15,12 @@
 **Location**: `Backend/Controllers/CharactersController.cs` (line 30)  
 **Type**: Runtime Exception  
 **Impact**: Page-breaking
+**Status**: Fixed — the endpoint now returns 404 when the character does not exist.
 
 **Description**: 
-- GetCharacter endpoint throws NullReferenceException when character ID doesn't exist
-- No null check before accessing character properties
-- Results in HTTP 500 instead of proper 404 response
+- Previously, GetCharacter threw NullReferenceException when the character ID did not exist.
+- The endpoint now checks the lookup result before accessing character properties.
+- A missing character returns HTTP 404.
 
 **Evidence**:
 ```csharp
@@ -27,14 +28,13 @@
 public async Task<IActionResult> GetCharacter(int id)
 {
     var character = await _context.Characters.FindAsync(id);
-    return Ok(character.Name);  // BOOM if character is null!
+
+    if (character == null)
+        return NotFound();
+
+    return Ok(character.Name);
 }
 ```
-
-**User Impact**: 
-- API crashes with 500 error
-- Poor error messages for clients
-- Breaks frontend when character not found
 
 **Workshop Learning**: Null checking, defensive programming, proper HTTP status codes
 

@@ -139,7 +139,7 @@ Open [Backend/Backend.http](Backend/Backend.http) in VS Code. With the [REST Cli
 | ------ | ---------------------- | ------------------------------------- |
 | `GET`  | `/api/shows`           | List all shows                        |
 | `GET`  | `/api/characters`      | List all characters                   |
-| `GET`  | `/api/characters/{id}` | Get one — **BUG: 500 if not found**   |
+| `GET`  | `/api/characters/{id}` | Get one — returns 404 if not found    |
 | `POST` | `/api/characters`      | Create — **BUG: returns 200 not 201** |
 | `GET`  | `/api/episodes`        | List all episodes                     |
 | `GET`  | `/api/quotes`          | List all quotes                       |
