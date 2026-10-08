@@ -387,19 +387,7 @@
             }
             loadError = false;
         }
-        catch (HttpRequestException ex)
-        {
-            ReportLoadError(ex);
-        }
-        catch (System.Text.Json.JsonException ex)
-        {
-            ReportLoadError(ex);
-        }
-        catch (NotSupportedException ex)
-        {
-            ReportLoadError(ex);
-        }
-        catch (TaskCanceledException ex)
+        catch (Exception ex)
         {
             ReportLoadError(ex);
         }
