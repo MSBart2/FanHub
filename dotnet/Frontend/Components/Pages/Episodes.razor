@@ -56,15 +56,21 @@
     private async Task OnSeasonChanged(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
-        try
+
+        if (string.IsNullOrEmpty(value))
         {
-            selectedSeason = string.IsNullOrEmpty(value) ? null : int.Parse(value);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning(ex, "Invalid season selection: {Season}", value);
             selectedSeason = null;
         }
+        else if (int.TryParse(value, out var season))
+        {
+            selectedSeason = season;
+        }
+        else
+        {
+            Logger.LogWarning("Invalid season selection: {Season}", value);
+            selectedSeason = null;
+        }
+
         await LoadEpisodes();
     }
 
