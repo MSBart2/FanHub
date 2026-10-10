@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"fanhub/config"
@@ -33,9 +32,11 @@ func main() {
 	api := r.Group("/api")
 	{
 		// Character routes
-		api.GET("/characters", handlers.GetCharacters)
-		api.POST("/characters", handlers.CreateCharacter)
-		api.GET("/characters/:id", handlers.GetCharacter)
+		characters := api.Group("/characters")
+		characters.Use(middleware.UniverseContext())
+		characters.GET("", handlers.GetCharacters)
+		characters.POST("", handlers.CreateCharacter)
+		characters.GET("/:id", handlers.GetCharacter)
 		
 		// Episode routes
 		api.GET("/episodes", handlers.GetEpisodes)
@@ -48,8 +49,11 @@ func main() {
 		api.GET("/shows/:id", handlers.GetShow)
 		
 		// Quote routes
-		api.GET("/quotes", handlers.GetQuotes)
-		api.POST("/quotes", handlers.CreateQuote)
+		quotes := api.Group("/quotes")
+		quotes.Use(middleware.UniverseContext())
+		quotes.GET("", handlers.GetQuotes)
+		quotes.POST("", handlers.CreateQuote)
+		quotes.GET("/spotlight", handlers.GetQuoteSpotlight)
 	}
 	
 	// BUG: Auth routes inconsistent - should be /api/auth but using /auth
