@@ -54,9 +54,7 @@ test("renders the quote, attribution, episode number, context, and initial like 
 test("hides character and episode attribution when their options are disabled", async () => {
   await render({ quote, showCharacter: false, showEpisode: false });
 
-  expect(container.textContent).not.toContain("Joey");
-  expect(container.textContent).not.toContain("The One with the Blackout");
-  expect(container.textContent).not.toContain("(S1E7)");
+  expect(container.querySelector(".attribution").textContent).toBe("");
 });
 
 test("shows the famous quote badge only for famous quotes", async () => {
