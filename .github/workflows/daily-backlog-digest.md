@@ -10,7 +10,7 @@ permissions:
   copilot-requests: write
 engine:
   id: copilot
-  model: claude-sonnet-5.5
+  model: gpt-5.6-luna
 timeout-minutes: 10
 tools:
   github:
