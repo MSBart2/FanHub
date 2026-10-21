@@ -2,7 +2,7 @@
 // NOTE: This file uses .js extension while others use .jsx - inconsistent!
 // Also mixes different patterns
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import EpisodeList from "../components/EpisodeList";
 import { episodesApi } from "../services/api";
 
@@ -57,6 +57,7 @@ const Episodes = () => {
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const latestRequest = useRef(0);
 
   // Extract unique seasons from episodes
   const extractSeasons = useCallback((episodeList) => {
@@ -75,6 +76,8 @@ const Episodes = () => {
   // Load episodes
   const loadEpisodes = useCallback(
     async (seasonId = null) => {
+      const requestId = ++latestRequest.current;
+      setError(null);
       // Only use cache for unfiltered (all episodes) requests
       const now = Date.now();
       if (
@@ -84,13 +87,13 @@ const Episodes = () => {
         now - cacheTimestamp < 30000
       ) {
         setEpisodes(episodeCache);
+        setSeasons(extractSeasons(episodeCache));
         setLoading(false);
         return;
       }
 
       try {
         setLoading(true);
-        setError(null);
 
         const params = {};
         if (seasonId) {
@@ -98,13 +101,16 @@ const Episodes = () => {
         }
 
         const response = await episodesApi.getAll(params);
+        if (requestId !== latestRequest.current) return;
 
         // Handle different response formats (backend inconsistency!)
         const data = response.data.data || response.data;
 
-        // Update cache (but doesn't track which season this is for!)
-        episodeCache = data;
-        cacheTimestamp = Date.now();
+        // Keep the shared cache limited to all episodes.
+        if (!seasonId) {
+          episodeCache = data;
+          cacheTimestamp = Date.now();
+        }
 
         setEpisodes(data);
 
@@ -113,10 +119,13 @@ const Episodes = () => {
           setSeasons(extractSeasons(data));
         }
       } catch (err) {
+        if (requestId !== latestRequest.current) return;
         console.error("Failed to load episodes:", err);
         setError("Failed to load episodes. Is the backend running?");
       } finally {
-        setLoading(false);
+        if (requestId === latestRequest.current) {
+          setLoading(false);
+        }
       }
     },
     [extractSeasons],
@@ -125,11 +134,14 @@ const Episodes = () => {
   // Initial load
   useEffect(() => {
     loadEpisodes();
+    return () => {
+      latestRequest.current++;
+    };
   }, [loadEpisodes]);
 
   // Handle season filter
   const handleSeasonClick = (season) => {
-    if (selectedSeason === season?.id) {
+    if (!season || selectedSeason === season.id) {
       // Deselect - show all
       setSelectedSeason(null);
       loadEpisodes();
