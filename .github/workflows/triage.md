@@ -15,6 +15,8 @@ timeout-minutes: 10
 tools:
   github:
     toolsets: [issues, repos]
+    min-integrity: approved
+    trusted-users: [rbmathis, "github-actions[bot]"]
 safe-outputs:
   add-labels:
     allowed:
@@ -39,7 +41,7 @@ safe-outputs:
 
 # Triage the issue that received `/triage`
 
-A maintainer asked for triage on this issue. Its sanitized text is:
+A maintainer asked for triage on issue #${{ github.event.issue.number }}. Read that issue with the GitHub tools; the triggering text is:
 
 "${{ steps.sanitized.outputs.text }}"
 

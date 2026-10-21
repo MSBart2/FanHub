@@ -15,6 +15,8 @@ timeout-minutes: 10
 tools:
   github:
     toolsets: [issues, pull_requests]
+    min-integrity: approved
+    trusted-users: [rbmathis, "github-actions[bot]"]
 safe-outputs:
   create-issue:
     title-prefix: "[digest] "
