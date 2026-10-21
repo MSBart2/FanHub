@@ -13,10 +13,12 @@ engine:
   model: gpt-5.6-luna
 timeout-minutes: 10
 tools:
+  bash: ["cat", "ls", "find", "grep", "head", "tail", "wc"]
   github:
     toolsets: [issues, pull_requests]
-    min-integrity: approved
-    trusted-users: [rbmathis, "github-actions[bot]"]
+    # The integrity guard in gh-aw v0.92.6 rates every FanHub issue 'none',
+    # even maintainer-authored ones. Writes stay limited to safe outputs.
+    min-integrity: none
 safe-outputs:
   create-issue:
     title-prefix: "[digest] "
