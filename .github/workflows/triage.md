@@ -8,7 +8,9 @@ permissions:
   contents: read
   issues: read
   copilot-requests: write
-engine: copilot
+engine:
+  id: copilot
+  model: claude-sonnet-5.5
 timeout-minutes: 10
 tools:
   github:
