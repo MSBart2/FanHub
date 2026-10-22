@@ -14,12 +14,14 @@ try {
   input = {};
 }
 
-const cwd = input.cwd || process.cwd();
+const cwd = input.cwd || input.working_directory || process.cwd();
 const root = execSync('git rev-parse --show-toplevel', { cwd, encoding: 'utf8' }).trim();
 const loopDir = path.join(root, '.copilot-loop');
 fs.mkdirSync(loopDir, { recursive: true });
 
-const sessionId = input.sessionId || 'unknown';
+const branch = execSync('git branch --show-current', { cwd: root, encoding: 'utf8' }).trim();
+// Field casing differs between hook forms; fall back to the branch so parallel worktrees keep separate counters.
+const sessionId = input.sessionId || input.session_id || `branch-${branch.replace(/[^\w.-]/g, '_')}`;
 const counterFile = path.join(loopDir, `stop-blocks-${sessionId}.json`);
 const logFile = path.join(loopDir, 'hook-log.jsonl');
 const blocks = fs.existsSync(counterFile) ? JSON.parse(fs.readFileSync(counterFile, 'utf8')).blocks : 0;
@@ -43,8 +45,9 @@ function log(decision, note) {
     JSON.stringify({
       time: new Date().toISOString(),
       sessionId,
-      agent: input.agentName || 'main',
-      branch: execSync('git branch --show-current', { cwd: root, encoding: 'utf8' }).trim(),
+      agent: input.agentName || input.agent_name || 'main',
+      inputKeys: Object.keys(input),
+      branch,
       decision,
       blocksSoFar: blocks,
       tests: testsLine,
