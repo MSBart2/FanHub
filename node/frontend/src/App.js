@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Characters from './pages/Characters';
 import Episodes from './pages/Episodes';
+import EpisodeDetail from './pages/EpisodeDetail';
 import About from './pages/About';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/characters" element={<Characters />} />
             <Route path="/episodes" element={<Episodes />} />
+            <Route path="/episodes/:id" element={<EpisodeDetail />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </main>

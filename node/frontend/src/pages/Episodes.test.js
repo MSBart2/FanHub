@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { act } from "react-dom/test-utils";
+import { MemoryRouter, Routes, Route, useParams } from "react-router-dom";
 import Episodes from "./Episodes";
 import { episodesApi } from "../services/api";
 
@@ -9,14 +10,32 @@ jest.mock("../services/api", () => ({
 }));
 
 jest.mock("../components/EpisodeList", () => {
-  return function EpisodeList({ episodes }) {
-    return <div>{episodes.map((episode) => episode.title).join(", ")}</div>;
+  return function EpisodeList({ episodes, onEpisodeClick }) {
+    return (
+      <div>
+        {episodes.map((episode) => (
+          <span
+            key={episode.id}
+            role="link"
+            data-episode={episode.id}
+            onClick={() => onEpisodeClick(episode)}
+          >
+            {episode.title}
+          </span>
+        ))}
+      </div>
+    );
   };
 });
 
+function DetailStub() {
+  const { id } = useParams();
+  return <div>Detail route {id}</div>;
+}
+
 const allEpisodes = [
-  { title: "Pilot", season_id: 1, season_number: 1 },
-  { title: "Season two premiere", season_id: 2, season_number: 2 },
+  { id: 11, title: "Pilot", season_id: 1, season_number: 1 },
+  { id: 22, title: "Season two premiere", season_id: 2, season_number: 2 },
 ];
 const seasonTwo = [allEpisodes[1]];
 let container;
@@ -41,8 +60,33 @@ afterEach(() => {
 });
 
 async function render() {
-  await act(async () => root.render(<Episodes />));
+  await act(async () =>
+    root.render(
+      <MemoryRouter initialEntries={["/"]}>
+        <Routes>
+          <Route path="/" element={<Episodes />} />
+          <Route path="/episodes/:id" element={<DetailStub />} />
+        </Routes>
+      </MemoryRouter>,
+    ),
+  );
 }
+
+test("clicking an episode navigates to its id-specific route without alerting", async () => {
+  const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  episodesApi.getAll.mockResolvedValue({ data: allEpisodes });
+  await render();
+
+  await act(async () =>
+    container.querySelector('[data-episode="22"]').click(),
+  );
+
+  expect(container.textContent).toContain("Detail route 22");
+  expect(container.textContent).not.toContain("Pilot");
+  expect(alertSpy).not.toHaveBeenCalled();
+  expect(console.log).not.toHaveBeenCalled();
+});
 
 async function click(label) {
   const button = Array.from(container.querySelectorAll("button")).find(

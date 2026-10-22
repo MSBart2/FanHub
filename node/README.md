@@ -302,9 +302,34 @@ users → user_favorites → characters
 /api/shows           - Show management
 /api/characters      - Character CRUD
 /api/episodes        - Episode listing
+/api/episodes/:id    - Episode detail with related characters and quotes
 /api/quotes          - Quote management
 /auth               - Authentication (⚠️ inconsistent path!)
 ```
+
+### Episode Detail (#5)
+
+Click an episode on `/episodes` to open `/episodes/:id`. The detail route also
+loads directly by requesting `GET /api/episodes/:id` through `episodesApi.getById`;
+the API success body is `{ success: true, data: episode }` (Axios:
+`response.data.data`). Every detail state includes a **Back to episodes** link
+to `/episodes`, independent of browser history. The shared Header/Footer and
+other routes are unchanged.
+
+The page is read-only: it shows episode/show/season information and available
+metadata, related character names/actors/images/featured indicators, and quote
+text/speakers/context. Numeric zero values are retained; date-only air dates
+are displayed without timezone conversion. Missing or broken images use text
+fallbacks. Missing descriptions, characters, and quotes have explanatory empty
+states; unknown quote speakers are labeled. Empty association arrays are valid
+(the seed data has no episode-character associations); cast is never inferred
+from quotes. Characters do not link to the separate character-detail feature
+(#4), and quotes have no mutation controls.
+
+Loading, HTTP 404 (not found), and other request failures have distinct states.
+Changing the route clears previous content and image failures; stale requests
+and requests settling after unmount cannot replace the current episode. Invalid
+success response envelopes are shown as request errors rather than empty details.
 
 ---
 
@@ -426,14 +451,18 @@ node/
 │   │   ├── pages/
 │   │   │   ├── Characters.jsx       # ⚠️ Class component
 │   │   │   ├── Episodes.js          # 🐛 Cache bug!
+│   │   │   ├── Episodes.test.js     # 9 list/cache/navigation tests
+│   │   │   ├── EpisodeDetail.js     # Read-only detail route (#5)
+│   │   │   ├── EpisodeDetail.test.js # 33 detail/lifecycle/error tests
 │   │   │   ├── Home.jsx
 │   │   │   └── About.jsx            # ⚠️ Uses <style> tag!
 │   │   ├── services/
 │   │   │   └── api.js
+│   │   ├── App.test.js              # 5 router integration tests
 │   │   └── styles/
 │   │       ├── global.css
 │   │       └── QuoteDisplay.module.css
-│   ├── __tests__/              # ❌ No tests yet
+│   ├── __tests__/              # README placeholder; Jest tests live beside source
 │   └── package.json
 ├── docker-compose.yml
 ├── package.json
@@ -458,7 +487,7 @@ npm stop               # Stop all services
 npm run install:all    # Install all dependencies
 npm run backend        # Start backend only (port 3001)
 npm run frontend       # Start frontend only (port 3000)
-npm test               # Run tests (not implemented yet)
+npm test               # Placeholder: prints "No tests configured yet" and exits successfully
 npm run db:reset       # Reset database with fresh seed data
 
 # Backend (cd backend/)
@@ -468,8 +497,60 @@ npm start              # Start production mode
 # Frontend (cd frontend/)
 npm start              # Start development server
 npm run build          # Build for production
-npm test               # Run tests (not implemented)
+npm test               # React Scripts/Jest (interactive watch mode)
 ```
+
+Frontend validation must run in `node/frontend`, not via the root placeholder
+`npm test`. Run the full non-watch Jest suite and a normal production build:
+
+```bash
+# From node/frontend (bash)
+CI=true npx react-scripts test --watchAll=false
+# Unset CI for the normal build, without changing the parent shell's environment.
+(unset CI; npm run build)
+```
+
+```powershell
+# From node/frontend (PowerShell)
+$previousCI = $env:CI
+try {
+    $env:CI = "true"
+    npx react-scripts test --watchAll=false
+    Remove-Item Env:CI -ErrorAction SilentlyContinue
+    npm run build
+} finally {
+    $env:CI = $previousCI
+}
+```
+
+The frontend test inventory is **47 cases across three files**:
+
+- `src/pages/Episodes.test.js`: **9 cases**, retaining the original 8 list/cache
+  regressions and adding episode-detail navigation, with router-aware rendering.
+- `src/pages/EpisodeDetail.test.js`: **33 cases** covering detail rendering,
+  empty/error states, lifecycle and route changes, including reviewer-strengthened
+  StrictMode request races, scoped portrait fallback, and 404/500 route resets.
+- `src/App.test.js`: **5 integration cases** covering real episode-list navigation,
+  direct detail URLs, return navigation, and shared Header/Footer.
+
+The `frontend/__tests__/README.md` "No tests yet" text is a stale placeholder,
+not the test inventory.
+
+Validation: the earlier full suite passed **40/40**; after revisions, the
+targeted detail suite passed **33/33**, and the final full-suite rerun passed
+**47/47 across all 3 suites**. Jest emitted React `act` deprecation and React
+Router future-flag warnings, but no test failures. The orchestrator verified that
+a normal `npm run build` passed. **`CI=true npm run build` does not pass**: React Scripts
+treats existing lint warnings as errors (unused `useState`/`useEffect` imports in
+`Characters.jsx` and the `latestRequest.current` effect-cleanup warning in
+`Episodes.js`). Both warning sites were verified in HEAD by the orchestrator;
+they are pre-existing and were not changed for this feature. The commands above
+explicitly unset CI for the normal build rather than implying a CI build passes.
+
+Live browser/backend scenarios were **not performed**. Issue #5's feature
+implementation is checked below; a passing final full-suite rerun and reviewer
+acceptance are required before any local commit, enforced by the orchestrator.
+The full-suite gate has passed; reviewer acceptance is not claimed here.
 
 ### Environment Variables
 
@@ -554,7 +635,7 @@ As you progress through the workshop, check off these items:
 ### Features
 - [ ] Complete authentication implementation (#44)
 - [ ] Add character detail page (#4)
-- [ ] Add episode detail page (#5)
+- [x] Add episode detail page (#5) — final full-suite pass and reviewer acceptance required before local commit
 - [ ] Implement search functionality
 - [ ] Add admin panel
 - [ ] Add dark mode support (#2)
@@ -600,7 +681,11 @@ A: Absolutely! Change the seed data and update repository instructions to your f
 A: Well-known show with clear character relationships, memorable quotes, and dramatic arcs - perfect for a fan site demo.
 
 **Q: Where are the tests?**  
-A: You'll write them in the workshop using Copilot's custom prompts!
+A: Frontend Jest tests live in `src/pages/Episodes.test.js` (9 cases),
+`src/pages/EpisodeDetail.test.js` (33 cases), and `src/App.test.js` (5 cases); the
+`frontend/__tests__/README.md` "No tests yet" description is a stale placeholder.
+Run React Scripts/Jest from `frontend/`: the root `npm test` is only a
+success-exiting placeholder, not validation. More tests are added during the workshop.
 
 **Q: Is this production-ready?**  
 A: Absolutely not! This is a learning project with intentional security issues and bugs.
