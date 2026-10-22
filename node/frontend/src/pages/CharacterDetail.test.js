@@ -322,6 +322,51 @@ it.each(["resolves", "rejects"])("a request that %s after unmount never has its 
   root = createRoot(container);
 });
 
+it("keeps headings dark and readable on white panels with the real global.css applied", async () => {
+  const fs = require("fs");
+  const path = require("path");
+  const style = document.createElement("style");
+  style.setAttribute("data-test", "global-css");
+  style.textContent = fs.readFileSync(path.join(__dirname, "..", "styles", "global.css"), "utf8");
+  // The app loads base CSS before styled-components injects runtime styles.
+  document.head.insertBefore(style, document.head.firstChild);
+  try {
+    await renderCharacter(full);
+    // This JSDOM orders document.styleSheets (and the cascade) by sheet creation, not
+    // tree position, so styled-components' tag from earlier tests would still win/lose
+    // wrongly. Re-attach runtime tags after the base sheet to mirror the app's order.
+    document.head.querySelectorAll("style[data-styled]").forEach((tag) => document.head.appendChild(tag));
+    const channel = (el) => {
+      const m = getComputedStyle(el).color.match(/\d+(\.\d+)?/g);
+      expect(m).not.toBeNull();
+      return m.slice(0, 3).map((n) => Number(n) / 255);
+    };
+    const lin = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+    const luminance = (el) => {
+      const [r, g, b] = channel(el).map(lin);
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const headings = [
+      container.querySelector("h1"),
+      ...Array.from(container.querySelectorAll("h2")),
+      ...Array.from(container.querySelectorAll("li h3")),
+    ];
+    expect(headings.map((h) => h.textContent)).toEqual([
+      "Jane Doe",
+      "Biography",
+      "Episode appearances",
+      "Zeta",
+      "Alpha",
+    ]);
+    headings.forEach((h) => {
+      // WCAG contrast against a white panel (luminance 1) must be at least 4.5:1.
+      expect(1.05 / (luminance(h) + 0.05)).toBeGreaterThanOrEqual(4.5);
+    });
+  } finally {
+    style.remove();
+  }
+});
+
 it("renders the character under StrictMode double effects", async () => {
   charactersApi.getById.mockResolvedValue({ data: full });
   await render({ strict: true });

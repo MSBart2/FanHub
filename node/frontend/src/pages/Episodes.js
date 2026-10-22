@@ -3,6 +3,7 @@
 // Also mixes different patterns
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import EpisodeList from "../components/EpisodeList";
 import { episodesApi } from "../services/api";
 
@@ -52,6 +53,7 @@ let cacheTimestamp = null;
 
 // Functional component with hooks
 const Episodes = () => {
+  const navigate = useNavigate();
   const [episodes, setEpisodes] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(null);
@@ -153,11 +155,7 @@ const Episodes = () => {
 
   // Handle episode click
   const handleEpisodeClick = (episode) => {
-    // TODO: Navigate to episode detail page
-    console.log("Clicked episode:", episode);
-    alert(
-      `Episode detail page not implemented yet!\n\nEpisode: ${episode.title}`,
-    );
+    navigate(`/episodes/${episode.id}`);
   };
 
   // Filter episodes by selected season (client-side backup)

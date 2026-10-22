@@ -35,6 +35,10 @@ const Profile = styled.section`
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  h1, h2 {
+    color: #0d0d0d;
+  }
 `;
 
 const Portrait = styled.div`
@@ -98,6 +102,10 @@ const Appearances = styled.section`
   color: #0d0d0d;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  h2, h3 {
+    color: #0d0d0d;
+  }
 
   h2 {
     margin-top: 0;

@@ -302,18 +302,51 @@ users → user_favorites → characters
 /api/shows           - Show management
 /api/characters      - Character CRUD
 /api/episodes        - Episode listing
+/api/episodes/:id    - Episode detail with related characters and quotes
 /api/quotes          - Quote management
 /auth               - Authentication (⚠️ inconsistent path!)
 ```
 
 ### Character Detail (#4 — complete)
 
+The `/characters/:id` route requests `GET /api/characters/:id` through
+`charactersApi.getById`. Unlike the episode endpoint, the character API returns
+the character object directly (Axios: `response.data`), including its `episodes`
+array, without a `{ success, data }` envelope.
+
 - Character cards are keyed by ID and use React Router links to `/characters/:id`, replacing the placeholder alerts.
 - The profile shows the name, actor, biography, image, status, and main/supporting role from numeric `is_main_character` values (`1`/`0`). Missing or broken images fall back to initials.
-- Recorded episode appearances show the title, episode number, and featured status, with an empty-record message when none are recorded. There are no season labels or episode links; episode detail (#5) remains incomplete.
+- Recorded episode appearances show the title, episode number, and featured status, with an empty-record message when none are recorded. There are no season labels or episode links; the episode-detail route is available separately.
 - Loading, HTTP 404, and other request failures have distinct messages. A **Back to Characters** link is always available.
 
-For direct URL entry or refresh in production, configure the SPA host to serve `index.html` for frontend routes such as `/characters/:id`, without intercepting API requests.
+### Episode Detail (#5 — complete)
+
+Click an episode on `/episodes` to open `/episodes/:id`. The detail route also
+loads directly by requesting `GET /api/episodes/:id` through `episodesApi.getById`;
+the API success body is `{ success: true, data: episode }` (Axios:
+`response.data.data`). Every detail state includes a **Back to episodes** link
+to `/episodes`, independent of browser history. The shared Header/Footer and
+other routes are unchanged.
+
+The page is read-only: it shows episode/show/season information and available
+metadata, related character names/actors/images/featured indicators, and quote
+text/speakers/context. Numeric zero values are retained; date-only air dates
+are displayed without timezone conversion. Missing or broken images use text
+fallbacks. Missing descriptions, characters, and quotes have explanatory empty
+states; unknown quote speakers are labeled. Empty association arrays are valid
+(the seed data has no episode-character associations); cast is never inferred
+from quotes. Characters do not link to the separate character-detail feature
+(#4), and quotes have no mutation controls.
+
+Loading, HTTP 404 (not found), and other request failures have distinct states.
+Changing the route clears previous content and image failures; stale requests
+and requests settling after unmount cannot replace the current episode. Invalid
+success response envelopes are shown as request errors rather than empty details.
+
+For direct URL entry or refresh in production, configure the SPA host to serve
+`index.html` for frontend routes such as `/characters/:id` and `/episodes/:id`,
+without intercepting API requests. Both detail routes retain the shared
+Header/Footer and the original list, home, and about routes.
 
 ---
 
@@ -436,10 +469,14 @@ node/
 │   │   │   ├── Characters.jsx       # ⚠️ Class component
 │   │   │   ├── CharacterDetail.jsx  # /characters/:id profile
 │   │   │   ├── Episodes.js          # 🐛 Cache bug!
+│   │   │   ├── Episodes.test.js     # 9 list/cache/navigation tests
+│   │   │   ├── EpisodeDetail.js     # Read-only detail route (#5)
+│   │   │   ├── EpisodeDetail.test.js # 33 detail/lifecycle/error tests
 │   │   │   ├── Home.jsx
 │   │   │   └── About.jsx            # ⚠️ Uses <style> tag!
 │   │   ├── services/
 │   │   │   └── api.js
+│   │   ├── App.test.js              # Router integration tests for detail pages
 │   │   └── styles/
 │   │       ├── global.css
 │   │       └── QuoteDisplay.module.css
@@ -468,7 +505,7 @@ npm stop               # Stop all services
 npm run install:all    # Install all dependencies
 npm run backend        # Start backend only (port 3001)
 npm run frontend       # Start frontend only (port 3000)
-npm test               # Run tests (not implemented yet)
+npm test               # Placeholder: prints "No tests configured yet" and exits successfully
 npm run db:reset       # Reset database with fresh seed data
 
 # Backend (cd backend/)
@@ -478,23 +515,73 @@ npm start              # Start production mode
 # Frontend (cd frontend/)
 npm start              # Start development server
 npm run build          # Build for production
-npm test               # Run frontend Jest tests in watch mode
+npm test               # React Scripts/Jest (interactive watch mode)
 ```
 
 ### Frontend Validation
 
-From `node/frontend`, run the full Jest suite and a normal production build in PowerShell:
+Frontend validation must run in `node/frontend`, not via the root placeholder
+`npm test`. Run the full non-watch Jest suite and a normal production build:
 
-```powershell
-$env:CI='true'
-npx react-scripts test --watchAll=false
-Remove-Item Env:CI -ErrorAction SilentlyContinue
-npm run build
+```bash
+# From node/frontend (bash)
+CI=true npx react-scripts test --watchAll=false
+# Unset CI for the normal build, without changing the parent shell's environment.
+(unset CI; npm run build)
 ```
 
-Frontend tests live under `src/**/*.test.js`; see [the test guide](frontend/__tests__/README.md) for the current suites. They cover character data, errors, empty records, and navigation using API mocks, alongside existing episode regressions. Manual browser checks against a live API have **not** been completed.
+```powershell
+# From node/frontend (PowerShell)
+$previousCI = $env:CI
+try {
+    $env:CI = "true"
+    npx react-scripts test --watchAll=false
+    Remove-Item Env:CI -ErrorAction SilentlyContinue
+    npm run build
+} finally {
+    $env:CI = $previousCI
+}
+```
 
-The normal build with CI unset passed with existing warnings. `CI=true npm run build` fails because Create React App treats those baseline warnings as errors: unused `useState`/`useEffect` imports in the class-based `Characters.jsx` and the existing effect-ref cleanup warning in `Episodes.js`. These unrelated defects remain; this is not a clean CI build.
+Frontend Jest tests live beside the source under `src/**/*.test.js`:
+
+- `src/pages/CharacterDetail.test.js`: profile data, image/field fallbacks,
+  recorded and empty appearances, loading, 404/failures, and route changes.
+- `src/pages/Characters.test.js`: ID-based card links, filters, search, empty
+  results, and failures.
+- `src/pages/Episodes.test.js`: **9 cases** from the episode-detail branch, retaining the original 8 list/cache
+  regressions and adding episode-detail navigation, with router-aware rendering.
+- `src/pages/EpisodeDetail.test.js`: **33 cases** from the episode-detail branch covering detail rendering,
+  empty/error states, lifecycle and route changes, including reviewer-strengthened
+  StrictMode request races, scoped portrait fallback, and 404/500 route resets.
+- `src/App.test.js`: shared integration seam for both character and episode
+  list/detail/back navigation, direct detail URLs, and shared Header/Footer.
+  Its final combined inventory depends on integration of both branches' tests.
+
+See [the test guide](frontend/__tests__/README.md) for character-side coverage
+and mock usage; it does not yet list the episode-detail additions. These tests
+use API mocks, not a live backend, and are not comprehensive coverage of all
+frontend features. The root `npm test` placeholder is not validation.
+
+Historical episode-branch validation: the earlier full suite passed **40/40**;
+after revisions, the targeted detail suite passed **33/33**, and that branch's
+final full-suite rerun passed **47/47 across 3 suites**, including its 5 App
+integration cases. These are branch-specific results, not the combined #4/#5
+inventory or proof that the integrated suite passes. Jest emitted React `act`
+deprecation and React Router future-flag warnings, but no test failures.
+Both branches reported that a normal `npm run build` with CI unset passed
+with existing warnings. **`CI=true npm run build` does not pass**: React Scripts
+treats existing lint warnings as errors (unused `useState`/`useEffect` imports in
+`Characters.jsx` and the `latestRequest.current` effect-cleanup warning in
+`Episodes.js`). Both warning sites were reported as verified in the episode
+branch's HEAD; these unrelated workshop defects remain unchanged. The commands above
+explicitly unset CI for the normal build rather than implying a CI build passes.
+
+Live browser/backend scenarios were **not performed**. Issue #5's feature
+implementation is checked below; a passing final full-suite rerun and reviewer
+acceptance are required before any local commit, enforced by the orchestrator.
+The episode branch's full-suite gate passed; neither an integrated full-suite
+pass nor reviewer acceptance is claimed by those historical results.
 
 ### Environment Variables
 
@@ -579,7 +666,7 @@ As you progress through the workshop, check off these items:
 ### Features
 - [ ] Complete authentication implementation (#44)
 - [x] Add character detail page (#4)
-- [ ] Add episode detail page (#5)
+- [x] Add episode detail page (#5) — final full-suite pass and reviewer acceptance required before local commit
 - [ ] Implement search functionality
 - [ ] Add admin panel
 - [ ] Add dark mode support (#2)
@@ -625,7 +712,13 @@ A: Absolutely! Change the seed data and update repository instructions to your f
 A: Well-known show with clear character relationships, memorable quotes, and dramatic arcs - perfect for a fan site demo.
 
 **Q: Where are the tests?**  
-A: You'll write them in the workshop using Copilot's custom prompts!
+A: Frontend Jest tests live beside the source under `src/**/*.test.js`, including
+`src/pages/Characters.test.js`, `src/pages/CharacterDetail.test.js`,
+`src/pages/Episodes.test.js`, `src/pages/EpisodeDetail.test.js`, and
+`src/App.test.js`. See [Frontend Validation](#frontend-validation) for coverage
+and commands, and [the test guide](frontend/__tests__/README.md) for character-side guidance.
+Run React Scripts/Jest from `frontend/`: the root `npm test` is only a
+success-exiting placeholder, not validation. More tests are added during the workshop.
 
 **Q: Is this production-ready?**  
 A: Absolutely not! This is a learning project with intentional security issues and bugs.
