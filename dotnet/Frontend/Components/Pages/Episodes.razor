@@ -1,6 +1,7 @@
 @page "/episodes"
 @rendermode InteractiveServer
 @inject HttpClient Http
+@inject ILogger<Episodes> Logger
 
 <PageTitle>Episodes - FanHub</PageTitle>
 
@@ -55,7 +56,21 @@
     private async Task OnSeasonChanged(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
-        selectedSeason = string.IsNullOrEmpty(value) ? null : int.Parse(value);
+
+        if (string.IsNullOrEmpty(value))
+        {
+            selectedSeason = null;
+        }
+        else if (int.TryParse(value, out var season))
+        {
+            selectedSeason = season;
+        }
+        else
+        {
+            Logger.LogWarning("Invalid season selection: {Season}", value);
+            selectedSeason = null;
+        }
+
         await LoadEpisodes();
     }
 
