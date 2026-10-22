@@ -831,8 +831,10 @@ No optimized production builds.
 ### 42. **No Responsive Design**
 **Location**: `node/frontend/src/styles/global.css` (line 44)
 
-### 43. **No Character Detail Page**
-**Location**: `node/frontend/src/pages/Characters.jsx` (line 137)
+### 43. **No Character Detail Page — Resolved by #4**
+**Location**: `node/frontend/src/App.js`, `node/frontend/src/pages/Characters.jsx`, `node/frontend/src/pages/CharacterDetail.jsx`
+
+Character cards now use ID-keyed React Router links to `/characters/:id` instead of placeholder alerts. The profile displays name, actor, biography, image (initials for absent/broken images), status, and main/supporting role from numeric values. Recorded appearances show title, episode number, and featured status, or an empty-record message; they do not include season labels or episode links. Loading, 404, and request failures have distinct messages, with a Back to Characters link always available. Episode detail remains open under entry 44.
 
 ### 44. **No Episode Detail Page**
 **Location**: `node/frontend/src/pages/Episodes.js` (line 137)
@@ -840,7 +842,7 @@ No optimized production builds.
 ### 45. **No Tests Configured**
 **Location**: Both backend and frontend
 - Backend: `npm test` returns placeholder
-- Frontend: Test files don't exist
+- Frontend: Jest suites now exist under `node/frontend/src/**/*.test.js`; see [the test guide](node/frontend/__tests__/README.md). This does not resolve the remaining testing gaps.
 
 ### 46. **No CI/CD Pipeline**
 **Location**: `.github/workflows/` - directory doesn't exist

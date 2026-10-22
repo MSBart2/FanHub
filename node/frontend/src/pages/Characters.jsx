@@ -2,6 +2,7 @@
 // Uses a different coding style than Home.jsx!
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import CharacterCard from '../components/CharacterCard';
 import { charactersApi } from '../services/api';
 
@@ -46,6 +47,10 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
     gap: '1.5rem',
+  },
+  cardLink: {
+    color: 'inherit',
+    textDecoration: 'none',
   },
   loading: {
     textAlign: 'center',
@@ -133,12 +138,6 @@ class Characters extends React.Component {
     }
   };
 
-  handleCharacterClick = (character) => {
-    // TODO: Navigate to character detail page
-    console.log('Clicked character:', character);
-    alert(`Character detail page not implemented yet!\n\nCharacter: ${character.name}`);
-  };
-
   render() {
     const { characters, loading, error, filter, statusFilter, searchTerm } = this.state;
 
@@ -189,11 +188,13 @@ class Characters extends React.Component {
               </div>
             ) : (
               characters.map((character) => (
-                <CharacterCard
+                <Link
                   key={character.id}
-                  character={character}
-                  onClick={this.handleCharacterClick}
-                />
+                  to={`/characters/${character.id}`}
+                  style={styles.cardLink}
+                >
+                  <CharacterCard character={character} />
+                </Link>
               ))
             )}
           </div>

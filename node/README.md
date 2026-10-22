@@ -306,6 +306,15 @@ users → user_favorites → characters
 /auth               - Authentication (⚠️ inconsistent path!)
 ```
 
+### Character Detail (#4 — complete)
+
+- Character cards are keyed by ID and use React Router links to `/characters/:id`, replacing the placeholder alerts.
+- The profile shows the name, actor, biography, image, status, and main/supporting role from numeric `is_main_character` values (`1`/`0`). Missing or broken images fall back to initials.
+- Recorded episode appearances show the title, episode number, and featured status, with an empty-record message when none are recorded. There are no season labels or episode links; episode detail (#5) remains incomplete.
+- Loading, HTTP 404, and other request failures have distinct messages. A **Back to Characters** link is always available.
+
+For direct URL entry or refresh in production, configure the SPA host to serve `index.html` for frontend routes such as `/characters/:id`, without intercepting API requests.
+
 ---
 
 ## 🐛 Known Issues
@@ -425,6 +434,7 @@ node/
 │   │   │   └── QuoteDisplay.jsx     # CSS Modules
 │   │   ├── pages/
 │   │   │   ├── Characters.jsx       # ⚠️ Class component
+│   │   │   ├── CharacterDetail.jsx  # /characters/:id profile
 │   │   │   ├── Episodes.js          # 🐛 Cache bug!
 │   │   │   ├── Home.jsx
 │   │   │   └── About.jsx            # ⚠️ Uses <style> tag!
@@ -433,7 +443,7 @@ node/
 │   │   └── styles/
 │   │       ├── global.css
 │   │       └── QuoteDisplay.module.css
-│   ├── __tests__/              # ❌ No tests yet
+│   ├── __tests__/              # README points to src/**/*.test.js
 │   └── package.json
 ├── docker-compose.yml
 ├── package.json
@@ -468,8 +478,23 @@ npm start              # Start production mode
 # Frontend (cd frontend/)
 npm start              # Start development server
 npm run build          # Build for production
-npm test               # Run tests (not implemented)
+npm test               # Run frontend Jest tests in watch mode
 ```
+
+### Frontend Validation
+
+From `node/frontend`, run the full Jest suite and a normal production build in PowerShell:
+
+```powershell
+$env:CI='true'
+npx react-scripts test --watchAll=false
+Remove-Item Env:CI -ErrorAction SilentlyContinue
+npm run build
+```
+
+Frontend tests live under `src/**/*.test.js`; see [the test guide](frontend/__tests__/README.md) for the current suites. They cover character data, errors, empty records, and navigation using API mocks, alongside existing episode regressions. Manual browser checks against a live API have **not** been completed.
+
+The normal build with CI unset passed with existing warnings. `CI=true npm run build` fails because Create React App treats those baseline warnings as errors: unused `useState`/`useEffect` imports in the class-based `Characters.jsx` and the existing effect-ref cleanup warning in `Episodes.js`. These unrelated defects remain; this is not a clean CI build.
 
 ### Environment Variables
 
@@ -553,7 +578,7 @@ As you progress through the workshop, check off these items:
 
 ### Features
 - [ ] Complete authentication implementation (#44)
-- [ ] Add character detail page (#4)
+- [x] Add character detail page (#4)
 - [ ] Add episode detail page (#5)
 - [ ] Implement search functionality
 - [ ] Add admin panel
