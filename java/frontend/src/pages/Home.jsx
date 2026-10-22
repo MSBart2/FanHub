@@ -85,10 +85,36 @@ const ErrorMessage = styled.div`
   margin-bottom: 1rem;
 `;
 
+const SpotlightCard = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #3eaf1a;
+`;
+
+const SpotlightQuote = styled.blockquote`
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  color: #1a1a1a;
+`;
+
+const SpotlightMeta = styled.div`
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+`;
+
+const SPOTLIGHT_SLUG = "breaking-bad";
+
 // Home component
 function Home() {
   const [show, setShow] = useState(null);
   const [randomQuote, setRandomQuote] = useState(null);
+  const [spotlightQuote, setSpotlightQuote] = useState(null);
+  const [currentShow, setCurrentShow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -107,10 +133,21 @@ function Home() {
 
       // Get a random famous quote
       try {
-        const quoteResponse = await quotesApi.getRandom({
-          famous_only: "true",
-        });
-        setRandomQuote(quoteResponse.data);
+        const [quoteResult, spotlightResult] = await Promise.allSettled([
+          quotesApi.getRandom({
+            famous_only: "true",
+          }),
+          quotesApi.spotlight(SPOTLIGHT_SLUG),
+        ]);
+
+        if (quoteResult.status === "fulfilled") {
+          setRandomQuote(quoteResult.value.data);
+        }
+
+        if (spotlightResult.status === "fulfilled") {
+          setSpotlightQuote(spotlightResult.value.data?.quote || null);
+          setCurrentShow(spotlightResult.value.data?.program || null);
+        }
       } catch (e) {
         // Quote might not exist, that's okay
         console.log("No quotes available");
@@ -168,6 +205,23 @@ function Home() {
         <Section>
           <SectionTitle>Quote of the Day</SectionTitle>
           <QuoteDisplay quote={randomQuote} onLike={handleQuoteLike} />
+        </Section>
+      )}
+
+      {spotlightQuote && (
+        <Section>
+          <SectionTitle>Quote Spotlight</SectionTitle>
+          <SpotlightCard>
+            <SpotlightQuote>
+              “{spotlightQuote.quoteText || spotlightQuote.quote_text}”
+            </SpotlightQuote>
+            <SpotlightMeta>
+              {(spotlightQuote.characterName || spotlightQuote.character_name) && (
+                <span>— {spotlightQuote.characterName || spotlightQuote.character_name}</span>
+              )}
+              {currentShow && <span>{currentShow.title}</span>}
+            </SpotlightMeta>
+          </SpotlightCard>
         </Section>
       )}
 

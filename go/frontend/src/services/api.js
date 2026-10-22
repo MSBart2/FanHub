@@ -71,6 +71,11 @@ export const quotesApi = {
   getAll: (params) => api.get('/api/quotes', { params }),
   getById: (id) => api.get(`/api/quotes/${id}`),
   getRandom: (params) => api.get('/api/quotes/random', { params }),
+  getSpotlight: (slug) => api.get('/api/quotes/spotlight', {
+    headers: {
+      'X-Show-Slug': slug,
+    },
+  }),
   create: (data) => api.post('/api/quotes', data),
   update: (id, data) => api.put(`/api/quotes/${id}`, data),
   delete: (id) => api.delete(`/api/quotes/${id}`),

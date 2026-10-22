@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,11 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
+
+app.UseWhen(
+    ctx => ctx.Request.Path.StartsWithSegments("/api/characters") ||
+           ctx.Request.Path.StartsWithSegments("/api/quotes"),
+    branch => branch.UseMiddleware<UniverseContextMiddleware>());
 
 app.MapControllers();
 
