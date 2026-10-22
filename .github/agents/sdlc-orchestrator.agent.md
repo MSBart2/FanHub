@@ -50,5 +50,5 @@ The prompt starts with one of three modes.
 2. Resolve conflicts in named seam files only, keeping every workstream's intent (for routes: keep all routes). Any conflict outside a named seam is a stop-and-report.
 3. Run the full frontend suite. Call **test-reviewer** on the integrated diff against `main`.
 4. Write an **integration record** to `.copilot-loop/integration-record.md`: workstreams and branches, seams and how each was resolved, suite counts before and after merging, reviewer verdict, open risks.
-5. `git push -u origin <integration-branch>`, then `gh pr create --draft --base main --title "<title>" --body-file .copilot-loop/integration-record.md`. Include `Fixes #A` and `Fixes #B` in the body.
+5. `git push -u origin <integration-branch>`, then `gh pr create --draft --base main --title "<title>" --body-file .copilot-loop/integration-record.md`. Include `Fixes #A` and `Fixes #B` in the body. The record is the pull request body; leave `.copilot-loop/` untracked.
 6. Finish with the pull request URL and the integration record.
