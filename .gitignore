@@ -3,3 +3,6 @@
 apm_modules/
 
 .github/aw/logs/
+
+# Copilot local SDLC loop evidence
+.copilot-loop/

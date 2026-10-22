@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "command": "node scripts/copilot-hooks/prepare-worktree.mjs",
+        "timeoutSec": 60
+      }
+    ]
+  }
+}
