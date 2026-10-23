@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"fanhub/database"
@@ -38,8 +37,7 @@ func CreateShow(c *gin.Context) {
 
 	result := database.DB.Create(&show)
 	if result.Error != nil {
-		log.Printf("CreateShow: %v", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		respondInternalError(c, "CreateShow", result.Error)
 		return
 	}
 

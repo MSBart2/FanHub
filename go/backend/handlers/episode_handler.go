@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -52,8 +51,7 @@ func CreateEpisode(c *gin.Context) {
 
 	result := database.DB.Create(&episode)
 	if result.Error != nil {
-		log.Printf("CreateEpisode: %v", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		respondInternalError(c, "CreateEpisode", result.Error)
 		return
 	}
 

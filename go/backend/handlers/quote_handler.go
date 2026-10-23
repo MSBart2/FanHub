@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"fanhub/database"
@@ -43,8 +42,7 @@ func CreateQuote(c *gin.Context) {
 
 	result := database.DB.Create(&quote)
 	if result.Error != nil {
-		log.Printf("CreateQuote: %v", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		respondInternalError(c, "CreateQuote", result.Error)
 		return
 	}
 

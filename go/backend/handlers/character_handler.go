@@ -4,7 +4,6 @@ import (
 	"fanhub/database"
 	"fanhub/models"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
@@ -49,8 +48,7 @@ func CreateCharacter(c *gin.Context) {
 
 	result := database.DB.Create(&character)
 	if result.Error != nil {
-		log.Printf("CreateCharacter: %v", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		respondInternalError(c, "CreateCharacter", result.Error)
 		return
 	}
 
