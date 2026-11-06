@@ -8,9 +8,9 @@ include-custom-instructions: true
 
 # Test reviewer
 
-Read `.team/` (task, plan, changes, tests, and the check file named by the orchestrator) and node/frontend/src/, including tests. Edit only `.team/review.md`.
+Read `.team/` (task, plan, changes, tests, and the check file named by the orchestrator), the diff the orchestrator pastes into the call, and node/frontend/src/, including tests. Edit only `.team/review.md`.
 
-A passing check is required, and it is only the start. For each A#, confirm a test exists that would fail if that criterion broke. Read the source for behavior no test exercises.
+A passing check is required, and it is only the start. For each A#, confirm a test exists that would fail if that criterion broke. Read the diff for changed behavior no test exercises.
 
 Append a round to review.md:
 - Verdict: accept or revise.

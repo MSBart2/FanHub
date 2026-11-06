@@ -1,8 +1,11 @@
 # FanHub agent team rules
 
-- The team works on the Node frontend. The check is `npm --prefix node/frontend test -- --watchAll=false --ci`; install `node/frontend` dependencies once before a run.
+- The team works on the Node frontend, one issue per branch (`issue-N`). Install `node/frontend` dependencies once before a run.
 - Source lives in `node/frontend/src/`. Tests are `*.test.js` files next to the code they test.
-- `.team/` is the shared record. Any agent can read any file there; each file has one writer:
+- The default Check for task.md, run from the repository root:
+  - `npm --prefix node/frontend test -- --watchAll=false --ci`
+  - `node/frontend/node_modules/.bin/eslint` on every changed file under `node/frontend/src/`
+- `.team/` is the shared record for the current issue. It is gitignored, so it stays put when branches change. Any agent can read any file there; each file has one writer:
 
 | File | Writer |
 |---|---|
@@ -13,6 +16,6 @@
 | `review.md` | test-reviewer |
 | `status.md`, `evidence/` | orchestrator |
 
-- Append a new `## Round N` section; never rewrite an earlier round or another agent's file.
+- Round N is the work that leads to check-N. Append a `## Round N` section with the round number the orchestrator gives you; never rewrite an earlier round or another agent's file.
 - Name each test after the acceptance criterion it proves (`A#: ...`).
 - Never commit, push, merge, or install packages. A person makes those decisions.
