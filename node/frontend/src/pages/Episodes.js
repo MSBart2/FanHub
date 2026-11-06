@@ -75,10 +75,9 @@ const Episodes = () => {
   // Load episodes
   const loadEpisodes = useCallback(
     async (seasonId = null) => {
-      // Only use cache for unfiltered (all episodes) requests
+      // Workshop bug (#202): the shared cache ignores the requested season.
       const now = Date.now();
       if (
-        !seasonId &&
         episodeCache &&
         cacheTimestamp &&
         now - cacheTimestamp < 30000
@@ -148,11 +147,6 @@ const Episodes = () => {
     );
   };
 
-  // Filter episodes by selected season (client-side backup)
-  const filteredEpisodes = selectedSeason
-    ? episodes.filter((ep) => ep.season_id === selectedSeason)
-    : episodes;
-
   return (
     <div style={pageStyles.container}>
       <div style={pageStyles.header}>
@@ -209,7 +203,7 @@ const Episodes = () => {
         </div>
       ) : (
         <EpisodeList
-          episodes={filteredEpisodes}
+          episodes={episodes}
           onEpisodeClick={handleEpisodeClick}
         />
       )}

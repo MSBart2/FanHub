@@ -21,13 +21,16 @@ A generic fan site application for TV shows featuring characters, episodes, quot
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js 18+**
+- **Node.js 22, 24, or 26** (use a current LTS release for containers)
 - **Docker Desktop**
 - **Git**
 
 ### Installation
 
 ```bash
+# Run from the node directory
+cd node
+
 # Install all dependencies (root, backend, and frontend)
 npm run install:all
 
@@ -316,6 +319,12 @@ This codebase has **46+ intentional bugs** documented in `/BUGS.md`:
 - ❌ Duplicate Jesse Pinkman in seed data
 - ❌ Episode cache ignores season filter
 - ❌ Inconsistent API paths (/api/* vs /auth)
+
+For the #202 teaching exercise, open Episodes and select Season 2 within
+30 seconds of the initial load. The highlighted season changes, but the
+previously cached list remains visible. Deselect Season 2, wait until the
+30-second cache expires, then select it again to fetch the correct list.
+This behavior is intentional in the workshop starter.
 
 ### High Priority (15)
 - Missing error handling

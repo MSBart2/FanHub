@@ -2,6 +2,9 @@
   "name": "fanhub-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x || 24.x || 26.x"
+  },
   "dependencies": {
     "axios": "^1.6.2",
     "react": "^18.2.0",

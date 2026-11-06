@@ -8,7 +8,7 @@ Complete setup instructions for the Node.js/Express + React version of FanHub.
 
 ## ⚡ One-Command Start
 
-**Requires:** [Node.js 18+](https://nodejs.org/)
+**Requires:** [Node.js 22, 24, or 26](https://nodejs.org/)
 
 From the repo root:
 
@@ -73,7 +73,7 @@ The frontend starts on **http://localhost:3000**.
 
 ### Option 3: Local Runtime 💻 (No Docker required)
 
-**Requires:** [Node.js 18+](https://nodejs.org/)
+**Requires:** [Node.js 22, 24, or 26](https://nodejs.org/)
 
 No database server needed — SQLite creates a `fanhub.db` file automatically.
 
@@ -106,6 +106,7 @@ Frontend runs on: **http://localhost:3000**
 npm install         # Install dependencies
 npm start           # Start the server
 npm run dev         # Start with nodemon (auto-reload on file changes)
+npm test            # Verify SQLite and bcrypt native dependencies
 
 # Frontend (node/frontend/)
 npm install         # Install dependencies
@@ -113,6 +114,33 @@ npm start           # Start dev server (port 3000)
 npm run build       # Production build
 npm test            # Run tests
 ```
+
+The backend is plain JavaScript and has no compilation step; use `npm start`
+to verify it starts, then request `http://localhost:5265/health`.
+
+### Troubleshooting dependency installation
+
+Run `node --version` and `npm --version` first. Both projects support Node 22,
+24, and 26. From the repository root, install both projects with:
+
+```powershell
+Set-Location node
+npm run install:all
+```
+
+The backend uses `better-sqlite3` 12.11.1 and `bcrypt` 6 for newer Node runtimes.
+Older `better-sqlite3` 9 installations can fall back to `node-gyp` compilation
+on Node 26 and fail with `Could not find any Python installation to use`.
+Use the updated manifests and lockfiles rather than disabling install scripts:
+SQLite and password hashing need their native binaries.
+
+If a prebuilt SQLite binary cannot be downloaded, inspect the npm error for
+network restrictions. Source compilation requires Python and a C++ toolchain
+(Visual Studio Build Tools on Windows).
+
+On machines using the Microsoft package proxy, verify that `npm config get
+registry` reports `https://packagefeedproxy.microsoft.io/npm/`. Do not switch
+to a public registry to work around an installation error.
 
 ---
 

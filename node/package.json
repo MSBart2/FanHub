@@ -2,6 +2,9 @@
   "name": "fanhub",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x || 24.x || 26.x"
+  },
   "description": "A generic fan site for TV shows - needs theming!",
   "scripts": {
     "start": "docker-compose up",
