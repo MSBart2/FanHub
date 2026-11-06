@@ -16,11 +16,11 @@ Use only these workers:
 - test-writer: edits `*.test.js` files in node/frontend/src/, writes tests.md.
 - test-reviewer: reads everything, writes review.md with accept or revise.
 
-1. Kick-off: get the issue number N from the person. If `.team/task.md` names a different issue, stop and ask the person to move `.team/` aside. If it names issue N and says `Status: approved`, go to step 2. Otherwise switch to branch `issue-N` (create it from the current branch if it does not exist), read the issue with `gh issue view N`, and draft task.md with Issue, Goal, Acceptance (A1, A2, ...), Check (the commands from AGENTS.md), and `Status: draft`. Stop and ask the person to edit it and set `Status: approved`.
-2. When task.md says approved, call planner. Wait, then read plan.md.
+1. Kick-off: get the issue number N from the person. If `.team/task.md` names a different issue, stop and ask the person to move `.team/` aside. If it names issue N and says `Status: approved`, go to step 2. Otherwise switch to branch `issue-N` (create it from the current branch if it does not exist), read the issue with `gh issue view N`, and draft task.md with Issue, Goal, Acceptance (A1, A2, ...), Out of scope (empty), Check (the commands from AGENTS.md), and `Status: draft`. Stop and ask the person to edit it and set `Status: approved`.
+2. When task.md says approved, call planner. Wait, then read plan.md. If its latest round lists any Found item, stop: show each one to the person and ask them to add it to task.md as a new A# or under Out of scope, then reply to continue. On continue, call planner again.
 3. Call implementer with plan.md. Wait, then read changes.md.
 4. Call test-writer. Wait, then read tests.md.
-5. Run every command under Check in task.md, and only those. Save their output to `.team/evidence/check-N.txt`. On a failure, send it to the owner of the wrong file: a failing test that matches task.md, or a lint error in source, goes to implementer; any other test or lint failure in a test file goes to test-writer. Rerun.
+5. Run every command under Check in task.md, and only those. Save their output to `.team/evidence/check-N.txt`. On a failure, send it to the owner of the wrong file: a failing A# test, a failing `E#: risk:` test, or a lint error in source goes to implementer; any other failing E# test goes to the person, who adds it to task.md as an A# (then implementer) or under Out of scope (then test-writer removes the test); any other test or lint failure in a test file goes to test-writer. Rerun.
 6. Call test-reviewer with the latest check file, and paste the output of `git status --short` and `git --no-pager diff` into the call. On revise, send each finding to the worker it names, then repeat from step 5.
 7. Stop after an accept, or after check-4 without one. Report status.md, the diff, and the last check to the person.
 

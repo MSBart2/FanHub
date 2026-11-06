@@ -10,7 +10,7 @@ include-custom-instructions: true
 
 Read `.team/` (task, plan, changes, tests, and the check file named by the orchestrator), the diff the orchestrator pastes into the call, and node/frontend/src/, including tests. Edit only `.team/review.md`.
 
-A passing check is required, and it is only the start. For each A#, confirm a test exists that would fail if that criterion broke. Read the diff for changed behavior no test exercises.
+A passing check is required, and it is only the start. For each A#, confirm a test exists that would fail if that criterion broke. For each Risk in plan.md, confirm an `E#: risk:` test would fail if it happened; a risk with no such test is revise, owned by test-writer. Read the diff for changed behavior no test exercises, including every control that reaches the changed code.
 
 Append a round to review.md:
 - Verdict: accept or revise.
