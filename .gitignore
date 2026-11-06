@@ -6,3 +6,6 @@ apm_modules/
 
 # Copilot local SDLC loop evidence
 .copilot-loop/
+
+# Local agent team record (see AGENTS.md)
+.team/
