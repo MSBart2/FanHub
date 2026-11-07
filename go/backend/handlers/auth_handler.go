@@ -3,9 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"fanhub/models"
 	"fanhub/services"
+	"github.com/gin-gonic/gin"
 )
 
 type RegisterRequest struct {
@@ -25,18 +24,19 @@ type LoginRequest struct {
 // BUG: No context usage
 func Register(c *gin.Context) {
 	var req RegisterRequest
-	
-	// BUG: Missing error check
-	c.ShouldBindJSON(&req)
-	
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
 	// BUG: Service has weak password validation
 	user, err := services.RegisterUser(req.Email, req.Password, req.Username, req.DisplayName)
 	if err != nil {
-		// BUG: Exposes internal error
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
 		return
 	}
-	
+
 	c.JSON(http.StatusCreated, user)
 }
 
@@ -45,16 +45,16 @@ func Register(c *gin.Context) {
 // BUG: No context usage
 func Login(c *gin.Context) {
 	var req LoginRequest
-	
+
 	// BUG: Missing error check
 	c.ShouldBindJSON(&req)
-	
+
 	// BUG: JWT token generation is incomplete/stub
 	token, err := services.AuthenticateUser(req.Email, req.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
