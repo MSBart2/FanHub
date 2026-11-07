@@ -63,6 +63,33 @@ public class QuotesController : ControllerBase
         
         return Ok(quote);  // BUG: Should be 201 Created
     }
+
+    [HttpGet("spotlight")]
+    public async Task<IActionResult> GetSpotlight()
+    {
+        var activeSeries = HttpContext.Items["Universe"] as Show;
+
+        if (activeSeries == null)
+            return NotFound(new { error = "No active program context" });
+
+        var quotes = await _context.Quotes
+            .Include(q => q.Character)
+            .Where(q => q.ShowId == activeSeries.Id)
+            .ToListAsync();
+
+        if (quotes.Count == 0)
+            return NotFound(new { error = "No quotes found for this program" });
+
+        var famousQuotes = quotes.Where(q => q.IsFamous).ToList();
+        var pool = famousQuotes.Count > 0 ? famousQuotes : quotes;
+        var quote = pool[Random.Shared.Next(pool.Count)];
+
+        return Ok(new
+        {
+            quote = quote,
+            program = new { programId = activeSeries.Id, title = activeSeries.Title }
+        });
+    }
     
     // BUG: Delete endpoint missing completely! No way to delete quotes
 }

@@ -25,12 +25,13 @@ const charactersRouter = require('./routes/characters');
 const episodesRoutes = require('./routes/episodes'); // Different naming!
 const quotesRouter = require('./routes/quotes');
 const authRoutes = require('./routes/auth'); // Yet another style
+const universeContext = require('./middleware/universeContext');
 
 // Mount routes - also inconsistent paths
 app.use('/api/shows', showsRouter);
-app.use('/api/characters', charactersRouter);
+app.use('/api/characters', universeContext, charactersRouter);
 app.use('/api/episodes', episodesRoutes);
-app.use('/api/quotes', quotesRouter);
+app.use('/api/quotes', universeContext, quotesRouter);
 app.use('/auth', authRoutes); // No /api prefix - inconsistent!
 
 // Health check
