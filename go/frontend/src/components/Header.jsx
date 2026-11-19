@@ -30,6 +30,8 @@ const Logo = styled(Link)`
 
   &:hover {
     color: #5ddb38;
+  }
+`;
 
 const NavLinks = styled.div`
   display: flex;
