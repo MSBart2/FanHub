@@ -60,6 +60,19 @@
         </section>
     }
 
+    @if (spotlightQuote != null && currentShow != null)
+    {
+        <section class="spotlight-section">
+            <div class="spotlight-label">Quote Spotlight</div>
+            <h2>@currentShow.Title</h2>
+            <blockquote class="spotlight-text">"@spotlightQuote.QuoteText"</blockquote>
+            @if (!string.IsNullOrWhiteSpace(spotlightQuote.Character?.Name))
+            {
+                <p class="spotlight-character">— @spotlightQuote.Character.Name</p>
+            }
+        </section>
+    }
+
     <section class="nav-cards">
         <a href="/characters" class="nav-card">
             <div class="nav-card-icon">⚗️</div>
@@ -305,32 +318,86 @@
             color: #888;
             font-weight: 600;
         }
+
+        .spotlight-section {
+            background: #f8f8f8;
+            border-left: 4px solid #1a1a1a;
+            border-radius: 4px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .spotlight-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #666;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .spotlight-section h2 {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin: 0 0 1rem;
+        }
+
+        .spotlight-text {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #333;
+            line-height: 1.6;
+            margin: 0 0 1rem;
+            quotes: none;
+        }
+
+        .spotlight-character {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            margin: 0;
+        }
     </style>
 
-@code {
-    private QuoteDto? qotd;
-    private string? qotdCharacterName;
-    private int characterCount;
+    @code {
+        private const string HomeShowSlug = "breaking-bad";
+        private QuoteDto? qotd;
+        private string? qotdCharacterName;
+        private QuoteDto? spotlightQuote;
+        private ProgramDto? currentShow;
+        private int characterCount;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
+        protected override async Task OnInitializedAsync()
         {
-            var characters = await Http.GetFromJsonAsync<List<CharacterDto>>("api/characters");
-            characterCount = characters?.Count ?? 0;
-
-            var quotes = await Http.GetFromJsonAsync<List<QuoteDto>>("api/quotes");
-            if (quotes != null && quotes.Count > 0)
+            try
             {
-                var famous = quotes.Where(q => q.IsFamous).ToList();
-                var pool = famous.Count > 0 ? famous : quotes;
-                var index = DateTime.UtcNow.DayOfYear % pool.Count;
-                qotd = pool[index];
-                qotdCharacterName = characters?.FirstOrDefault(c => c.Id == qotd.CharacterId)?.Name;
+                var characters = await Http.GetFromJsonAsync<List<CharacterDto>>("api/characters");
+                characterCount = characters?.Count ?? 0;
+
+                var quotes = await Http.GetFromJsonAsync<List<QuoteDto>>("api/quotes");
+                if (quotes != null && quotes.Count > 0)
+                {
+                    var famous = quotes.Where(q => q.IsFamous).ToList();
+                    var pool = famous.Count > 0 ? famous : quotes;
+                    var index = DateTime.UtcNow.DayOfYear % pool.Count;
+                    qotd = pool[index];
+                    qotdCharacterName = characters?.FirstOrDefault(c => c.Id == qotd.CharacterId)?.Name;
+                }
+
+                using var request = new HttpRequestMessage(HttpMethod.Get, "api/quotes/spotlight");
+                request.Headers.Add("X-Show-Slug", HomeShowSlug);
+
+                using var response = await Http.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var spotlight = await response.Content.ReadFromJsonAsync<SpotlightResponse>();
+                    spotlightQuote = spotlight?.Quote;
+                    currentShow = spotlight?.Program;
+                }
             }
+            catch { }
         }
-        catch { }
-    }
 
     private class QuoteDto
     {
@@ -338,11 +405,29 @@
         public int CharacterId { get; set; }
         public string QuoteText { get; set; } = "";
         public bool IsFamous { get; set; }
+        public QuoteCharacterDto? Character { get; set; }
     }
 
     private class CharacterDto
     {
         public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    private class SpotlightResponse
+    {
+        public QuoteDto? Quote { get; set; }
+        public ProgramDto? Program { get; set; }
+    }
+
+    private class ProgramDto
+    {
+        public int ProgramId { get; set; }
+        public string Title { get; set; } = "";
+    }
+
+    private class QuoteCharacterDto
+    {
         public string Name { get; set; } = "";
     }
 }

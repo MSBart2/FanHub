@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class QuoteService {
@@ -31,6 +33,21 @@ public class QuoteService {
     
     public List<Quote> getQuotesByCharacterId(Long characterId) {
         return quoteRepository.findByCharacterId(characterId);
+    }
+
+    public Quote getSpotlightQuote(Long showId) {
+        List<Quote> quotes = quoteRepository.findByShowId(showId);
+        if (quotes.isEmpty()) {
+            return null;
+        }
+
+        List<Quote> famousQuotes = quotes.stream()
+                .filter(quote -> Boolean.TRUE.equals(quote.getIsFamous()))
+                .collect(Collectors.toList());
+
+        List<Quote> spotlightPool = famousQuotes.isEmpty() ? quotes : famousQuotes;
+        int selectedIndex = ThreadLocalRandom.current().nextInt(spotlightPool.size());
+        return spotlightPool.get(selectedIndex);
     }
     
     public Quote createQuote(Quote quote) {
